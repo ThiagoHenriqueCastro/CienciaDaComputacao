@@ -24,7 +24,8 @@ int main()
 
         printf("O peso ideal de uma mulher com altura igual a %.2f é %.2f\n", altura, peso_ideal);
     }
-    else{
+    else
+    {
         printf("Valor invalido\n");
     }
 }

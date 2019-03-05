@@ -10,16 +10,18 @@ int main()
     scanf("%f", &b);
     printf("Digite o valor do terceiro numero\n");
     scanf("%f", &c);
-    if(a > b && a > c){
+    if (a > b && a > c)
+    {
         maior = a;
     }
-    else if(b > a && b > c){
+    else if (b > a && b > c)
+    {
         maior = b;
     }
-    else {
+    else
+    {
         maior = c;
     }
-    
 
     printf("O maior numero é %.2f\n", maior);
 }

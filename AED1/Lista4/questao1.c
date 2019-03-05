@@ -8,13 +8,14 @@ int main()
     scanf("%f", &a);
     printf("Digite o valor do segundo numero\n");
     scanf("%f", &b);
-    if(a > b){
+    if (a > b)
+    {
         maior = a;
     }
-    else{
+    else
+    {
         maior = b;
     }
-    
 
     printf("O maior numero é %.2f\n", maior);
 }

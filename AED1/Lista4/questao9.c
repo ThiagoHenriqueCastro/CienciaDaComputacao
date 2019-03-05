@@ -10,31 +10,39 @@ int main()
     scanf("%f", &b);
     printf("Digite o valor do terceiro numero\n");
     scanf("%f", &c);
-    if(a > b && a > c){
-        if(b > c){
+    if (a > b && a > c)
+    {
+        if (b > c)
+        {
             segundoMaior = b;
         }
-        else{
+        else
+        {
             segundoMaior = c;
         }
     }
-    else if(b > a && b > c){
-        if(a > c){
+    else if (b > a && b > c)
+    {
+        if (a > c)
+        {
             segundoMaior = a;
         }
-        else{
+        else
+        {
             segundoMaior = c;
         }
     }
-    else {
-        if(b > a){
+    else
+    {
+        if (b > a)
+        {
             segundoMaior = b;
         }
-        else{
+        else
+        {
             segundoMaior = a;
         }
     }
-    
 
     printf("O segundo maior numero é %.2f\n", segundoMaior);
 }
