@@ -10,20 +10,23 @@ int main()
     scanf("%f", &lado2);
     printf("Digite o valor do terceiro lado\n");
     scanf("%f", &lado3);
-    if (lado1 < 0 || lado2 < 0 || lado3 < 0)
+    if (lado1 + lado2 > lado3 && lado1 + lado3 > lado2 && lado2 + lado3 > lado1)
     {
-        printf("Triangulo Invalido\n");
+        if (lado1 == lado2 && lado1 == lado3)
+        {
+            printf("Triangulo Equilatero\n");
+        }
+        else if ((lado1 == lado2 && lado1 != lado3 & lado2 != lado3) || (lado2 == lado3 && lado2 != lado1 & lado3 != lado1) || (lado3 == lado1 && lado3 != lado2 & lado1 != lado2))
+        {
+            printf("Trian2gulo Isorceles\n");
+        }
+        else if (lado1 != lado2 && lado2 != lado3 && lado3 != lado1)
+        {
+            printf("Triangulo Escaleno\n");
+        }
     }
-    else if (lado1 == lado2 && lado1 == lado3)
+    else
     {
-        printf("Triangulo Equilatero\n");
-    }
-    else if ((lado1 == lado2 && lado1 != lado3 & lado2 != lado3) || (lado2 == lado3 && lado2 != lado1 & lado3 != lado1) || (lado3 == lado1 && lado3 != lado2 & lado1 != lado2))
-    {
-        printf("Trian2gulo Isorceles\n");
-    }
-    else if (lado1 != lado2 && lado2 != lado3 && lado3 != lado1)
-    {
-        printf("Triangulo Escaleno\n");
+        printf("Nao é um triangulo\n");
     }
 }
