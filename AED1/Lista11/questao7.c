@@ -1,20 +1,19 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
 int calcFatorial(int n);
-int fatorial = 1;
 int main()
 {
-    int fatorial = calcFatorial(6);
-    printf("%i \n", fatorial);
+    printf("%i\n", calcFatorial(3));
 }
+
 int calcFatorial(int n)
 {
-    if (n > 0)
+    if (n <= 1)
     {
-        fatorial *= n;
-        calcFatorial(n - 1);
+        return 1;
     }
-    return fatorial;
-    
+    else
+    {
+        return n * calcFatorial(n - 1);
+    }
 }

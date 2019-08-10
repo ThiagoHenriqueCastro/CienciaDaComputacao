@@ -1,22 +1,18 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-void calcFibonacci(int n);
-int a = 1;
-int b = 1;
+#include <stdlib.h>
+int fibonacci(int n);
 int main()
 {
-    calcFibonacci(5);
+    printf("%i\n", fibonacci(6));
 }
-void calcFibonacci(int n)
+int fibonacci(int n)
 {
-    if (n > 0)
+    if (n == 1 | n == 2)
     {
-        printf("%i ", a);
-        printf("%i ", b);
-        a += b;
-        b += a;
-        calcFibonacci(n - 1);
+        return 1;
     }
-    
+    else
+    {
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
 }

@@ -5,11 +5,12 @@ int main()
 {
     sequencia(10);
 }
+
 void sequencia(int n)
 {
-    if (n >= 1)
+    if (n > 0)
     {
         sequencia(n - 1);
-        printf("%i ", n);
+        printf("%i\n", n);
     }
 }

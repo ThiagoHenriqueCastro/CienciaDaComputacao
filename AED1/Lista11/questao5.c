@@ -1,18 +1,19 @@
-#include <stdlib.h>
 #include <stdio.h>
-int somaAte(int inferior, int superior);
-int somatorio = 0;
+#include <stdlib.h>
+int soma(int n, int m);
 int main()
 {
-    int soma = somaAte(1, 4);
-    printf("%i \n", soma);
+    printf("%i\n", soma(2, 4));
 }
-int somaAte(int inferior, int superior)
+int soma(int n, int m)
 {
-    if (inferior <= superior)
+    int somatorio = 0;
+    if (n == m)
     {
-        somaAte(inferior + 1, superior);
-        somatorio += inferior;
+        return m;
     }
-    return somatorio;
+    else
+    {
+        return n + soma(n + 1, m);
+    }
 }
