@@ -1,3 +1,10 @@
+/**
+ * TP01Q03 PALINDROMO
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 08/2019 Este algoritmo testa se uma string é um palindromo
+ */
+
 class TP01Q03Recursivo {
     public static void main(String[] args) {
         String[] input = new String[1000];
@@ -17,6 +24,11 @@ class TP01Q03Recursivo {
         }
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -25,6 +37,12 @@ class TP01Q03Recursivo {
         return boolValue;
     }
 
+    /**
+     * o i é passado como termo controlador da recursão
+     * 
+     * @param line string que deve ser analizada
+     * @return true se as metadas da palavra forem identicas inversamente
+     */
     public static int isPalindromo(String line, int i, int j) {
         int result;
         if (i >= j)

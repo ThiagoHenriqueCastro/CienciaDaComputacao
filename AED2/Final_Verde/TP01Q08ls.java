@@ -6,11 +6,11 @@
  *          vogais, consoantes, se for numeral inteiro ou real.
  */
 
-class TP01Q08Recursivo {
+class TP01Q08ls {
     public static void main(String[] args) {
         String[] input = new String[1000];
         int inputIndex = 0;
-        MyIO.setCharset("UTF-8");
+        MyIO.setCharset("WINDOWS-1252");
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -18,8 +18,8 @@ class TP01Q08Recursivo {
 
         for (int i = 0; i < inputIndex; i++) {
 
-            MyIO.print(onlyVowels(input[i], 0) == input[i].length() ? "SIM " : "NAO ");
-            MyIO.print(onlyConsonants(input[i], 0) == input[i].length() ? "SIM " : "NAO ");
+            MyIO.print(onlyVowels(input[i]) ? "SIM " : "NAO ");
+            MyIO.print(onlyConsonants(input[i]) ? "SIM " : "NAO ");
             MyIO.print(isInt(input[i]) ? "SIM " : "NAO ");
             MyIO.println(isDouble(input[i]) ? "SIM" : "NAO");
         }
@@ -27,8 +27,8 @@ class TP01Q08Recursivo {
 
     /**
      * 
-     * @param line string a ser verificada
-     * @return true se a string for FIM
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
      */
     public static boolean isFim(String line) {
         boolean boolValue = false;
@@ -40,9 +40,8 @@ class TP01Q08Recursivo {
 
     /**
      * 
-     * @param line string a ser verificada
-     * @return verifica se a string é composta apenas por letras, sejam maisuculas
-     *         ou minusculas
+     * @param line string a ser analizada
+     * @return true caso so existirem letras na string
      */
     public static Boolean onlyLetters(String line) {
         boolean resp = false;
@@ -60,8 +59,8 @@ class TP01Q08Recursivo {
 
     /**
      * 
-     * @param letter testa se a letra é uma vogal
-     * @return true caso seja vogal
+     * @param letter char a ser verificado
+     * @return true se composta por uma vogal
      */
     public static Boolean isVowel(char letter) {
         boolean resp = false;
@@ -75,27 +74,27 @@ class TP01Q08Recursivo {
 
     /**
      * 
-     * @param line verifica se a string é composta apenas por algarismos
-     * @param i    controlador da recursão
-     * @return a contagem do numero de algarismos para avaliação futura
+     * @param line string a ser verificada
+     * @return true se todas as characteres forem numeros
      */
-    public static Integer onlyNumbers(String line, int i) {
-        int resp = 0;
-        if (i == line.length())
-            resp = 0;
-        else if ((int) line.charAt(i) >= 48 && (int) line.charAt(i) <= 57)
-            resp = 1 + onlyNumbers(line, (i + 1));
-        else
-            resp = 0 + onlyNumbers(line, (i + 1));
+    public static Boolean onlyNumbers(String line) {
+        boolean resp = false;
+        int cont = 0;
+        for (int i = 0; i < line.length(); i++) {
+            if ((int) line.charAt(i) >= 48 && (int) line.charAt(i) <= 57)
+                cont++;
+        }
+
+        if (cont == line.length())
+            resp = true;
 
         return resp;
     }
 
     /**
-     * testa se um char é numeral
      * 
-     * @param letter char a ser verificado
-     * @return true se for numeral
+     * @param letter char a ser analizado
+     * @return true se o char for um numero 0-9
      */
     public static Boolean isNumber(char letter) {
         boolean resp = false;
@@ -108,41 +107,19 @@ class TP01Q08Recursivo {
     /**
      * 
      * @param line string a ser verificada
-     * @param i    controlador da recursao
-     * @return aa contagem de vogais para uso futuro
+     * @return caso todas as letras forem vogais, retorna true
      */
-    public static Integer onlyVowels(String line, int i) {
-        int result = 0;
+    public static Boolean onlyVowels(String line) {
+        boolean result = false;
         if (onlyLetters(line)) {
-            if (i == line.length())
-                result = 0;
-            else if (isVowel(line.charAt(i)))
-                result = 1 + onlyVowels(line, (i + 1));
-            else
-                result = 0 + onlyVowels(line, (i + 1));
-
-        }
-
-        return result;
-
-    }
-
-    /**
-     * 
-     * @param line string a ser verifcada
-     * @param i    controlador da recusao
-     * @return a contagem do numero de letras nao vogais da string
-     */
-    public static Integer onlyConsonants(String line, int i) {
-        int result = 0;
-        if (onlyLetters(line)) {
-            if (i == line.length())
-                result = 0;
-            else if (!isVowel(line.charAt(i)))
-                result = 1 + onlyConsonants(line, (i + 1));
-            else
-                result = 0 + onlyConsonants(line, (i + 1));
-
+            for (int i = 0; i < line.length(); i++) {
+                if (isVowel(line.charAt(i))) {
+                    result = true;
+                } else {
+                    result = false;
+                    i = line.length();
+                }
+            }
         }
 
         return result;
@@ -152,11 +129,33 @@ class TP01Q08Recursivo {
     /**
      * 
      * @param line string a ser verificada
-     * @return true caso todos os digitos da string forem numericos
+     * @return true se as char forem diferentes de vogais, consoantes
+     */
+    public static Boolean onlyConsonants(String line) {
+        boolean result = false;
+        if (onlyLetters(line)) {
+            for (int i = 0; i < line.length(); i++) {
+                if (!isVowel(line.charAt(i))) {
+                    result = true;
+                } else {
+                    result = false;
+                    i = line.length();
+                }
+            }
+        }
+
+        return result;
+
+    }
+
+    /**
+     * 
+     * @param line string a ser verificada
+     * @return true se for numero e se for inteiro
      */
     public static Boolean isInt(String line) {
         boolean result = false;
-        if (onlyNumbers(line, 0) == line.length())
+        if (onlyNumbers(line))
             result = true;
         return result;
 
@@ -164,8 +163,8 @@ class TP01Q08Recursivo {
 
     /**
      * 
-     * @param line string a ser processada
-     * @return true se for numeral com ate uma virgula ou ponto
+     * @param line string a ser analizada
+     * @return true se for numerica e tiver no maximo um ponto ou virgula
      */
     public static Boolean isDouble(String line) {
         boolean result = false;
