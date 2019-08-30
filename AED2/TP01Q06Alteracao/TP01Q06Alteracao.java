@@ -1,10 +1,18 @@
+
+/**
+ * TP01Q06 ALTERACAO
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 08/2019 Altera Aleatoreamente letras de uma string
+ */
+
 import java.util.Random;
 
 class TP01Q06Alteracao {
     public static void main(String[] args) {
         String[] input = new String[1000];
         int inputIndex = 0;
-        MyIO.setCharset("UTF-8");
+        MyIO.setCharset("WINDOWS-1252");
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -15,6 +23,11 @@ class TP01Q06Alteracao {
         }
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -23,6 +36,11 @@ class TP01Q06Alteracao {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line string a ser analizada
+     * @return string modificada
+     */
     public static String encrypt(String line) {
         char firstLetter = randomLetter();
         char secondLetter = randomLetter();
@@ -38,6 +56,10 @@ class TP01Q06Alteracao {
         return output;
     }
 
+    /**
+     * 
+     * @return uma letra aleatoria
+     */
     public static char randomLetter() {
         Random gerador = new Random();
         gerador.setSeed(4);

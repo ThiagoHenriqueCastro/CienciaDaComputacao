@@ -10,7 +10,7 @@ class TP01Q08ls {
     public static void main(String[] args) {
         String[] input = new String[1000];
         int inputIndex = 0;
-        MyIO.setCharset("UTF-8");
+        MyIO.setCharset("WINDOWS-1252");
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -25,6 +25,11 @@ class TP01Q08ls {
         }
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -33,6 +38,11 @@ class TP01Q08ls {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line string a ser analizada
+     * @return true caso so existirem letras na string
+     */
     public static Boolean onlyLetters(String line) {
         boolean resp = false;
         int cont = 0;
@@ -47,6 +57,11 @@ class TP01Q08ls {
         return resp;
     }
 
+    /**
+     * 
+     * @param letter char a ser verificado
+     * @return true se composta por uma vogal
+     */
     public static Boolean isVowel(char letter) {
         boolean resp = false;
 
@@ -57,6 +72,11 @@ class TP01Q08ls {
         return resp;
     }
 
+    /**
+     * 
+     * @param line string a ser verificada
+     * @return true se todas as characteres forem numeros
+     */
     public static Boolean onlyNumbers(String line) {
         boolean resp = false;
         int cont = 0;
@@ -71,6 +91,11 @@ class TP01Q08ls {
         return resp;
     }
 
+    /**
+     * 
+     * @param letter char a ser analizado
+     * @return true se o char for um numero 0-9
+     */
     public static Boolean isNumber(char letter) {
         boolean resp = false;
         if ((int) letter >= 48 && (int) letter <= 57)
@@ -79,6 +104,11 @@ class TP01Q08ls {
         return resp;
     }
 
+    /**
+     * 
+     * @param line string a ser verificada
+     * @return caso todas as letras forem vogais, retorna true
+     */
     public static Boolean onlyVowels(String line) {
         boolean result = false;
         if (onlyLetters(line)) {
@@ -96,6 +126,11 @@ class TP01Q08ls {
 
     }
 
+    /**
+     * 
+     * @param line string a ser verificada
+     * @return true se as char forem diferentes de vogais, consoantes
+     */
     public static Boolean onlyConsonants(String line) {
         boolean result = false;
         if (onlyLetters(line)) {
@@ -113,6 +148,11 @@ class TP01Q08ls {
 
     }
 
+    /**
+     * 
+     * @param line string a ser verificada
+     * @return true se for numero e se for inteiro
+     */
     public static Boolean isInt(String line) {
         boolean result = false;
         if (onlyNumbers(line))
@@ -121,6 +161,11 @@ class TP01Q08ls {
 
     }
 
+    /**
+     * 
+     * @param line string a ser analizada
+     * @return true se for numerica e tiver no maximo um ponto ou virgula
+     */
     public static Boolean isDouble(String line) {
         boolean result = false;
         int number = 0;

@@ -1,3 +1,4 @@
+
 class TP01Q05Recursivo {
     public static void main(String[] args) {
         String[] input = new String[1000];
@@ -13,6 +14,11 @@ class TP01Q05Recursivo {
         }
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {

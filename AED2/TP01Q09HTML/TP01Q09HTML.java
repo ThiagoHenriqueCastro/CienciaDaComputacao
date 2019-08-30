@@ -68,6 +68,11 @@ class TP01Q09HTML {
 
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -76,6 +81,13 @@ class TP01Q09HTML {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param url url da pagina web a ser extraida
+     * @return o codigo fonte da pagina web em uma string
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     public static String getCode(String url) throws MalformedURLException, IOException {
         BufferedReader in = null;
         StringBuilder content = null;
@@ -97,6 +109,11 @@ class TP01Q09HTML {
         return content.toString();
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return o numero de ocorrencias
+     */
     public static Integer cont_consonants(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -118,7 +135,6 @@ class TP01Q09HTML {
                         && code.charAt(i) != 'Û') {
                     result++;
                 }
-
             }
 
         }
@@ -126,6 +142,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return numero de ocorrencias da tag br
+     */
     public static Integer cont_br(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -138,6 +159,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return numero de ocorrencias da tag table
+     */
     public static Integer cont_table(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -151,6 +177,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra a comum
+     */
     public static Integer cont_common_a(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -160,6 +191,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra e comum
+     */
     public static Integer cont_common_e(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -169,6 +205,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra i comum
+     */
     public static Integer cont_common_i(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -178,6 +219,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra 0 comum
+     */
     public static Integer cont_common_o(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -187,6 +233,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra u comum
+     */
     public static Integer cont_common_u(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -196,6 +247,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra a aguda
+     */
     public static Integer cont_acute_a(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -205,6 +261,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra e aguda
+     */
     public static Integer cont_acute_e(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -214,6 +275,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra i aguda
+     */
     public static Integer cont_acute_i(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -223,6 +289,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra o aguda
+     */
     public static Integer cont_acute_o(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -232,6 +303,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra u aguda
+     */
     public static Integer cont_acute_u(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -241,6 +317,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra a grave
+     */
     public static Integer cont_grave_a(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -250,6 +331,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra e grave
+     */
     public static Integer cont_grave_e(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -259,6 +345,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra i grave
+     */
     public static Integer cont_grave_i(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -268,6 +359,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra o grave
+     */
     public static Integer cont_grave_o(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -277,6 +373,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra u grave
+     */
     public static Integer cont_grave_u(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -286,6 +387,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra a til
+     */
     public static Integer cont_tilde_a(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -295,6 +401,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra o til
+     */
     public static Integer cont_tilde_o(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -304,6 +415,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra a circunflexa
+     */
     public static Integer cont_circ_a(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -313,6 +429,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra e circunflexa
+     */
     public static Integer cont_circ_e(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -322,6 +443,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra i circunflexa
+     */
     public static Integer cont_circ_i(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -331,6 +457,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra o circunflexa
+     */
     public static Integer cont_circ_o(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
@@ -340,6 +471,11 @@ class TP01Q09HTML {
         return result;
     }
 
+    /**
+     * 
+     * @param code codigo da pagina web
+     * @return ocorrencias da letra circunflexa
+     */
     public static Integer cont_circ_u(String code) {
         int result = 0;
         for (int i = 0; i < code.length(); i++) {
