@@ -1,12 +1,20 @@
 /**
+<<<<<<< HEAD
  * TP01Q00 Aquecimento Recursivo
+=======
+ * TP01Q00 Aquecimento
+>>>>>>> 6aa113d863187424cf64a8246ccac44f10208186
  * 
  * @author Thiago Henrique de Castro Oliveira
  * @version 1 08/2019 Este algoritmo conta o numero de letras maiusculas em uma
  *          string.
  */
 
+<<<<<<< HEAD
 class TP01Q00Recursivo {
+=======
+class TP01Q00Recusivo {
+>>>>>>> 6aa113d863187424cf64a8246ccac44f10208186
     public static void main(String[] args) {
         String[] input = new String[1000];
         int inputIndex = 0;

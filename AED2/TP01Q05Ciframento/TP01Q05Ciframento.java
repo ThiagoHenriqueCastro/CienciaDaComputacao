@@ -9,7 +9,11 @@ class TP01Q05Ciframento {
     public static void main(String[] args) {
         String[] input = new String[1000];
         int inputIndex = 0;
+<<<<<<< HEAD
         MyIO.setCharset("ISO-8859-7");
+=======
+        MyIO.setCharset("WINDOWS-1252");
+>>>>>>> 6aa113d863187424cf64a8246ccac44f10208186
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
