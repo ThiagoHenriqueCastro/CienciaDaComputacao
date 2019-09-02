@@ -24,13 +24,6 @@ boolean isFim(char *line)
     return resp;
 }
 
-void append(char *s, char c)
-{
-    int len = strlen(s);
-    s[len] = c;
-    s[len + 1] = '\0';
-}
-
 char *crawlNome(char *line)
 {
     int begin = 0;
@@ -53,28 +46,19 @@ char *crawlNome(char *line)
             i = strlen(line);
         }
     }
+
     int cont = 0;
-    char cToStr[2];
-    cToStr[1] = '\0';
-    char currentChar;
-    size_t len = strlen(output);
-    char *str2 = malloc(len + 1 + 1);
-    strcpy(str2, output);
+    char aux[2];
+    aux[1] = '\0';
     for (int i = begin; i < end; i++)
     {
-        size_t len = strlen(str2);
-        char *str2 = malloc(len + 1 + 1);
-        strcpy(str2, str2);
-        str2[len] = line[i];
-        str2[len + 1] = '\0';
+        aux[0] = line[i];
+        strcat(output, aux);
     }
 
-    free(str2);
+     printf("%s", output);
 
-    //printf("%s", line);
-    printf("%s", str2);
-
-    return str2;
+    return output;
 }
 
 int main(int argc, char const *argv[])
@@ -94,7 +78,7 @@ int main(int argc, char const *argv[])
     char *nome;
     for (int i = 0; i < 1; i++)
     {
-        arq = fopen("1._FC_Nürnberg.html", "r");
+        arq = fopen("Argentinos_Juniors.html", "r");
         if (arq == NULL)
         {
             perror(input[i]);
@@ -126,6 +110,8 @@ int main(int argc, char const *argv[])
                 html[idx] = '\0';
 
                 nome = crawlNome(html);
+
+                printf("%s" , nome);
             }
         }
     }

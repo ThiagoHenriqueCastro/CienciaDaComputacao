@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 class Time {
     // Strings
@@ -150,7 +152,7 @@ class Time {
 
         System.out.printf(getNome() + " ## ");
         System.out.printf(getApelido() + " ## ");
-        if (getFundacaoDia() >= 0 && getFundacaoMes() <= 9) {
+        if (getFundacaoDia() >= 0 && getFundacaoDia() <= 9) {
 
             if (getFundacaoMes() >= 0 && getFundacaoMes() <= 9) {
                 MyIO.print("0" + getFundacaoDia() + "/" + "0" + getFundacaoMes() + "/" + getFundacaoAno() + " ## ");
@@ -210,13 +212,14 @@ public class Crawl {
         String aux;
         int controller;
 
-        for (int i = 0; i < inputIndex; i++) {
 
+        for (int i = 0; i < 1; i++) {
             try {
                 controller = 0;
-                File file = new File(input[i]);
-                FileReader reader = new FileReader(file);
-                BufferedReader br = new BufferedReader(reader);
+                File arq = new File(input[i]);
+                FileInputStream file = new FileInputStream("/tmp/times/ACF_Fiorentina.html");
+                InputStreamReader is = new InputStreamReader(file, "UTF-8");
+                BufferedReader br = new BufferedReader(is);
 
                 while ((html = br.readLine()) != null && controller != 1) {
                     if (html.contains("Full name")) {
@@ -225,57 +228,34 @@ public class Crawl {
 
                     }
                 }
-                MyIO.println(input[i]);
-
+                
                 splitted = table.split("Full name");
                 withoutTags = removerTags(splitted[1]);
-                if (table.contains("al</a><") == false || table.contains("<br /><") == false) {
-                    if (table.contains("<br />\n")) {
 
-                        Proxlinha = br.readLine();
-                        Proxlinha = br.readLine();
-                        Proxlinha = br.readLine();
-                    } else {
-                        Proxlinha = br.readLine();
-                    }
-                    MyIO.println(table);
-                    aux = html + Proxlinha;
-                    nome = crawlNome(aux);
-                    apelido = crawlApelido(aux);
-                    dia = crawlDia(aux);
-                    mes = crawlMes(aux);
-                    ano = crawlAno(aux);
-                    estadio = crawlEstadio(aux);
-                    capacidade = crawlCapacidade(aux);
-                    tecnico = crawlTecnico(aux);
-                    liga = crawlLiga(aux);
-                    tamanho = file.length();
-                    nomeArquivo = input[i];
-                } else {
-                    // MyIO.println(input[i]);
-                    // MyIO.println(table);
-                    nome = crawlNome(withoutTags);
-                    apelido = crawlApelido(withoutTags);
-                    dia = crawlDia(withoutTags);
-                    mes = crawlMes(withoutTags);
-                    ano = crawlAno(withoutTags);
-                    estadio = crawlEstadio(withoutTags);
-                    capacidade = crawlCapacidade(withoutTags);
-                    tecnico = crawlTecnico(withoutTags);
-                    liga = crawlLiga(withoutTags);
-                    tamanho = file.length();
-                    nomeArquivo = input[i];
+                nome = crawlNome(withoutTags);
+                apelido = crawlApelido(withoutTags);
+                dia = crawlDia(withoutTags);
+                mes = crawlMes(withoutTags);
+                ano = crawlAno(withoutTags);
+                estadio = crawlEstadio(withoutTags);
+                capacidade = crawlCapacidade(withoutTags);
+                tecnico = crawlTecnico(withoutTags);
+                liga = crawlLiga(withoutTags);
+                tamanho = arq.length();
+                nomeArquivo = input[i];
 
-                    times[i] = new Time(nome, apelido, estadio, tecnico, liga, nomeArquivo, capacidade, dia, mes, ano,
-                            tamanho);
-                }
+               
+
+                times[i] = new Time(nome, apelido, estadio, tecnico, liga, nomeArquivo, capacidade, dia, mes, ano,
+                        tamanho);
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
         }
 
-        for (int i = 0; i < inputIndex; i++) {
+        for (int i = 0; i < 1; i++) {
             times[i].imprimir();
         }
 
@@ -451,7 +431,6 @@ public class Crawl {
     public static String crawlTecnico(String line) {
 
         String tecnico = "";
-        MyIO.println(line);
         String[] splitted = line.contains("Manager") ? line.split("Manager ") : line.split("Head coach ");
         splitted = splitted[1].split("League");
         tecnico = splitted[0];
