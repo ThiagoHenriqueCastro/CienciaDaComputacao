@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -145,6 +146,24 @@ class Time {
         this.tamanho = valor;
     }
 
+    public Time clone() {
+        Time resp = new Time();
+
+        resp.nome = this.nome;
+        resp.apelido = this.apelido;
+        resp.capacidade = this.capacidade;
+        resp.estadio = this.estadio;
+        resp.fundacaoAno = this.fundacaoAno;
+        resp.fundacaoDia = this.fundacaoDia;
+        resp.fundacaoMes = this.fundacaoMes;
+        resp.liga = this.liga;
+        resp.tecnico = this.tecnico;
+        resp.tamanho = this.tamanho;
+        resp.nomeAquivo = this.nomeAquivo;
+
+        return resp;
+    }
+
     /**
      * imprime os atributos da classe
      */
@@ -179,10 +198,268 @@ class Time {
         MyIO.print(getTamanho() + " ## \n");
     }
 
+    public void ler(String path) {
+        String html = "";
+        String table = "";
+        try {
+            int controller = 0;
+            File arq = new File(path);
+            FileInputStream file = new FileInputStream(path);
+            InputStreamReader is = new InputStreamReader(file, "UTF-8");
+            BufferedReader br = new BufferedReader(is);
+
+            while ((html = br.readLine()) != null && controller != 1) {
+                if (html.contains("Full name")) {
+                    table = html;
+                    controller = 1;
+
+                }
+            }
+
+            String[] splitted = table.split("Full name");
+            String withoutTags = Crawl.removerTags(splitted[1]);
+
+            this.setNome(Crawl.crawlNome(withoutTags));
+            this.setApelido(Crawl.crawlApelido(withoutTags));
+            this.setFundacaoDia(Crawl.crawlDia(withoutTags));
+            this.setFundacaoMes(Crawl.crawlMes(withoutTags));
+            this.setFundacaoAno(Crawl.crawlAno(withoutTags));
+            this.setEstadio(Crawl.crawlEstadio(withoutTags));
+            this.setCapacidade(Crawl.crawlCapacidade(withoutTags));
+            this.setTecnico(Crawl.crawlTecnico(withoutTags));
+            this.setLiga(Crawl.crawlLiga(withoutTags));
+            this.setTamanho(arq.length());
+            this.setnomeAquivo(path);
+
+            br.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+}
+
+class Pilha {
+    private Time[] array;
+    private int topo;
+
+    public Pilha() {
+        this(6);
+    }
+
+    public Pilha(int tamanho) {
+        array = new Time[tamanho];
+        topo = 0;
+    }
+
+    public void empilhar(Time time) throws Exception {
+        if (topo >= array.length) {
+            throw new Exception("Erro ao inserir!");
+        }
+
+        array[topo] = time.clone();
+        topo++;
+    }
+
+    public String desempilhar() throws Exception {
+        if (topo == 0) {
+            throw new Exception("Erro ao desempilhar!");
+        }
+
+        Time resp = array[topo - 1].clone();
+        topo--;
+
+        String output = "(R) " + resp.getNome();
+        return output;
+    }
+
+    public void mostrar() {
+        for (int i = 0; i < topo; i++) {
+            MyIO.print("[" + i + "] ");
+            array[i].imprimir();
+        }
+    }
+}
+
+class Lista {
+    private Time[] array;
+    private int n;
+
+    public Lista() {
+        this(6);
+    }
+
+    public Lista(int tamanho) {
+        array = new Time[tamanho];
+        n = 0;
+    }
+
+    public void InserirInicio(Time time) throws Exception {
+        if (n >= array.length) {
+            throw new Exception("Erro ao inserir no inicio");
+        }
+
+        for (int i = n; i > 0; i--) {
+            array[i] = array[i - 1].clone();
+        }
+
+        array[0] = time.clone();
+        n++;
+    }
+
+    public void InserirFim(Time time) throws Exception {
+        if (n >= array.length) {
+            throw new Exception("Erro ao inserir no fim");
+        }
+
+        array[n] = time.clone();
+        n++;
+
+    }
+
+    public void inserir(Time time, int posicao) throws Exception {
+        if (n >= array.length || posicao < 0 || posicao > n) {
+            throw new Exception("Erro ao inserir na posição");
+        }
+
+        for (int i = n; i > posicao; i--) {
+            array[i] = array[i - 1].clone();
+        }
+
+        array[posicao] = time.clone();
+        n++;
+
+    }
+
+    public String removerInicio() throws Exception {
+        if (n == 0) {
+            throw new Exception("Erro ao remover no inicio");
+        }
+        Time resp = array[0].clone();
+        n--;
+
+        for (int i = 0; i < n; i++) {
+            array[i] = array[i + 1].clone();
+        }
+
+        String output = "(R) " + resp.getNome();
+
+        return output;
+    }
+
+    public String removerFim() throws Exception {
+        if (n == 0) {
+            throw new Exception("Erro ao remover no fim");
+        }
+        Time resp = array[n - 1].clone();
+        n--;
+
+        String output = "(R) " + resp.getNome();
+
+        return output;
+
+    }
+
+    public String remover(int posicao) throws Exception {
+
+        if (n == 0 || posicao < 0 || posicao >= n) {
+            throw new Exception("Erro ao remover na posicao");
+        }
+
+        Time resp = array[posicao].clone();
+        n--;
+        for (int i = posicao; i < n; i++) {
+
+            array[i] = array[i + 1].clone();
+        }
+        String output = "(R) " + resp.getNome();
+
+        return output;
+    }
+
+    public void mostrar() {
+        for (int i = 0; i < n; i++) {
+            // MyIO.print("[" + i + "] ");
+            array[i].imprimir();
+        }
+    }
+
+    public String PesquisaSequencial(String chave) {
+        String out = "NÃO";
+        for (int i = 0; i < n; i++) {
+            if (array[i].getNome().equals(chave)) {
+                out = "SIM";
+                i = n;
+            }
+        }
+
+        return out;
+    }
+
+    public void swap(int menor, int i) {
+        Time aux = array[i].clone();
+        array[i] = array[menor];
+        array[menor] = aux;
+    }
+
+    public Integer[] Selecao() {
+        int comparisons = 0;
+        int moves = 0;
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < (n - 1); i++) {
+            int menor = i;
+            for (int j = (i + 1); j < n; j++) {
+                if (array[menor].getTamanho() > array[j].getTamanho()) {
+                    menor = j;
+                    comparisons++;
+                }
+            }
+
+            swap(menor, i);
+            moves++;
+
+        }
+
+        Integer[] out = new Integer[3];
+        out[0] = comparisons;
+        out[1] = moves;
+        out[2] = (int) System.currentTimeMillis() - (int) start;
+
+        return out;
+    }
+
+    public Integer[] Insercao() {
+        int comparisons = 0;
+        int moves = 0;
+        long start = System.currentTimeMillis();
+
+        for (int i = 1; i < n; i++) {
+            Time tmp = array[i];
+            int j = i - 1;
+            while ((j >= 0) && (array[j].getFundacaoAno() > tmp.getFundacaoAno())) {
+                array[j + 1] = array[j];
+                j--;
+                comparisons++;
+                moves++;
+            }
+
+            array[j + 1] = tmp;
+            moves++;
+        }
+
+        Integer[] out = new Integer[3];
+        out[0] = comparisons;
+        out[1] = moves;
+        out[2] = (int) System.currentTimeMillis() - (int) start;
+
+        return out;
+    }
 }
 
 public class Crawl {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
@@ -191,70 +468,29 @@ public class Crawl {
         } while (isFim(input[inputIndex++]) == false);
         inputIndex--;
 
-        Time[] times = new Time[1000];
-        String html = "";
-        String table = "";
-        StringBuilder sb = new StringBuilder();
-        String[] splitted = new String[100];
-        String withoutTags = "";
-        String nome = "";
-        String apelido = "";
-        int dia = 0;
-        int mes = 0;
-        int ano = 0;
-        String estadio = "";
-        int capacidade = 0;
-        String tecnico = "";
-        String liga = "";
-        long tamanho = 0;
-        String nomeArquivo = "";
-        String Proxlinha = "";
-        String aux;
-        int controller;
-
+        Lista lista = new Lista(1000);
+        Time time;
         for (int i = 0; i < inputIndex; i++) {
-            try {
-                controller = 0;
-                File arq = new File(input[i]);
-                FileInputStream file = new FileInputStream(input[i]);
-                InputStreamReader is = new InputStreamReader(file, "UTF-8");
-                BufferedReader br = new BufferedReader(is);
 
-                while ((html = br.readLine()) != null && controller != 1) {
-                    if (html.contains("Full name")) {
-                        table = html;
-                        controller = 1;
+            time = new Time();
 
-                    }
-                }
+            time.ler(input[i]);
 
-                splitted = table.split("Full name");
-                withoutTags = removerTags(splitted[1]);
-
-                nome = crawlNome(withoutTags);
-                apelido = crawlApelido(withoutTags);
-                dia = crawlDia(withoutTags);
-                mes = crawlMes(withoutTags);
-                ano = crawlAno(withoutTags);
-                estadio = crawlEstadio(withoutTags);
-                capacidade = crawlCapacidade(withoutTags);
-                tecnico = crawlTecnico(withoutTags);
-                liga = crawlLiga(withoutTags);
-                tamanho = arq.length();
-                nomeArquivo = input[i];
-
-                times[i] = new Time(nome, apelido, estadio, tecnico, liga, nomeArquivo, capacidade, dia, mes, ano,
-                        tamanho);
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            lista.InserirFim(time);
 
         }
-
-        for (int i = 0; i < inputIndex; i++) {
-            times[i].imprimir();
+        Integer[] logs = new Integer[3];
+        logs = lista.Insercao();
+        try {
+            FileWriter writer = new FileWriter("649884_insercao.txt");
+            writer.write("649884\t" + logs[0] + "\t" + logs[1] + "\t" + logs[2]);
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        lista.mostrar();
 
     }
 
@@ -290,6 +526,7 @@ public class Crawl {
             splitted = splitted[1].split(" Short name");
 
         } else {
+
             splitted = splitted[1].split(" Founded");
         }
 
@@ -436,6 +673,7 @@ public class Crawl {
     public static int crawlCapacidade(String line) {
 
         String capacidade = "";
+
         String[] splitted = line.split("Capacity ");
         splitted = splitted[1].split(" ");
         if (splitted[0].contains(",")) {
@@ -444,7 +682,11 @@ public class Crawl {
         } else {
             capacidade = splitted[0] + splitted[1];
         }
-        // MyIO.println(capacidade);
+        capacidade = capacidade.replace("&#91", "");
+        capacidade = capacidade.replace("Chairman", "");
+        capacidade = capacidade.replace("Owner", "");
+        capacidade = capacidade.replace(".", "");
+
         return Integer.parseInt(capacidade);
     }
 

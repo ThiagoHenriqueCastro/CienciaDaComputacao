@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #define LINE 1000
 #define ENTRY 1000
@@ -24,7 +25,7 @@ boolean isFim(char *line)
     return resp;
 }
 
-char *crawlNome(char *line)
+void crawlNome(char *line, char *nome)
 {
     int begin = 0;
     int end = 0;
@@ -48,17 +49,159 @@ char *crawlNome(char *line)
     }
 
     int cont = 0;
-    char aux[2];
-    aux[1] = '\0';
-    for (int i = begin; i < end; i++)
+    for (int i = begin; i <= end; i++)
     {
-        aux[0] = line[i];
-        strcat(output, aux);
+        nome[cont++] = line[i];
+    }
+}
+
+void crawlApelido(char *line, char *apelido)
+{
+    int begin = 0;
+    int end = 0;
+    char *output = "";
+    for (int i = 0; i < strlen(line); i++)
+    {
+        if (line[i] == 'N' && line[i + 1] == 'i' && line[i + 2] == 'c' && line[i + 3] == 'k' && line[i + 4] == 'n' && line[i + 5] == 'a' && line[i + 6] == 'm' && line[i + 7] == 'e')
+        {
+            begin = i + 11;
+            i = strlen(line);
+        }
     }
 
-     printf("%s", output);
+    if (strstr(line, "Short name") != NULL)
+    {
+        for (int i = 0; i < strlen(line); i++)
+        {
+            if (line[i] == 'S' && line[i + 1] == 'h' && line[i + 2] == 'o' && line[i + 3] == 'r' && line[i + 4] == 't' && line[i + 5] == ' ' && line[i + 6] == 'n' && line[i + 7] == 'a')
+            {
+                end = i - 1;
+                i = strlen(line);
+            }
+        }
+    }
+    else
+    {
 
-    return output;
+        for (int i = 0; i < strlen(line); i++)
+        {
+            if (line[i] == 'F' && line[i + 1] == 'o' && line[i + 2] == 'u' && line[i + 3] == 'n' && line[i + 4] == 'd' && line[i + 5] == 'e' && line[i + 6] == 'd')
+            {
+                end = i - 1;
+                i = strlen(line);
+            }
+        }
+    }
+
+    int cont = 0;
+    for (int i = begin; i <= end; i++)
+    {
+        apelido[cont++] = line[i];
+    }
+}
+
+int crawlDia(char *line)
+{
+    int begin = 0;
+    int end = 0;
+    char output[10000];
+    char dia[50];
+    for (int i = 0; i < strlen(line); i++)
+    {
+        if (line[i] == 'F' && line[i + 1] == 'o' && line[i + 2] == 'u' && line[i + 3] == 'n' && line[i + 4] == 'd' && line[i + 5] == 'e' && line[i + 6] == 'd')
+        {
+            begin = i + 7;
+            i = strlen(line);
+        }
+    }
+    int cont = 0;
+    for (int i = begin; i < strlen(line); i++)
+    {
+        output[cont++] = line[i];
+    }
+
+    for (int i = 0; i < strlen(output); i++)
+    {
+        if (output[i] == ' ')
+        {
+            end = i - 1;
+            i = strlen(line);
+        }
+    }
+
+    for (int i = 0; i <= end; i++)
+    {
+        dia[i] = output[i];
+    }
+
+    /*
+    if(isalpha(dia[0])){
+
+    }
+    */
+    int out;
+    if (strstr(line, "January") || strstr(line, "February") || strstr(line, "March") || strstr(line, "April") || strstr(line, "May") || strstr(line, "June") || strstr(line, "July") || strstr(line, "September") || strstr(line, "August") || strstr(line, "October") || strstr(line, "November") || strstr(line, "July") || strstr(line, "December"))
+    {
+        out = atoi(dia);
+    }
+    else
+    {
+        out = 0;
+    }
+
+    return out;
+}
+
+int crawlMes(char *line)
+{
+    int begin = 0;
+    int end = 0;
+    char output[10000];
+    char dia[50];
+    for (int i = 0; i < strlen(line); i++)
+    {
+        if (line[i] == 'F' && line[i + 1] == 'o' && line[i + 2] == 'u' && line[i + 3] == 'n' && line[i + 4] == 'd' && line[i + 5] == 'e' && line[i + 6] == 'd')
+        {
+            begin = i + 7;
+            i = strlen(line);
+        }
+    }
+    int cont = 0;
+    for (int i = begin; i < strlen(line); i++)
+    {
+        output[cont++] = line[i];
+    }
+
+    for (int i = 0; i < strlen(output); i++)
+    {
+        if (output[i] == ' ')
+        {
+            end = i - 1;
+            i = strlen(line);
+        }
+    }
+
+    for (int i = 0; i <= end; i++)
+    {
+        dia[i] = output[i];
+    }
+
+    /*
+    if(isalpha(dia[0])){
+
+    }
+    */
+    int out;
+    if (strstr(line, "January") || strstr(line, "February") || strstr(line, "March") || strstr(line, "April") || strstr(line, "May") || strstr(line, "June") || strstr(line, "July") || strstr(line, "September") || strstr(line, "August") || strstr(line, "October") || strstr(line, "November") || strstr(line, "July") || strstr(line, "December"))
+    {
+        out = atoi(dia);
+    }
+    else
+    {
+        out = 0;
+    }
+
+    return out;
 }
 
 int main(int argc, char const *argv[])
@@ -75,10 +218,14 @@ int main(int argc, char const *argv[])
     FILE *arq;
     char *html = NULL;
     size_t len = 0;
-    char *nome;
+    char nome[100];
+    char apelido[100];
+    int dia;
+    int mes;
+    int ano;
     for (int i = 0; i < 1; i++)
     {
-        arq = fopen("Argentinos_Juniors.html", "r");
+        arq = fopen("A.F.C._Bournemouth.html", "r");
         if (arq == NULL)
         {
             perror(input[i]);
@@ -109,9 +256,28 @@ int main(int argc, char const *argv[])
                 }
                 html[idx] = '\0';
 
-                nome = crawlNome(html);
+                for (int i = 0; i < strlen(html); i++)
+                {
+                    if (html[i] == '#' || html[i] == '&')
+                    {
+                        html[i] = ' ';
+                        html[i + 1] = ' ';
+                        html[i + 2] = ' ';
+                        html[i + 3] = ' ';
+                        html[i + 4] = ' ';
+                    }
+                }
 
-                printf("%s" , nome);
+                crawlNome(html, nome);
+                crawlApelido(html, apelido);
+                dia = crawlDia(html);
+                mes = crawlMes(html);
+                //  ano = crawlAno();
+                printf("%s\n", nome);
+                printf("%s\n", apelido);
+                printf("%d\n", dia);
+                printf("%d\n", mes);
+                // printf("%d\n", ano);
             }
         }
     }
