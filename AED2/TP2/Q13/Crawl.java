@@ -292,7 +292,7 @@ class Lista {
 
     public Lista(int tamanho) {
         array = new Time[tamanho];
-        n = 0;
+        n = 1;
     }
 
     public void InserirInicio(Time time) throws Exception {
@@ -441,35 +441,6 @@ class Lista {
         return maior;
     }
 
-    public Integer[] Counting() {
-        int comparisons = 0;
-        int moves = 0;
-        long start = System.currentTimeMillis();
-
-        int[] count = new int[getMaior() + 1];
-        int[] ordenado = new int[n];
-
-        for (int i = 0; i < count.length; count[i] = 0, i++)
-            ;
-
-        for (int i = 0; i < n; count[array[i].getCapacidade()]++, i++)
-            ;
-
-        for (int i = 1; i < count.length; count[i] += count[i - 1], i++)
-            ;
-
-        for (int i = n - 1; i >= 0; ordenado[count[array[i].getCapacidade()] - 1] = array[i], count[array[i]
-                .getCapacidade()]--, i--)
-            ;
-
-        Integer[] out = new Integer[3];
-        out[0] = comparisons;
-        out[1] = moves;
-        out[2] = (int) System.currentTimeMillis() - (int) start;
-
-        return out;
-    }
-
     public Integer[] Insercao() {
         int comparisons = 0;
         int moves = 0;
@@ -502,13 +473,16 @@ class Lista {
         int moves = 0;
         long start = System.currentTimeMillis();
 
-        for (int tam = 2; tam <= n; tam++) {
+        for (int tam = 2; tam < n; tam++) {
+
             constroi(tam);
+
         }
 
         int tam = n;
 
         while (tam > 1) {
+            System.out.println(tam);
             swap(1, tam--);
             reconstroi(tam);
         }
@@ -525,6 +499,7 @@ class Lista {
         int i = tam;
         int first = 0;
         int second = 0;
+
         for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
             if (ch >= 'A' && ch <= 'Z') {
                 first += 1 + ch - 'A';
@@ -538,6 +513,7 @@ class Lista {
         }
 
         for (; i > 1 && first > second; i /= 2) {
+
             for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
                 if (ch >= 'A' && ch <= 'Z') {
                     first += 1 + ch - 'A';
@@ -637,7 +613,7 @@ public class Crawl {
 
         }
         Integer[] logs = new Integer[3];
-        logs = lista.Counting();
+        logs = lista.heapSort();
         try {
             FileWriter writer = new FileWriter("649884_heap.txt");
             writer.write("649884\t" + logs[0] + "\t" + logs[1] + "\t" + logs[2]);

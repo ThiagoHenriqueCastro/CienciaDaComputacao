@@ -25,18 +25,18 @@ class Time {
     private long tamanho;
 
     /**
-    * 
-    * @param nome nome do time
-    * @param apelido apelido do time
-    * @param estadio estadio do time
-    * @param tecnico apelido do time
-    * @param liga liga do time
-    * @param nomeArquivo nome do arquivo do time
-    * @param capacidade capacidade do estadio do time
-    * @param fundacaoDia fundacaoDia do time
-    * @param apelido apelido do time
-    * @return true se 'FIM' for encontrado
-    */
+     * 
+     * @param nome        nome do time
+     * @param apelido     apelido do time
+     * @param estadio     estadio do time
+     * @param tecnico     apelido do time
+     * @param liga        liga do time
+     * @param nomeArquivo nome do arquivo do time
+     * @param capacidade  capacidade do estadio do time
+     * @param fundacaoDia fundacaoDia do time
+     * @param apelido     apelido do time
+     * @return true se 'FIM' for encontrado
+     */
     public Time(String nome, String apelido, String estadio, String tecnico, String liga, String nomeArquivo,
             int capacidade, int fundacaoDia, int fundacaoMes, int fundacaoAno, long tamanho) {
 
@@ -432,7 +432,7 @@ class Lista {
         long start = System.currentTimeMillis();
 
         int[] count = new int[getMaior() + 1];
-        int[] ordenado = new int[n];
+        Time[] ordenado = new Time[n];
 
         for (int i = 0; i < count.length; count[i] = 0, i++)
             ;
@@ -444,8 +444,11 @@ class Lista {
             ;
 
         for (int i = n - 1; i >= 0; ordenado[count[array[i].getCapacidade()] - 1] = array[i]
-                .getCapacidade(), count[array[i].getCapacidade()]--, i--)
+                .clone(), count[array[i].getCapacidade()]--, i--)
             ;
+
+            array = ordenado.clone();
+            
 
         Integer[] out = new Integer[3];
         out[0] = comparisons;
