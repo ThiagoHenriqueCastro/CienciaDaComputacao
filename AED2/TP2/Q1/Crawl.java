@@ -23,7 +23,21 @@ class Time {
     // long
     private long tamanho;
 
-    // Constructor
+     /**
+    * 
+    * @param nome nome do time
+    * @param apelido apelido do time
+    * @param estadio estadio do time
+    * @param tecnico apelido do time
+    * @param liga liga do time
+    * @param nomeArquivo nome do arquivo do time
+    * @param capacidade capacidade do estadio do time
+    * @param fundacaoDia fundacaoDia do time
+    * @param fundacaoAno fundacaoAno do time
+    * @param fundacaoMes fundacaoMes do time
+    * @param tamanho tamanho do arquivo do time
+    * @return true se 'FIM' for encontrado
+    */
     public Time(String nome, String apelido, String estadio, String tecnico, String liga, String nomeArquivo,
             int capacidade, int fundacaoDia, int fundacaoMes, int fundacaoAno, long tamanho) {
 
@@ -186,6 +200,7 @@ public class Crawl {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
+        // preenche um array de nomes de arquivos
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -212,6 +227,7 @@ public class Crawl {
         String aux;
         int controller;
 
+        // para cada aquivo, o abre e extrai os dados da classe do mesmo
         for (int i = 0; i < inputIndex; i++) {
             try {
                 controller = 0;
@@ -257,7 +273,11 @@ public class Crawl {
         }
 
     }
-
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+    */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -266,20 +286,31 @@ public class Crawl {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o nome do time
+    */
     public static String crawlNome(String line) {
-
+        //splita a string em referencias proximas e pega o conteudo do meio
         String nome = "";
         String[] splitted = line.split(" Nickname\\(s\\)");
         nome = splitted[0];
         // MyIO.println(nome);
+        // remove strings inconvenientes que podem ter sobrado
         nome = nome.replace("&amp", "");
         nome = nome.replace("( ", "(");
         nome = nome.replace(" )", ")");
         nome = nome.replace(" &#91 1&#93", "");
         return nome;
     }
-
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o apelido do time
+    */
     public static String crawlApelido(String line) {
+        //splita a string em referencias proximas e pega o conteudo do meio
 
         String splitted[] = new String[1000];
 
@@ -294,7 +325,7 @@ public class Crawl {
         }
 
         value = splitted[0];
-
+        // remove strings inconvenientes que podem ter sobrado
         value = value.replace(" ,", ",");
         value = value.replace("( ", "(");
         value = value.replace(" )", ")");
@@ -307,8 +338,15 @@ public class Crawl {
 
         return value;
     }
-
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o die de fundacao do time
+    */
     public static int crawlDia(String line) {
+
+        //splita a string em referencias proximas e pega o conteudo do meio
+
         String splitted[] = new String[1000];
         String value = "";
         int resp = 0;
@@ -331,7 +369,11 @@ public class Crawl {
 
         return resp;
     }
-
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o mes de fundacao do time
+    */
     public static int crawlMes(String line) {
         String splitted[] = new String[1000];
         int mes = 0;
@@ -340,6 +382,7 @@ public class Crawl {
         splitted = line.split("Founded ");
         splitted = splitted[1].split(" ");
         value = splitted[1];
+        // Converte s escrita do mes para o inteiro respectivo
         if (value.matches(".*\\d.*")) {
             value = splitted[0];
         }
@@ -372,12 +415,17 @@ public class Crawl {
         }
         return mes;
     }
-
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o mes de fundacao do time
+    */
     public static int crawlAno(String line) {
-
+        // splita em referencias proximas e pega o conteudo entre as referencias
         String splitted[] = new String[1000];
         int resp = 0;
         String value = "";
+        // splita conforme a proxima referencia, o mes
         if (line.contains("January")) {
             splitted = line.split("January ");
         } else if (line.contains("February")) {
@@ -416,14 +464,19 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o nome do Estadio do time
+    */
     public static String crawlEstadio(String line) {
-
+        // splita em referencias e pega o conteudo
         String estadio = "";
         String[] splitted = line.split("Ground ");
         splitted = splitted[1].split("Capacity");
 
         estadio = splitted[0];
-
+        // retira inconveniencias da string resultante
         estadio = estadio.replace(" ,", ",");
 
         estadio = estadio.replace(" .", ".");
@@ -433,8 +486,13 @@ public class Crawl {
         return estadio;
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return a capacidade estadio do time
+    */
     public static int crawlCapacidade(String line) {
-
+        // split em referencias proximas 
         String capacidade = "";
         String[] splitted = line.split("Capacity ");
         splitted = splitted[1].split(" ");
@@ -447,15 +505,20 @@ public class Crawl {
         // MyIO.println(capacidade);
         return Integer.parseInt(capacidade);
     }
-
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return o tecnico do time
+    */
     public static String crawlTecnico(String line) {
+        // split em referencias proximas
         String tecnico = "";
         String[] splitted = line.contains("General manager") ? line.split("General manager")
                 : line.contains("Manager") ? line.split("Manager ")
                         : !line.contains("Coach ") ? line.split("Head coach ") : line.split("Coach ");
         splitted = line.contains("General manager") ? splitted[1].split("Chairman") : splitted[1].split("League");
         tecnico = splitted[0];
-
+        // retirando inconveniencias da string resultante
         tecnico = tecnico.replace("&#91 1&#93", "");
         tecnico = tecnico.replace("&#91 8&#93", "");
 
@@ -464,7 +527,13 @@ public class Crawl {
         return tecnico;
     }
 
+    /**
+     * 
+     * @param line string que devera ser verificada
+     * @return a liga do time
+    */
     public static String crawlLiga(String line) {
+        // split em referencias proximas
         String splitted[] = new String[1000];
         String resp = "";
         if (line.contains("Viktor")) {
@@ -485,10 +554,14 @@ public class Crawl {
 
         return resp;
     }
-
+    /**
+     * 
+     * @param html string que devera ser verificada
+     * @return string sem tags
+    */
     public static String removerTags(String html) {
         String resp = "";
-
+        // remove tags por regex em um html
         resp = html.replaceAll("\\<(/?[^\\>]+)\\>", " ").replaceAll("\\s+", " ").trim();
         resp = resp.replaceAll(";", " ").trim();
         resp = resp.replaceAll("&#160", " ").trim();

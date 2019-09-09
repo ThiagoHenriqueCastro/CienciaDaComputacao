@@ -24,7 +24,19 @@ class Time {
     // long
     private long tamanho;
 
-    // Constructor
+    /**
+    * 
+    * @param nome nome do time
+    * @param apelido apelido do time
+    * @param estadio estadio do time
+    * @param tecnico apelido do time
+    * @param liga liga do time
+    * @param nomeArquivo nome do arquivo do time
+    * @param capacidade capacidade do estadio do time
+    * @param fundacaoDia fundacaoDia do time
+    * @param apelido apelido do time
+    * @return true se 'FIM' for encontrado
+    */
     public Time(String nome, String apelido, String estadio, String tecnico, String liga, String nomeArquivo,
             int capacidade, int fundacaoDia, int fundacaoMes, int fundacaoAno, long tamanho) {
 

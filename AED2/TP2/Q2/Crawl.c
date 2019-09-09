@@ -204,6 +204,59 @@ int crawlMes(char *line)
     return out;
 }
 
+int crawlAno(char *line)
+{
+    int begin = 0;
+    int end = 0;
+    char output[10000];
+    char ano[50];
+    for (int i = 0; i < strlen(line); i++)
+    {
+        if (line[i] == 'F' && line[i + 1] == 'o' && line[i + 2] == 'u' && line[i + 3] == 'n' && line[i + 4] == 'd' && line[i + 5] == 'e' && line[i + 6] == 'd')
+        {
+            begin = i + 7;
+            i = strlen(line);
+        }
+    }
+    int cont = 0;
+    for (int i = begin; i < strlen(line); i++)
+    {
+        output[cont++] = line[i];
+    }
+
+    for (int i = 0; i < strlen(output); i++)
+    {
+        if (output[i] == ' ')
+        {
+            end = i - 1;
+            i = strlen(line);
+        }
+    }
+
+    for (int i = 0; i <= end; i++)
+    {
+        ano[i] = output[i];
+    }
+
+    /*
+    if(isalpha(dia[0])){
+
+    }
+    */
+    int out;
+    if (strstr(line, "January") || strstr(line, "February") || strstr(line, "March") || strstr(line, "April") || strstr(line, "May") || strstr(line, "June") || strstr(line, "July") || strstr(line, "September") || strstr(line, "August") || strstr(line, "October") || strstr(line, "November") || strstr(line, "July") || strstr(line, "December"))
+    {
+        out = atoi(ano);
+    }
+    else
+    {
+        out = 0;
+    }
+
+    return out;
+}
+
+
 int main(int argc, char const *argv[])
 {
     char input[ENTRY][LINE];
@@ -223,9 +276,9 @@ int main(int argc, char const *argv[])
     int dia;
     int mes;
     int ano;
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < inputIndex; i++)
     {
-        arq = fopen("A.F.C._Bournemouth.html", "r");
+        arq = fopen(input[i], "r");
         if (arq == NULL)
         {
             perror(input[i]);
