@@ -555,8 +555,59 @@ int binarySearch(char *chave, Lista lista[], int inicio, int fim)
     free(aux);
 }
 
-void selecaoRecursiva(Lista lista[], int i)
+void swap(int first, int second, Lista lista[])
 {
+    Time *temp;
+    temp = (Time *)malloc(sizeof(Time));
+
+    memccpy(temp, &(lista->array[first]), sizeof(Time), sizeof(Time));
+
+    //printf("%s\n", temp->nome);
+    // segundo para primeiro
+    strcpy(lista->array[first].nome, lista->array[second].nome);
+    strcpy(lista->array[first].apelido, lista->array[second].apelido);
+    strcpy(lista->array[first].estadio, lista->array[second].estadio);
+    strcpy(lista->array[first].tecnico, lista->array[second].tecnico);
+    strcpy(lista->array[first].liga, lista->array[second].liga);
+    strcpy(lista->array[first].nomeArquivo, lista->array[second].nomeArquivo);
+    lista->array[first].fundacaoDia = lista->array[second].fundacaoDia;
+    lista->array[first].fundacaoMes = lista->array[second].fundacaoMes;
+    lista->array[first].fundacaoAno = lista->array[second].fundacaoDia;
+    lista->array[first].paginaTam = lista->array[second].paginaTam;
+    lista->array[first].capacidade = lista->array[second].capacidade;
+
+    // temp para segundo
+
+    strcpy(lista->array[second].nome, temp->nome);
+    strcpy(lista->array[second].apelido, temp->apelido);
+    strcpy(lista->array[second].estadio, temp->estadio);
+    strcpy(lista->array[second].tecnico, temp->tecnico);
+    strcpy(lista->array[second].liga, temp->liga);
+    strcpy(lista->array[second].nomeArquivo, temp->nomeArquivo);
+    lista->array[second].fundacaoDia = temp->fundacaoDia;
+    lista->array[second].fundacaoMes = temp->fundacaoMes;
+    lista->array[second].fundacaoAno = temp->fundacaoDia;
+    lista->array[second].paginaTam = temp->paginaTam;
+    lista->array[second].capacidade = temp->capacidade;
+
+    free(temp);
+}
+
+void selectionsort(Lista lista[], int n)
+{
+    int i, im, tmp;
+    if (n > 1)
+    {
+        im = 0; //im = índice do maior valor
+        for (i = 1; i < n; i++)
+            if (lista->array[i].paginaTam > lista->array[im].paginaTam) //Seleciona o maior valor
+                im = i;
+        if (im != n - 1)
+        { //Efetua troca
+            swap(im, n - 1, lista);
+        }
+        selectionsort(lista, n - 1);
+    }
 }
 
 int main(int argc, char const *argv[])
@@ -593,6 +644,12 @@ int main(int argc, char const *argv[])
 
         free(time);
     }
+
+    // mostrar(lista);
+
+    selectionsort(lista, (lista->n));
+
+    mostrar(lista);
 
     free(lista);
 }
