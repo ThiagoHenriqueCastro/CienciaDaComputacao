@@ -15,7 +15,7 @@
 typedef struct Time
 {
     char nome[200];
-    char apelido[150];
+    char apelido[200];
     char estadio[100];
     char tecnico[100];
     char liga[100];
@@ -250,14 +250,15 @@ int ler(char *path, Time *time)
                     // printf("%s\n", nome);
                     strcpy((time)->nome, nome);
 
-                    //printf("%s\n", time->nome);
+                    // printf("%s\n", time->nome);
                 }
                 else if (strstr(campos[contador], "Nickname(s)") != NULL)
                 {
 
                     campos[contador] = removeTags(campos[contador]);
-
+                    //printf("%s\n", campos[contador]);
                     subString(campos[contador], 11, apelido);
+                    // printf("%s\n", apelido);
                     strcpy((time)->apelido, apelido);
                     // printf("%s\n", time->apelido);
                 }
@@ -408,10 +409,103 @@ int inserirFim(Lista lista[], Time *time)
     return 1;
 }
 
+int inserirInicio(Lista lista[], Time *time)
+{
+    if (lista->n > 1000)
+    {
+        perror("Erro ao inserir");
+        return (-1);
+    }
+
+    for (int i = lista->n; i > 0; i--)
+    {
+        lista->array[i] = lista->array[i - 1];
+    }
+
+    lista->array[0] = *time;
+
+    lista->n++;
+
+    return 1;
+}
+
+int inserir(Lista lista[], Time *time, int pos)
+{
+    if (lista->n > 1000)
+    {
+        perror("Erro ao inserir");
+        return (-1);
+    }
+
+    for (int i = lista->n; i > pos; i--)
+    {
+        lista->array[i] = lista->array[i - 1];
+    }
+
+    lista->array[pos] = *time;
+
+    lista->n++;
+
+    return 1;
+}
+
+char *removerFim(Lista lista[])
+{
+    if (lista->n <= 0)
+    {
+        perror("Erro ao remover");
+    }
+
+    char *resp = lista->array[lista->n - 1].nome;
+
+    lista->n--;
+
+    return resp;
+}
+
+char *removerInicio(Lista lista[])
+{
+    if (lista->n <= 0)
+    {
+        perror("Erro ao remover");
+    }
+
+    char *resp = lista->array[0].nome;
+
+    for (int i = 0; i < lista->n; i++)
+    {
+        lista->array[i] = lista->array[i + 1];
+    }
+
+    lista->n--;
+
+    return resp;
+}
+
+char *remover(Lista lista[], int pos)
+{
+    if (lista->n <= 0)
+    {
+        perror("Erro ao remover");
+    }
+
+    char *resp = lista->array[pos].nome;
+
+    for (int i = pos; i < lista->n; i++)
+    {
+        lista->array[i] = lista->array[i + 1];
+    }
+
+    lista->n--;
+
+    return resp;
+}
+
 void mostrar(Lista *lista)
 {
     for (int i = 0; i < lista->n; i++)
     {
+        printf("[%d] ", i);
         imprimir(&lista->array[i]);
     }
 }
@@ -445,11 +539,124 @@ int main(int argc, char const *argv[])
 
         ler(input[i], time);
         // imprimir(time);
-        // inserirFim(lista, time);
+        inserirFim(lista, time);
 
         free(time);
     }
 
+    char tam[5];
+    fgets(tam, 5, stdin);
+    int entry = atoi(tam);
+    //printf("%d", entry);
+
+    int indexCom = 0;
+    char comando[ENTRY][LINE];
+
+    do
+    {
+
+        fgets(comando[indexCom], LINE, stdin);
+    } while (isFim(comando[indexCom++]) == false);
+    indexCom--;
+
+    char *ops;
+    char *path;
+    char *pos;
+    char *correct;
+    char *remove;
+    for (int i = 0; i < entry; i++)
+    {
+        ops = (char *)malloc(50 * sizeof(char));
+        path = (char *)malloc(50 * sizeof(char));
+        pos = (char *)malloc(3 * sizeof(char));
+
+        strcpy(ops, comando[i]);
+
+        if (ops[0] == 'I')
+        {
+            if (ops[1] == '*')
+            {
+
+                subString_delimiter(ops, 3, 3, pos);
+                subString_delimiter(ops, 6, strlen(ops), path);
+
+                correct = strchr(path, '\n');
+                if (correct)
+                    *correct = 0;
+                time = (Time *)malloc(sizeof(Time));
+                if (time == NULL)
+                {
+                    return (-1);
+                }
+
+                ler(path, time);
+                inserir(lista, time, atoi(pos));
+                //imprimir(time);
+
+                free(time);
+
+                //printf("%s", path);
+            }
+            else if (ops[1] == 'F')
+            {
+                subString_delimiter(ops, 3, strlen(ops), path);
+                correct = strchr(path, '\n');
+                if (correct)
+                    *correct = 0;
+                time = (Time *)malloc(sizeof(Time));
+                if (time == NULL)
+                {
+                    return (-1);
+                }
+                ler(path, time);
+                inserirFim(lista, time);
+
+                free(time);
+                //printf("%s", path);
+            }
+            else
+            {
+                subString_delimiter(ops, 3, strlen(ops), path);
+                correct = strchr(path, '\n');
+                if (correct)
+                    *correct = 0;
+                time = (Time *)malloc(sizeof(Time));
+                if (time == NULL)
+                {
+                    return (-1);
+                }
+                ler(path, time);
+                inserirInicio(lista, time);
+
+                free(time);
+                //printf("%s", path);
+            }
+        }
+        else
+        {
+            if (ops[1] == 'F')
+            {
+                remove = removerFim(lista);
+
+                printf("(R) %s\n", remove);
+            }
+            else if (ops[1] == 'I')
+            {
+                remove = removerInicio(lista);
+                printf("(R) %s\n", remove);
+            }
+            else
+            {
+                subString_delimiter(ops, 3, strlen(ops), pos);
+                remove = remover(lista, atoi(pos));
+                printf("(R) %s\n", remove);
+                //printf("%s", pos);
+            }
+        }
+        free(pos);
+        free(ops);
+        free(path);
+    }
     mostrar(lista);
 
     free(lista);

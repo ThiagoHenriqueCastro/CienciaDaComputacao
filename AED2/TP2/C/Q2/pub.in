@@ -1,49 +1,48 @@
-/tmp/times/A.F.C._Bournemouth.html
-/tmp/times/Aldosivi.html
-/tmp/times/Brighton_&_Hove_Albion_F.C..html
-/tmp/times/C.D._Cobresal.html
-/tmp/times/Cardiff_Metropolitan_University_F.C..html
-/tmp/times/Club_Brugge_KV.html
-/tmp/times/Deportes_Tolima.html
-/tmp/times/Deportivo_Pasto.html
-/tmp/times/Estudiantes_de_La_Plata.html
-/tmp/times/Europa_F.C..html
-/tmp/times/FC_Banik_Ostrava.html
-/tmp/times/FC_Groningen.html
-/tmp/times/FC_Inter_Turku.html
-/tmp/times/FC_Kaisar.html
-/tmp/times/FC_Spartak_Trnava.html
-/tmp/times/FK_Belasica.html
-/tmp/times/FK_Iskra_Danilovgrad.html
-/tmp/times/FK_Napredak_Krusevac.html
-/tmp/times/Hammarby_Fotboll.html
-/tmp/times/Hapoel_Be'er_Sheva_F.C..html
-/tmp/times/IK_Sirius_Fotboll.html
+/tmp/times/AFC_Ajax.html
+/tmp/times/Clube_Atletico_Mineiro.html
+/tmp/times/Cruzeiro_Esporte_Clube.html
+/tmp/times/FC_Barcelona.html
 /tmp/times/Inter_Milan.html
-/tmp/times/KF_Drenica.html
-/tmp/times/KF_Flamurtari.html
-/tmp/times/KF_Tirana.html
-/tmp/times/Kuopion_Palloseura.html
-/tmp/times/Luftetari_Gjirokaster_FC.html
-/tmp/times/Malmo_FF.html
-/tmp/times/NK_Celik_Zenica.html
-/tmp/times/NK_Domzale.html
-/tmp/times/OGC_Nice.html
-/tmp/times/Odense_Boldklub.html
-/tmp/times/Olympique_de_Marseille.html
-/tmp/times/Oriente_Petrolero.html
-/tmp/times/PFC_CSKA_Moscow.html
-/tmp/times/PSV_Eindhoven.html
-/tmp/times/Paris_Saint-Germain_F.C..html
-/tmp/times/RB_Leipzig.html
-/tmp/times/Rampla_Juniors.html
 /tmp/times/Real_Madrid_CF.html
-/tmp/times/Rio_Ave_F.C..html
-/tmp/times/Royn.html
-/tmp/times/SD_Eibar.html
-/tmp/times/SK_Slavia_Prague.html
-/tmp/times/San_Lorenzo_de_Almagro.html
-/tmp/times/Tromso_IL.html
-/tmp/times/Vitoria_S.C..html
-/tmp/times/Wisla_Plock.html
+/tmp/times/Caernarfon_Town_F.C.html
+/tmp/times/FK_Iskra_Danilovgrad.html
+/tmp/times/Royal_Antwerp_F.C..html
+/tmp/times/CR_Vasco_da_Gama.html
+/tmp/times/Cefn_Druids_A.F.C..html
 FIM
+35
+II /tmp/times/SK_Rapid_Wien.html
+IF /tmp/times/FC_Encamp.html
+II /tmp/times/Alianza_Universidad.html
+II /tmp/times/Rio_Ave_F.C..html
+II /tmp/times/AS_Saint-Etienne.html
+II /tmp/times/Gremio_Foot-Ball_Porto_Alegrense.html
+II /tmp/times/Curico_Unido.html
+IF /tmp/times/C.D._El_Nacional.html
+II /tmp/times/Angers_SCO.html
+II /tmp/times/C.A._Cerro.html
+II /tmp/times/FK_Kukesi.html
+IF /tmp/times/HNK_Rijeka.html
+IF /tmp/times/Maccabi_Haifa_F.C..html
+R* 12
+RI
+RF
+R* 13
+I* 13 /tmp/times/SC_Heerenveen.html
+I* 14 /tmp/times/Anorthosis_Famagusta_FC.html
+II /tmp/times/Mosta_F.C..html
+II /tmp/times/Villarreal_CF.html
+RF
+II /tmp/times/Central_Cordoba_de_Santiago_del_Estero.html
+II /tmp/times/C.D._Tondela.html
+II /tmp/times/OHiggins_F.C..html
+I* 20 /tmp/times/Sligo_Rovers_F.C..html
+I* 20 /tmp/times/S.D._Aucas.html
+I* 21 /tmp/times/K.R.C._Genk.html
+I* 22 /tmp/times/West_Ham_United_F.C..html
+I* 23 /tmp/times/FC_Alashkert.html
+R* 10
+R* 10
+R* 11
+R* 12
+R* 13
