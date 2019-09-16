@@ -610,6 +610,20 @@ void selectionsort(Lista lista[], int n)
     }
 }
 
+void bubbleSort(Lista lista[])
+{
+    for (int i = (lista->n - 1); i > 0; i--)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            if (strcmp(lista->array[j].liga, lista->array[j + 1].liga) > 0)
+            {
+                swap((j + 1), j, lista);
+            }
+        }
+    }
+}
+
 int main(int argc, char const *argv[])
 {
 
@@ -648,6 +662,8 @@ int main(int argc, char const *argv[])
     // mostrar(lista);
 
     selectionsort(lista, (lista->n));
+
+    // bubbleSort(lista);
 
     mostrar(lista);
 
