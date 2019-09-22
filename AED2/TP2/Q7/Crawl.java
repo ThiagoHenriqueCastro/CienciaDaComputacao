@@ -1,3 +1,11 @@
+
+/**
+ * TP01P2Q07 Pesquisa Sequencial em Java
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// Classe Time
 class Time {
     // Strings
     private String nome;
@@ -146,6 +155,9 @@ class Time {
         this.tamanho = valor;
     }
 
+    /**
+     * Clona uma instancia do objeto Time e a retorna
+     */
     public Time clone() {
         Time resp = new Time();
 
@@ -198,6 +210,11 @@ class Time {
         MyIO.print(getTamanho() + " ## \n");
     }
 
+    /**
+     * Le um arquivo html e os aloca nas variaveis da classe time
+     * 
+     * @param path caminho do arquivo
+     */
     public void ler(String path) {
         String html = "";
         String table = "";
@@ -240,6 +257,7 @@ class Time {
     }
 }
 
+// Classe Pilha e seus metodos
 class Pilha {
     private Time[] array;
     private int topo;
@@ -282,6 +300,7 @@ class Pilha {
     }
 }
 
+// Classe Lista e seus metodos
 class Lista {
     private Time[] array;
     private int n;
@@ -388,10 +407,13 @@ class Lista {
     public String PesquisaSequencial(String chave) {
         String out = "NÃO";
         for (int i = 0; i < n; i++) {
+            System.out.println(chave);
+            System.out.println(array[i].getNome());
             if (array[i].getNome().equals(chave)) {
                 out = "SIM";
-                i = n;
+                // i = n;
             }
+
         }
 
         return out;
@@ -403,6 +425,7 @@ public class Crawl {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
+        // Preenche o vetor de entradas e para cada uma le o arquivo
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -410,6 +433,7 @@ public class Crawl {
 
         Lista lista = new Lista(1000);
         Time time;
+        // para cada operacao, chama o metodo respectivo na lista
         for (int i = 0; i < inputIndex; i++) {
 
             time = new Time();
@@ -440,6 +464,9 @@ public class Crawl {
 
     }
 
+    /**
+     * verifica se é o fim do arquivo
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -448,6 +475,11 @@ public class Crawl {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return nome estraido do arquivo
+     */
     public static String crawlNome(String line) {
 
         String nome = "";
@@ -461,6 +493,11 @@ public class Crawl {
         return nome;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return apelido estraido do arquivo
+     */
     public static String crawlApelido(String line) {
 
         String splitted[] = new String[1000];
@@ -491,6 +528,11 @@ public class Crawl {
         return value;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return dia extraido do arquivo
+     */
     public static int crawlDia(String line) {
         String splitted[] = new String[1000];
         String value = "";
@@ -515,6 +557,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return mes extraido do arquivo
+     */
     public static int crawlMes(String line) {
         String splitted[] = new String[1000];
         int mes = 0;
@@ -556,6 +603,11 @@ public class Crawl {
         return mes;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return ano extraido do arquivo
+     */
     public static int crawlAno(String line) {
 
         String splitted[] = new String[1000];
@@ -599,6 +651,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return estadio extraido do arquivo
+     */
     public static String crawlEstadio(String line) {
 
         String estadio = "";
@@ -616,6 +673,11 @@ public class Crawl {
         return estadio;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return capacidade extraida do arquivo
+     */
     public static int crawlCapacidade(String line) {
 
         String capacidade = "";
@@ -636,11 +698,18 @@ public class Crawl {
         return Integer.parseInt(capacidade);
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return tecnico extraido do arquivo
+     */
     public static String crawlTecnico(String line) {
         String tecnico = "";
+        // System.out.println(line);
         String[] splitted = line.contains("General manager") ? line.split("General manager")
                 : line.contains("Manager") ? line.split("Manager ")
                         : !line.contains("Coach ") ? line.split("Head coach ") : line.split("Coach ");
+
         splitted = line.contains("General manager") ? splitted[1].split("Chairman") : splitted[1].split("League");
         tecnico = splitted[0];
 
@@ -652,6 +721,11 @@ public class Crawl {
         return tecnico;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return Liga extraido do arquivo
+     */
     public static String crawlLiga(String line) {
         String splitted[] = new String[1000];
         String resp = "";
@@ -674,6 +748,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser tratada
+     * @return a mesma linha sem tags html
+     */
     public static String removerTags(String html) {
         String resp = "";
 

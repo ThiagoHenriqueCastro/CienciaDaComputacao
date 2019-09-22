@@ -1,10 +1,17 @@
-#define _GNU_SOURCE
+/**
+ * TP01P2Q10 Selecao Recursiva em C
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma lista de Times
+ * Apos isso, faz ordenacao na mesma
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <locale.h>
+#include <time.h>
 
 #define LINE 1000
 #define ENTRY 1000
@@ -14,6 +21,9 @@
 #define true 1
 #define boolean short
 
+/*
+* Definiçao da Struct Time
+*/
 typedef struct Time
 {
     char nome[200];
@@ -29,6 +39,9 @@ typedef struct Time
     long paginaTam;
 } Time;
 
+/*
+* Definiçao da Struct Lista
+*/
 typedef struct Lista
 {
     Time array[1000];
@@ -36,6 +49,9 @@ typedef struct Lista
 
 } Lista;
 
+/*
+* Recebe a linha e verifica se a mesma é o fim do arquivo;
+*/
 boolean isFim(char *line)
 {
     boolean resp = false;
@@ -45,6 +61,9 @@ boolean isFim(char *line)
     return resp;
 }
 
+/*
+* Recebe a linha e a quebra em tokens, com base em um delimiter
+*/
 char *multi_tok(char *input, char *delimiter)
 {
     static char *string;
@@ -69,6 +88,9 @@ char *multi_tok(char *input, char *delimiter)
     return temp;
 }
 
+/*
+* recebe uma string e remove tags da mesma, verificando o ponto de abertura e fechamento de tags
+*/
 char *removeTags(char *input)
 {
     int idx = 0;
@@ -93,6 +115,9 @@ char *removeTags(char *input)
     return input;
 }
 
+/*
+* Recebe a linha, um offset e o destino do substring. Pega o conteudo dentro da string;
+*/
 char *subString(const char *input, int offset, char *dest)
 {
     int input_len = strlen(input);
@@ -103,6 +128,9 @@ char *subString(const char *input, int offset, char *dest)
     return dest;
 }
 
+/*
+* Recebe a linha da liga e corrige uma quebra de linha nao intencional
+*/
 void handle_liga(char *input)
 {
     for (int i = 0; i < strlen(input); i++)
@@ -122,6 +150,10 @@ void handle_liga(char *input)
     input[strlen(input)] = 0;
 }
 
+/*
+* Recebe a linha, um offset e o destino do substring. Pega o conteudo dentro da string;
+* Desta vez, podemos determinar um limite para a substring
+*/
 char *subString_delimiter(const char *input, int offset, int len, char *dest)
 {
     int input_len = strlen(input);
@@ -130,6 +162,9 @@ char *subString_delimiter(const char *input, int offset, int len, char *dest)
     return dest;
 }
 
+/*
+* Recebe a linha e verifica qual mes esta na mesma, o convertendo para seu valor inteiro em datas
+*/
 int getMes(char *campo)
 {
     int resp = 0;
@@ -189,6 +224,9 @@ void imprimir(Time *time)
     printf("%s ## %s ## %d/%d/%d ## %s ## %d ## %s ## %s ## %s ## %lu ##\n", time->nome, time->apelido, time->fundacaoDia, time->fundacaoMes, time->fundacaoAno, time->estadio, time->capacidade, time->tecnico, time->liga, time->nomeArquivo, time->paginaTam);
 }
 
+/*
+* Abre e le um html, nele vai pegando as informaçoes e colocando no Time
+*/
 int ler(char *path, Time *time)
 {
     //printf("%s\n", path);
@@ -211,18 +249,24 @@ int ler(char *path, Time *time)
         perror(path);
         return (-1);
     }
-    char *html;
-    char *line;
+    char *html = NULL;
+    char *line = NULL;
+    int flag = 0;
     size_t len = 0;
-    while (!feof(arq))
+    while (!feof(arq) && flag != 1)
     {
         getline(&html, &len, arq);
 
+        /*
+        * Essa linha contem todas as informaçoes necessarias
+        */
         if (strstr(html, "Full name") != NULL)
         {
-
+            flag = 1;
             line = html;
-
+            /*
+            * Trata a linha, splittando
+            */
             char *resp = strstr(line, "Full name");
 
             char *token = multi_tok(resp, "<tr>");
@@ -241,7 +285,10 @@ int ler(char *path, Time *time)
 
             contador = 0;
             //
-
+            /*
+            * Mapeia toda a linha, cada vez pegando cada informaçao
+            * Ao encontrar a informaçao, é feito um substring e a remocao das tags
+            */
             do
             {
                 if (strstr(campos[contador], "Full name") != NULL)
@@ -362,7 +409,18 @@ int ler(char *path, Time *time)
                         split = multi_tok(NULL, " ");
                     }
 
-                    capacidade = atoi(splitted[0]);
+                    char *capacity_rcv = splitted[0];
+                    char capacity_out[strlen(capacity_rcv)];
+                    int cont = 0;
+                    for (int i = 0; i < strlen(capacity_rcv); i++)
+                    {
+                        if (!ispunct(capacity_rcv[i]))
+                        {
+                            capacity_out[cont++] = capacity_rcv[i];
+                        }
+                    }
+                    // printf("%s\n", capacity_out);
+                    capacidade = atoi(capacity_out);
                     (time)->capacidade = capacidade;
                     //  printf("%d\n", time->capacidade);
                 }
@@ -394,10 +452,13 @@ int ler(char *path, Time *time)
             time->paginaTam = sz;
         }
     }
-    return 1;
     fclose(arq);
+    return 1;
 }
 
+/*
+* Abaixo sao realiazadas as operacoes da lista
+*/
 int inserirFim(Lista lista[], Time *time)
 {
     if (lista->n > 1000)
@@ -507,54 +568,12 @@ void mostrar(Lista *lista)
 {
     for (int i = 0; i < lista->n; i++)
     {
-        printf("[%d] ", i);
         imprimir(&lista->array[i]);
     }
 }
-
-int binarySearch(char *chave, Lista lista[], int inicio, int fim)
-{
-    int valorChave = 0;
-    int valorLista = 0;
-    char *aux;
-
-    //printf("%d e %d\n", inicio, fim);
-
-    aux = (char *)malloc(200 * sizeof(char));
-
-    if (inicio > fim)
-    {
-        return 0;
-    }
-    int meio = (inicio + fim) / 2;
-
-    strcpy(aux, lista->array[meio].nome);
-
-    //printf("%s\n", lista->array[meio].nome);
-    //printf("%s\n", chave);
-    // printf("%lu\n", strlen(aux));
-    // printf("%lu\n", strlen(chave));
-
-    if (strcmp(aux, chave) == 0)
-    {
-
-        return 1;
-    }
-    else
-    {
-        if (strcmp(lista->array[meio].nome, chave) < 0)
-        {
-            return binarySearch(chave, lista, meio + 1, fim);
-        }
-        else
-        {
-            return binarySearch(chave, lista, inicio, meio - 1);
-        }
-    }
-
-    free(aux);
-}
-
+/*
+* Troca entre elementos do vetor
+*/
 void swap(int first, int second, Lista lista[])
 {
     Time *temp;
@@ -593,93 +612,28 @@ void swap(int first, int second, Lista lista[])
     free(temp);
 }
 
-void selectionsort(Lista lista[], int n)
+/*
+* Selecao Recursiva
+*/
+int selectionsort(Lista lista[], int n)
 {
-    int i, im, tmp;
+    int i, im, tmp, comp;
     if (n > 1)
     {
         im = 0; //im = índice do maior valor
         for (i = 1; i < n; i++)
-            if (lista->array[i].paginaTam > lista->array[im].paginaTam) //Seleciona o maior valor
+            if (lista->array[i].paginaTam > lista->array[im].paginaTam)
+            {
                 im = i;
+            } //Seleciona o maior valor
+
         if (im != n - 1)
         { //Efetua troca
             swap(im, n - 1, lista);
         }
-        selectionsort(lista, n - 1);
+        comp += 1 + selectionsort(lista, n - 1);
+        return comp;
     }
-}
-
-void bubbleSort(Lista lista[])
-{
-    for (int i = (lista->n - 1); i > 0; i--)
-    {
-        for (int j = 0; j < i; j++)
-        {
-            if (strcmp(lista->array[j].liga, lista->array[j + 1].liga) > 0)
-            {
-                swap((j + 1), j, lista);
-            }
-        }
-    }
-}
-
-int findLargestNum(Lista lista[])
-{
-
-    int i;
-    int largestNum = -1;
-
-    for (i = 0; i < lista->n; i++)
-    {
-        if (lista->array[i].paginaTam > largestNum)
-            largestNum = lista->array[i].paginaTam;
-    }
-
-    return largestNum;
-}
-
-void radixSort(Lista lista[])
-{
-
-    //  printf("\n\nRunning Radix Sort on Unsorted List!\n\n");
-
-    // Base 10 is used
-    int i;
-    Time *semiSorted;
-    semiSorted = (Time *)malloc(lista->n * sizeof(Time));
-    int significantDigit = 1;
-    int largestNum = findLargestNum(lista);
-
-    // Loop until we reach the largest significant digit
-    while (largestNum / significantDigit > 0)
-    {
-
-        int bucket[10] = {0};
-
-        // Counts the number of "keys" or digits that will go into each bucket
-        for (i = 0; i < lista->n; i++)
-            bucket[(lista->array[i].paginaTam / significantDigit) % 10]++;
-
-        /**
-     * Add the count of the previous buckets,
-     * Acquires the indexes after the end of each bucket location in the array
-		 * Works similar to the count sort algorithm
-     **/
-        for (i = 1; i < 10; i++)
-            bucket[i] += bucket[i - 1];
-
-        // Use the bucket to fill a "semiSorted" array
-        for (i = lista->n - 1; i >= 0; i--)
-            semiSorted[--bucket[(lista->array[i].paginaTam / significantDigit) % 10]] = lista->array[i];
-
-        for (i = 0; i < lista->n; i++)
-            lista->array[i] = semiSorted[i];
-
-        // Move to next significant digit
-        significantDigit *= 10;
-    }
-    free(semiSorted);
 }
 
 int main(int argc, char const *argv[])
@@ -691,7 +645,9 @@ int main(int argc, char const *argv[])
     Time *time;
     Lista *lista = (Lista *)malloc(sizeof(Lista));
     lista->n = 0;
-
+    /*
+    * Preenche um vetor com as entradas
+    */
     do
     {
 
@@ -699,6 +655,9 @@ int main(int argc, char const *argv[])
     } while (isFim(input[inputIndex++]) == false);
     inputIndex--;
     char *newline;
+    /*
+    * Para cada entrada, le e inseri o Time na lista
+    */
     for (int i = 0; i < inputIndex; i++)
     {
         newline = strchr(input[i], '\n');
@@ -718,12 +677,15 @@ int main(int argc, char const *argv[])
     }
 
     // mostrar(lista);
+    // selecao
+    clock_t comeco = clock();
+    int comp = selectionsort(lista, (lista->n));
+    double total = (clock() - comeco) / (double)CLOCKS_PER_SEC / 1000;
 
-    // selectionsort(lista, (lista->n));
-
-    //bubbleSort(lista);
-
-    radixSort(lista);
+    FILE *log = fopen("649884_selecaoRecursiva.txt", "w");
+    fprintf(log, "649884\t%f\t%d", total, comp);
+    fclose(log);
+    // bubbleSort(lista);
 
     mostrar(lista);
 

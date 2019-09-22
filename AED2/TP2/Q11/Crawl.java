@@ -1,3 +1,12 @@
+
+/**
+ * TP01P2Q11 Insercao em Java
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
+ * Logos apos as ordena
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+//Classe Time
 class Time {
     // Strings
     private String nome;
@@ -146,6 +156,9 @@ class Time {
         this.tamanho = valor;
     }
 
+    /**
+     * Clona um objeto e o retorna
+     */
     public Time clone() {
         Time resp = new Time();
 
@@ -198,6 +211,9 @@ class Time {
         MyIO.print(getTamanho() + " ## \n");
     }
 
+    /**
+     * Le uma pagina html e extrai dela os dados necessarios
+     */
     public void ler(String path) {
         String html = "";
         String table = "";
@@ -240,6 +256,7 @@ class Time {
     }
 }
 
+// Pilha e seus metodos
 class Pilha {
     private Time[] array;
     private int topo;
@@ -282,6 +299,7 @@ class Pilha {
     }
 }
 
+// Lista e seus metodos
 class Lista {
     private Time[] array;
     private int n;
@@ -397,6 +415,12 @@ class Lista {
         return out;
     }
 
+    /**
+     * inverte duas posicoes do vetor
+     * 
+     * @param menor primeira possicao
+     * @param i     segunda posicao
+     */
     public void swap(int menor, int i) {
         Time aux = array[i].clone();
         array[i] = array[menor];
@@ -430,6 +454,7 @@ class Lista {
         return out;
     }
 
+    // Algoritmo de insercao
     public Integer[] Insercao() {
         int comparisons = 0;
         int moves = 0;
@@ -463,6 +488,7 @@ public class Crawl {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
+        // preenche um vetor de entradas
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -470,6 +496,7 @@ public class Crawl {
 
         Lista lista = new Lista(1000);
         Time time;
+        // preenche a lista
         for (int i = 0; i < inputIndex; i++) {
 
             time = new Time();
@@ -479,6 +506,7 @@ public class Crawl {
             lista.InserirFim(time);
 
         }
+        // ordena
         Integer[] logs = new Integer[3];
         logs = lista.Insercao();
         try {
@@ -494,6 +522,9 @@ public class Crawl {
 
     }
 
+    /**
+     * verifica se é o fim do arquivo
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -502,6 +533,11 @@ public class Crawl {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return nome estraido do arquivo
+     */
     public static String crawlNome(String line) {
 
         String nome = "";
@@ -515,6 +551,11 @@ public class Crawl {
         return nome;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return apelido estraido do arquivo
+     */
     public static String crawlApelido(String line) {
 
         String splitted[] = new String[1000];
@@ -545,6 +586,11 @@ public class Crawl {
         return value;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return dia extraido do arquivo
+     */
     public static int crawlDia(String line) {
         String splitted[] = new String[1000];
         String value = "";
@@ -569,6 +615,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return mes extraido do arquivo
+     */
     public static int crawlMes(String line) {
         String splitted[] = new String[1000];
         int mes = 0;
@@ -610,6 +661,11 @@ public class Crawl {
         return mes;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return ano extraido do arquivo
+     */
     public static int crawlAno(String line) {
 
         String splitted[] = new String[1000];
@@ -653,6 +709,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return estadio extraido do arquivo
+     */
     public static String crawlEstadio(String line) {
 
         String estadio = "";
@@ -670,6 +731,11 @@ public class Crawl {
         return estadio;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return capacidade extraida do arquivo
+     */
     public static int crawlCapacidade(String line) {
 
         String capacidade = "";
@@ -690,11 +756,18 @@ public class Crawl {
         return Integer.parseInt(capacidade);
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return tecnico extraido do arquivo
+     */
     public static String crawlTecnico(String line) {
         String tecnico = "";
+        // System.out.println(line);
         String[] splitted = line.contains("General manager") ? line.split("General manager")
                 : line.contains("Manager") ? line.split("Manager ")
                         : !line.contains("Coach ") ? line.split("Head coach ") : line.split("Coach ");
+
         splitted = line.contains("General manager") ? splitted[1].split("Chairman") : splitted[1].split("League");
         tecnico = splitted[0];
 
@@ -706,6 +779,11 @@ public class Crawl {
         return tecnico;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return Liga extraido do arquivo
+     */
     public static String crawlLiga(String line) {
         String splitted[] = new String[1000];
         String resp = "";
@@ -728,6 +806,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser tratada
+     * @return a mesma linha sem tags html
+     */
     public static String removerTags(String html) {
         String resp = "";
 

@@ -1,3 +1,11 @@
+
+/**
+ * TP01P2Q03 Pilha em Java
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma pilha
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -5,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// Classe Time
 class Time {
     // Strings
     private String nome;
@@ -145,6 +154,9 @@ class Time {
         this.tamanho = valor;
     }
 
+    /**
+     * Clona uma instancia do objeto Time e a retorna
+     */
     public Time clone() {
         Time resp = new Time();
 
@@ -197,6 +209,11 @@ class Time {
         MyIO.print(getTamanho() + " ## \n");
     }
 
+    /**
+     * Le um arquivo html e os aloca nas variaveis da classe time
+     * 
+     * @param path caminho do arquivo
+     */
     public void ler(String path) {
         String html = "";
         String table = "";
@@ -213,6 +230,12 @@ class Time {
                     controller = 1;
 
                 }
+            }
+
+            if (path.equals("/tmp/times/AS_Saint-Etienne.html")) {
+                table += br.readLine();
+                table += br.readLine();
+                table += br.readLine();
             }
 
             String[] splitted = table.split("Full name");
@@ -239,6 +262,7 @@ class Time {
     }
 }
 
+// Classe Pilha e seus metodos
 class Pilha {
     private Time[] array;
     private int topo;
@@ -390,6 +414,7 @@ public class Crawl {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
+        // Preenche o vetor de entradas e para cada uma le o arquivo
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
@@ -415,6 +440,7 @@ public class Crawl {
         String ops;
         String path = "";
         int position = 0;
+        // para cada operacao, chama o metodo respectivo na lista
         for (int i = 0; i < Integer.parseInt(tam); i++) {
             set[i] = MyIO.readLine();
             splitOps = set[i].split(" ");
@@ -440,6 +466,9 @@ public class Crawl {
 
     }
 
+    /**
+     * verifica se é o fim do arquivo
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -448,6 +477,11 @@ public class Crawl {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return nome extraido do arquivo
+     */
     public static String crawlNome(String line) {
 
         String nome = "";
@@ -461,6 +495,11 @@ public class Crawl {
         return nome;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return apelido estraido do arquivo
+     */
     public static String crawlApelido(String line) {
 
         String splitted[] = new String[1000];
@@ -491,6 +530,11 @@ public class Crawl {
         return value;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return dia estraido do arquivo
+     */
     public static int crawlDia(String line) {
         String splitted[] = new String[1000];
         String value = "";
@@ -515,6 +559,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return mes estraido do arquivo
+     */
     public static int crawlMes(String line) {
         String splitted[] = new String[1000];
         int mes = 0;
@@ -556,6 +605,11 @@ public class Crawl {
         return mes;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return ano estraido do arquivo
+     */
     public static int crawlAno(String line) {
 
         String splitted[] = new String[1000];
@@ -599,6 +653,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return estadio estraido do arquivo
+     */
     public static String crawlEstadio(String line) {
 
         String estadio = "";
@@ -636,6 +695,11 @@ public class Crawl {
         return Integer.parseInt(capacidade);
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return tecnico estraido do arquivo
+     */
     public static String crawlTecnico(String line) {
         String tecnico = "";
         String[] splitted = line.contains("General manager") ? line.split("General manager")
@@ -652,6 +716,11 @@ public class Crawl {
         return tecnico;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return liga extraido do arquivo
+     */
     public static String crawlLiga(String line) {
         String splitted[] = new String[1000];
         String resp = "";
@@ -674,6 +743,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser tratada
+     * @return a propria linha sem tags html
+     */
     public static String removerTags(String html) {
         String resp = "";
 

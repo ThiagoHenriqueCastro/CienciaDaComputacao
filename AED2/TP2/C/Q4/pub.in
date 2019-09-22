@@ -11,39 +11,38 @@
 /tmp/times/Cefn_Druids_A.F.C..html
 FIM
 35
-I /tmp/times/SK_Rapid_Wien.html
-I /tmp/times/FC_Encamp.html
-I /tmp/times/Alianza_Universidad.html
-I /tmp/times/Rio_Ave_F.C..html
-I /tmp/times/AS_Saint-Etienne.html
-I /tmp/times/Gremio_Foot-Ball_Porto_Alegrense.html
-I /tmp/times/Curico_Unido.html
-I /tmp/times/C.D._El_Nacional.html
-I /tmp/times/Angers_SCO.html
-I /tmp/times/C.A._Cerro.html
-I /tmp/times/FK_Kukesi.html
-I /tmp/times/HNK_Rijeka.html
-I /tmp/times/Maccabi_Haifa_F.C..html
-R
-R
-R
-R
-I /tmp/times/SC_Heerenveen.html
-I /tmp/times/Anorthosis_Famagusta_FC.html
-I /tmp/times/Mosta_F.C..html
-I /tmp/times/Villarreal_CF.html
-R
-I /tmp/times/Central_Cordoba_de_Santiago_del_Estero.html
-I /tmp/times/C.D._Tondela.html
-I /tmp/times/OHiggins_F.C..html
-I /tmp/times/Sligo_Rovers_F.C..html
-I /tmp/times/S.D._Aucas.html
-I /tmp/times/K.R.C._Genk.html
-I /tmp/times/West_Ham_United_F.C..html
-I /tmp/times/FC_Alashkert.html
-R
-R
-R
-R
-R
-
+II /tmp/times/SK_Rapid_Wien.html
+IF /tmp/times/FC_Encamp.html
+II /tmp/times/Alianza_Universidad.html
+II /tmp/times/Rio_Ave_F.C..html
+II /tmp/times/AS_Saint-Etienne.html
+II /tmp/times/Gremio_Foot-Ball_Porto_Alegrense.html
+II /tmp/times/Curico_Unido.html
+IF /tmp/times/C.D._El_Nacional.html
+II /tmp/times/Angers_SCO.html
+II /tmp/times/C.A._Cerro.html
+II /tmp/times/FK_Kukesi.html
+IF /tmp/times/HNK_Rijeka.html
+IF /tmp/times/Maccabi_Haifa_F.C..html
+R* 12
+RI
+RF
+R* 13
+I* 13 /tmp/times/SC_Heerenveen.html
+I* 14 /tmp/times/Anorthosis_Famagusta_FC.html
+II /tmp/times/Mosta_F.C..html
+II /tmp/times/Villarreal_CF.html
+RF
+II /tmp/times/Central_Cordoba_de_Santiago_del_Estero.html
+II /tmp/times/C.D._Tondela.html
+II /tmp/times/OHiggins_F.C..html
+I* 20 /tmp/times/Sligo_Rovers_F.C..html
+I* 20 /tmp/times/S.D._Aucas.html
+I* 21 /tmp/times/K.R.C._Genk.html
+I* 22 /tmp/times/West_Ham_United_F.C..html
+I* 23 /tmp/times/FC_Alashkert.html
+R* 10
+R* 10
+R* 11
+R* 12
+R* 13

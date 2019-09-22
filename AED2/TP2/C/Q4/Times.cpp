@@ -1,4 +1,9 @@
-#define _GNU_SOURCE
+/**
+ * TP01P2Q04 Lista com alocaçao sequencial em C
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma lista de Times
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +19,9 @@
 #define true 1
 #define boolean short
 
+/*
+* Definiçao da Struct Time
+*/
 typedef struct Time
 {
     char nome[200];
@@ -29,6 +37,9 @@ typedef struct Time
     long paginaTam;
 } Time;
 
+/*
+* Definiçao da Struct Lista
+*/
 typedef struct Lista
 {
     Time array[1000];
@@ -36,6 +47,9 @@ typedef struct Lista
 
 } Lista;
 
+/*
+* Recebe a linha e verifica se a mesma é o fim do arquivo;
+*/
 boolean isFim(char *line)
 {
     boolean resp = false;
@@ -45,6 +59,9 @@ boolean isFim(char *line)
     return resp;
 }
 
+/*
+* Recebe a linha e a quebra em tokens, com base em um delimiter
+*/
 char *multi_tok(char *input, char *delimiter)
 {
     static char *string;
@@ -69,6 +86,9 @@ char *multi_tok(char *input, char *delimiter)
     return temp;
 }
 
+/*
+* recebe uma string e remove tags da mesma, verificando o ponto de abertura e fechamento de tags
+*/
 char *removeTags(char *input)
 {
     int idx = 0;
@@ -93,6 +113,9 @@ char *removeTags(char *input)
     return input;
 }
 
+/*
+* Recebe a linha, um offset e o destino do substring. Pega o conteudo dentro da string;
+*/
 char *subString(const char *input, int offset, char *dest)
 {
     int input_len = strlen(input);
@@ -103,6 +126,9 @@ char *subString(const char *input, int offset, char *dest)
     return dest;
 }
 
+/*
+* Recebe a linha da liga e corrige uma quebra de linha nao intencional
+*/
 void handle_liga(char *input)
 {
     for (int i = 0; i < strlen(input); i++)
@@ -122,6 +148,10 @@ void handle_liga(char *input)
     input[strlen(input)] = 0;
 }
 
+/*
+* Recebe a linha, um offset e o destino do substring. Pega o conteudo dentro da string;
+* Desta vez, podemos determinar um limite para a substring
+*/
 char *subString_delimiter(const char *input, int offset, int len, char *dest)
 {
     int input_len = strlen(input);
@@ -130,6 +160,9 @@ char *subString_delimiter(const char *input, int offset, int len, char *dest)
     return dest;
 }
 
+/*
+* Recebe a linha e verifica qual mes esta na mesma, o convertendo para seu valor inteiro em datas
+*/
 int getMes(char *campo)
 {
     int resp = 0;
@@ -189,6 +222,9 @@ void imprimir(Time *time)
     printf("%s ## %s ## %d/%d/%d ## %s ## %d ## %s ## %s ## %s ## %lu ##\n", time->nome, time->apelido, time->fundacaoDia, time->fundacaoMes, time->fundacaoAno, time->estadio, time->capacidade, time->tecnico, time->liga, time->nomeArquivo, time->paginaTam);
 }
 
+/*
+* Abre e le um html, nele vai pegando as informaçoes e colocando no Time
+*/
 int ler(char *path, Time *time)
 {
     //printf("%s\n", path);
@@ -211,17 +247,24 @@ int ler(char *path, Time *time)
         perror(path);
         return (-1);
     }
-    char *html;
-    char *line;
+    char *html = NULL;
+    char *line = NULL;
+    int flag = 0;
     size_t len = 0;
-    while (!feof(arq))
+    while (!feof(arq) && flag != 1)
     {
         getline(&html, &len, arq);
 
+        /*
+        * Essa linha contem todas as informaçoes necessarias
+        */
         if (strstr(html, "Full name") != NULL)
         {
-
+            flag = 1;
             line = html;
+            /*
+            * Trata a linha, splittando
+            */
 
             char *resp = strstr(line, "Full name");
 
@@ -242,6 +285,10 @@ int ler(char *path, Time *time)
             contador = 0;
             //
 
+            /*
+            * Mapeia toda a linha, cada vez pegando cada informaçao
+            * Ao encontrar a informaçao, é feito um substring e a remocao das tags
+            */
             do
             {
                 if (strstr(campos[contador], "Full name") != NULL)
@@ -362,7 +409,18 @@ int ler(char *path, Time *time)
                         split = multi_tok(NULL, " ");
                     }
 
-                    capacidade = atoi(splitted[0]);
+                    char *capacity_rcv = splitted[0];
+                    char capacity_out[strlen(capacity_rcv)];
+                    int cont = 0;
+                    for (int i = 0; i < strlen(capacity_rcv); i++)
+                    {
+                        if (!ispunct(capacity_rcv[i]))
+                        {
+                            capacity_out[cont++] = capacity_rcv[i];
+                        }
+                    }
+                    // printf("%s\n", capacity_out);
+                    capacidade = atoi(capacity_out);
                     (time)->capacidade = capacidade;
                     //  printf("%d\n", time->capacidade);
                 }
@@ -394,10 +452,13 @@ int ler(char *path, Time *time)
             time->paginaTam = sz;
         }
     }
-    return 1;
     fclose(arq);
+    return 1;
 }
 
+/*
+* Abaixo sao realiazadas as operacoes da lista
+*/
 int inserirFim(Lista lista[], Time *time)
 {
     if (lista->n > 1000)
@@ -512,118 +573,6 @@ void mostrar(Lista *lista)
     }
 }
 
-int binarySearch(char *chave, Lista lista[], int inicio, int fim)
-{
-    int valorChave = 0;
-    int valorLista = 0;
-    char *aux;
-
-    //printf("%d e %d\n", inicio, fim);
-
-    aux = (char *)malloc(200 * sizeof(char));
-
-    if (inicio > fim)
-    {
-        return 0;
-    }
-    int meio = (inicio + fim) / 2;
-
-    strcpy(aux, lista->array[meio].nome);
-
-    //printf("%s\n", lista->array[meio].nome);
-    //printf("%s\n", chave);
-    // printf("%lu\n", strlen(aux));
-    // printf("%lu\n", strlen(chave));
-
-    if (strcmp(aux, chave) == 0)
-    {
-
-        return 1;
-    }
-    else
-    {
-        if (strcmp(lista->array[meio].nome, chave) < 0)
-        {
-            return binarySearch(chave, lista, meio + 1, fim);
-        }
-        else
-        {
-            return binarySearch(chave, lista, inicio, meio - 1);
-        }
-    }
-
-    free(aux);
-}
-
-void swap(int first, int second, Lista lista[])
-{
-    Time *temp;
-    temp = (Time *)malloc(sizeof(Time));
-
-    memccpy(temp, &(lista->array[first]), sizeof(Time), sizeof(Time));
-
-    //printf("%s\n", temp->nome);
-    // segundo para primeiro
-    strcpy(lista->array[first].nome, lista->array[second].nome);
-    strcpy(lista->array[first].apelido, lista->array[second].apelido);
-    strcpy(lista->array[first].estadio, lista->array[second].estadio);
-    strcpy(lista->array[first].tecnico, lista->array[second].tecnico);
-    strcpy(lista->array[first].liga, lista->array[second].liga);
-    strcpy(lista->array[first].nomeArquivo, lista->array[second].nomeArquivo);
-    lista->array[first].fundacaoDia = lista->array[second].fundacaoDia;
-    lista->array[first].fundacaoMes = lista->array[second].fundacaoMes;
-    lista->array[first].fundacaoAno = lista->array[second].fundacaoDia;
-    lista->array[first].paginaTam = lista->array[second].paginaTam;
-    lista->array[first].capacidade = lista->array[second].capacidade;
-
-    // temp para segundo
-
-    strcpy(lista->array[second].nome, temp->nome);
-    strcpy(lista->array[second].apelido, temp->apelido);
-    strcpy(lista->array[second].estadio, temp->estadio);
-    strcpy(lista->array[second].tecnico, temp->tecnico);
-    strcpy(lista->array[second].liga, temp->liga);
-    strcpy(lista->array[second].nomeArquivo, temp->nomeArquivo);
-    lista->array[second].fundacaoDia = temp->fundacaoDia;
-    lista->array[second].fundacaoMes = temp->fundacaoMes;
-    lista->array[second].fundacaoAno = temp->fundacaoDia;
-    lista->array[second].paginaTam = temp->paginaTam;
-    lista->array[second].capacidade = temp->capacidade;
-
-    free(temp);
-}
-
-void selectionsort(Lista lista[], int n)
-{
-    int i, im, tmp;
-    if (n > 1)
-    {
-        im = 0; //im = índice do maior valor
-        for (i = 1; i < n; i++)
-            if (lista->array[i].paginaTam > lista->array[im].paginaTam) //Seleciona o maior valor
-                im = i;
-        if (im != n - 1)
-        { //Efetua troca
-            swap(im, n - 1, lista);
-        }
-        selectionsort(lista, n - 1);
-    }
-}
-
-void bubbleSort(Lista lista[])
-{
-    for (int i = (lista->n - 1); i > 0; i--)
-    {
-        for (int j = 0; j < i; j++)
-        {
-            if (strcmp(lista->array[j].liga, lista->array[j + 1].liga) > 0)
-            {
-                swap((j + 1), j, lista);
-            }
-        }
-    }
-}
-
 int main(int argc, char const *argv[])
 {
 
@@ -632,8 +581,10 @@ int main(int argc, char const *argv[])
 
     Time *time;
     Lista *lista = (Lista *)malloc(sizeof(Lista));
-    lista->n = 0;
 
+    /*
+    * Preenche um vetor com as entradas
+    */
     do
     {
 
@@ -641,6 +592,9 @@ int main(int argc, char const *argv[])
     } while (isFim(input[inputIndex++]) == false);
     inputIndex--;
     char *newline;
+    /*
+    * Para cada entrada, le e inseri o Time na lista
+    */
     for (int i = 0; i < inputIndex; i++)
     {
         newline = strchr(input[i], '\n');
@@ -659,12 +613,123 @@ int main(int argc, char const *argv[])
         free(time);
     }
 
-    // mostrar(lista);
+    /*
+    * Abaixo, sao realizadas as interpretacoes de cada comando na entrada
+    * com base nisso, o tipo de insercao ou remocao é feita
+    */
+    char tam[5];
+    fgets(tam, 5, stdin);
+    int entry = atoi(tam);
+    //printf("%d", entry);
 
-    selectionsort(lista, (lista->n));
+    int indexCom = 0;
+    char comando[ENTRY][LINE];
 
-    // bubbleSort(lista);
+    do
+    {
 
+        fgets(comando[indexCom], LINE, stdin);
+    } while (isFim(comando[indexCom++]) == false);
+    indexCom--;
+
+    char *ops;
+    char *path;
+    char *pos;
+    char *correct;
+    char *remove;
+    for (int i = 0; i < entry; i++)
+    {
+        ops = (char *)malloc(50 * sizeof(char));
+        path = (char *)malloc(50 * sizeof(char));
+        pos = (char *)malloc(3 * sizeof(char));
+
+        strcpy(ops, comando[i]);
+
+        if (ops[0] == 'I')
+        {
+            if (ops[1] == '*')
+            {
+
+                subString_delimiter(ops, 3, 3, pos);
+                subString_delimiter(ops, 6, strlen(ops), path);
+
+                correct = strchr(path, '\n');
+                if (correct)
+                    *correct = 0;
+                time = (Time *)malloc(sizeof(Time));
+                if (time == NULL)
+                {
+                    return (-1);
+                }
+
+                ler(path, time);
+                inserir(lista, time, atoi(pos));
+                //imprimir(time);
+
+                free(time);
+
+                //printf("%s", path);
+            }
+            else if (ops[1] == 'F')
+            {
+                subString_delimiter(ops, 3, strlen(ops), path);
+                correct = strchr(path, '\n');
+                if (correct)
+                    *correct = 0;
+                time = (Time *)malloc(sizeof(Time));
+                if (time == NULL)
+                {
+                    return (-1);
+                }
+                ler(path, time);
+                inserirFim(lista, time);
+
+                free(time);
+                //printf("%s", path);
+            }
+            else
+            {
+                subString_delimiter(ops, 3, strlen(ops), path);
+                correct = strchr(path, '\n');
+                if (correct)
+                    *correct = 0;
+                time = (Time *)malloc(sizeof(Time));
+                if (time == NULL)
+                {
+                    return (-1);
+                }
+                ler(path, time);
+                inserirInicio(lista, time);
+
+                free(time);
+                //printf("%s", path);
+            }
+        }
+        else
+        {
+            if (ops[1] == 'F')
+            {
+                remove = removerFim(lista);
+
+                printf("(R) %s\n", remove);
+            }
+            else if (ops[1] == 'I')
+            {
+                remove = removerInicio(lista);
+                printf("(R) %s\n", remove);
+            }
+            else
+            {
+                subString_delimiter(ops, 3, strlen(ops), pos);
+                remove = remover(lista, atoi(pos));
+                printf("(R) %s\n", remove);
+                //printf("%s", pos);
+            }
+        }
+        free(pos);
+        free(ops);
+        free(path);
+    }
     mostrar(lista);
 
     free(lista);

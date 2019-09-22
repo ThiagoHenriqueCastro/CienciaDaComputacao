@@ -1,3 +1,12 @@
+
+/**
+ * TP01P2Q13 Heapsort em Java
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
+ * Logos apos as ordena
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// Classe Time
 class Time {
     // Strings
     private String nome;
@@ -146,6 +156,7 @@ class Time {
         this.tamanho = valor;
     }
 
+    // Clona um objeto time e o retorna
     public Time clone() {
         Time resp = new Time();
 
@@ -198,6 +209,9 @@ class Time {
         MyIO.print(getTamanho() + " ## \n");
     }
 
+    /**
+     * Le um arquivo html e extrai dados do mesmo
+     */
     public void ler(String path) {
         String html = "";
         String table = "";
@@ -240,6 +254,7 @@ class Time {
     }
 }
 
+// Classe pilha e seus metodos
 class Pilha {
     private Time[] array;
     private int topo;
@@ -282,6 +297,7 @@ class Pilha {
     }
 }
 
+// Classe lista e seus metodos
 class Lista {
     private Time[] array;
     private int n;
@@ -381,6 +397,7 @@ class Lista {
     public void mostrar() {
         for (int i = 0; i < n; i++) {
             // MyIO.print("[" + i + "] ");
+            // System.out.println("a");
             array[i].imprimir();
         }
     }
@@ -397,6 +414,9 @@ class Lista {
         return out;
     }
 
+    /**
+     * inverte posicoes do vetor
+     */
     public void swap(int menor, int i) {
         Time aux = array[i].clone();
         array[i] = array[menor];
@@ -430,17 +450,6 @@ class Lista {
         return out;
     }
 
-    public int getMaior() {
-        int maior = array[0].getCapacidade();
-        for (int i = 1; i < n; i++) {
-            if (array[i].getCapacidade() > maior) {
-                maior = array[i].getCapacidade();
-            }
-        }
-
-        return maior;
-    }
-
     public Integer[] Insercao() {
         int comparisons = 0;
         int moves = 0;
@@ -468,23 +477,40 @@ class Lista {
         return out;
     }
 
+    // heapsort
     public Integer[] heapSort() {
         int comparisons = 0;
         int moves = 0;
         long start = System.currentTimeMillis();
 
+        Time[] tmp = new Time[n + 1];
+
+        for (int i = 0; i < n; i++) {
+            System.out.println(array[i]);
+            tmp[i + 1] = array[i].clone();
+        }
+
+        array = tmp;
+
         for (int tam = 2; tam < n; tam++) {
 
-            constroi(tam);
+            comparisons += constroi(tam);
 
         }
 
         int tam = n;
 
         while (tam > 1) {
-            System.out.println(tam);
+            // System.out.println(tam);
             swap(1, tam--);
-            reconstroi(tam);
+            comparisons += reconstroi(tam);
+        }
+
+        tmp = array;
+        array = new Time[n];
+
+        for (int i = 0; i < n; i++) {
+            array[i] = tmp[i + 1].clone();
         }
 
         Integer[] out = new Integer[3];
@@ -495,100 +521,42 @@ class Lista {
         return out;
     }
 
-    public void constroi(int tam) {
+    public int constroi(int tam) {
         int i = tam;
-        int first = 0;
-        int second = 0;
+        int comparisons = 0;
 
-        for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
-            if (ch >= 'A' && ch <= 'Z') {
-                first += 1 + ch - 'A';
-            }
-        }
-
-        for (char ch : array[i / 2].getEstadio().toUpperCase().toCharArray()) {
-            if (ch >= 'A' && ch <= 'Z') {
-                second += 1 + ch - 'A';
-            }
-        }
-
-        for (; i > 1 && first > second; i /= 2) {
-
-            for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
-                if (ch >= 'A' && ch <= 'Z') {
-                    first += 1 + ch - 'A';
-                }
-            }
-            for (char ch : array[i / 2].getEstadio().toUpperCase().toCharArray()) {
-                if (ch >= 'A' && ch <= 'Z') {
-                    second += 1 + ch - 'A';
-                }
-            }
+        for (; i > 1 && array[i].getEstadio().compareTo(array[i / 2].getEstadio()) > 0; i /= 2) {
             swap(i, i / 2);
+            comparisons++;
         }
+
+        return comparisons;
     }
 
-    public void reconstroi(int tam) {
+    public int reconstroi(int tam) {
         int i = 1, filho;
-        int first = 0;
-        int second = 0;
-        for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
-            if (ch >= 'A' && ch <= 'Z') {
-                first += 1 + ch - 'A';
-            }
-        }
-        filho = getMaiorFilho(i, tam);
-        for (char ch : array[i / 2].getEstadio().toUpperCase().toCharArray()) {
-            if (ch >= 'A' && ch <= 'Z') {
-                second += 1 + ch - 'A';
-            }
-        }
+        int comparisons = 0;
 
         while (i <= (tam / 2)) {
-            filho = getMaiorFilho(i, tam);
-            for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
-                if (ch >= 'A' && ch <= 'Z') {
-                    first += 1 + ch - 'A';
-                }
-            }
 
-            for (char ch : array[i / 2].getEstadio().toUpperCase().toCharArray()) {
-                if (ch >= 'A' && ch <= 'Z') {
-                    second += 1 + ch - 'A';
-                }
+            if (array[2 * i].getEstadio().compareTo(array[2 * i + 1].getEstadio()) > 0 || 2 * i == tam) {
+                filho = 2 * i;
+            } else {
+                filho = 2 * i + 1;
             }
-            if (first < second) {
+            comparisons++;
+
+            if (array[i].getEstadio().compareTo(array[filho].getEstadio()) < 0) {
                 swap(i, filho);
                 i = filho;
             } else {
                 i = tam;
             }
+            comparisons++;
         }
+        return comparisons;
     }
 
-    public int getMaiorFilho(int i, int tam) {
-        int maior = 0;
-        int first = 0;
-        for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
-            if (ch >= 'A' && ch <= 'Z') {
-                first += 1 + ch - 'A';
-            }
-        }
-        for (int j = tam; i >= tam / 2; i++) {
-            for (char ch : array[i].getEstadio().toUpperCase().toCharArray()) {
-                if (ch >= 'A' && ch <= 'Z') {
-                    first += 1 + ch - 'A';
-                }
-            }
-            if (j / 2 == i) {
-                if (first > maior) {
-                    maior = first;
-                }
-            }
-        }
-
-        return maior;
-    }
 }
 
 public class Crawl {
@@ -610,7 +578,6 @@ public class Crawl {
             time.ler(input[i]);
 
             lista.InserirFim(time);
-
         }
         Integer[] logs = new Integer[3];
         logs = lista.heapSort();
@@ -627,6 +594,9 @@ public class Crawl {
 
     }
 
+    /**
+     * verifica se é o fim do arquivo
+     */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -635,6 +605,11 @@ public class Crawl {
         return boolValue;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return nome estraido do arquivo
+     */
     public static String crawlNome(String line) {
 
         String nome = "";
@@ -648,6 +623,11 @@ public class Crawl {
         return nome;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return apelido estraido do arquivo
+     */
     public static String crawlApelido(String line) {
 
         String splitted[] = new String[1000];
@@ -678,6 +658,11 @@ public class Crawl {
         return value;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return dia extraido do arquivo
+     */
     public static int crawlDia(String line) {
         String splitted[] = new String[1000];
         String value = "";
@@ -702,6 +687,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return mes extraido do arquivo
+     */
     public static int crawlMes(String line) {
         String splitted[] = new String[1000];
         int mes = 0;
@@ -743,6 +733,11 @@ public class Crawl {
         return mes;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return ano extraido do arquivo
+     */
     public static int crawlAno(String line) {
 
         String splitted[] = new String[1000];
@@ -786,6 +781,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return estadio extraido do arquivo
+     */
     public static String crawlEstadio(String line) {
 
         String estadio = "";
@@ -803,6 +803,11 @@ public class Crawl {
         return estadio;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return capacidade extraida do arquivo
+     */
     public static int crawlCapacidade(String line) {
 
         String capacidade = "";
@@ -823,11 +828,18 @@ public class Crawl {
         return Integer.parseInt(capacidade);
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return tecnico extraido do arquivo
+     */
     public static String crawlTecnico(String line) {
         String tecnico = "";
+        // System.out.println(line);
         String[] splitted = line.contains("General manager") ? line.split("General manager")
                 : line.contains("Manager") ? line.split("Manager ")
                         : !line.contains("Coach ") ? line.split("Head coach ") : line.split("Coach ");
+
         splitted = line.contains("General manager") ? splitted[1].split("Chairman") : splitted[1].split("League");
         tecnico = splitted[0];
 
@@ -839,6 +851,11 @@ public class Crawl {
         return tecnico;
     }
 
+    /**
+     * 
+     * @param line linha a ser analisada
+     * @return Liga extraido do arquivo
+     */
     public static String crawlLiga(String line) {
         String splitted[] = new String[1000];
         String resp = "";
@@ -861,6 +878,11 @@ public class Crawl {
         return resp;
     }
 
+    /**
+     * 
+     * @param line linha a ser tratada
+     * @return a mesma linha sem tags html
+     */
     public static String removerTags(String html) {
         String resp = "";
 

@@ -1,3 +1,10 @@
+/**
+ * TP01P2Q02 Registro em C
+ * 
+ * @author Thiago Henrique de Castro Oliveira
+ * @version 1 09/2019 Este algoritmo le paginas html e preenche uma struct de Times
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +19,9 @@
 #define true 1
 #define boolean short
 
+/*
+* Definiçao da Struct Time
+*/
 typedef struct Time
 {
     char nome[200];
@@ -27,13 +37,9 @@ typedef struct Time
     long paginaTam;
 } Time;
 
-typedef struct Lista
-{
-    Time array[1000];
-    int n;
-
-} Lista;
-
+/*
+* Recebe a linha e verifica se a mesma é o fim do arquivo;
+*/
 boolean isFim(char *line)
 {
     boolean resp = false;
@@ -43,6 +49,9 @@ boolean isFim(char *line)
     return resp;
 }
 
+/*
+* Recebe a linha e a quebra em tokens, com base em um delimiter
+*/
 char *multi_tok(char *input, char *delimiter)
 {
     static char *string;
@@ -67,6 +76,9 @@ char *multi_tok(char *input, char *delimiter)
     return temp;
 }
 
+/*
+* recebe uma string e remove tags da mesma, verificando o ponto de abertura e fechamento de tags
+*/
 char *removeTags(char *input)
 {
     int idx = 0;
@@ -91,6 +103,9 @@ char *removeTags(char *input)
     return input;
 }
 
+/*
+* Recebe a linha, um offset e o destino do substring. Pega o conteudo dentro da string;
+*/
 char *subString(const char *input, int offset, char *dest)
 {
     int input_len = strlen(input);
@@ -101,6 +116,9 @@ char *subString(const char *input, int offset, char *dest)
     return dest;
 }
 
+/*
+* Recebe a linha da liga e corrige uma quebra de linha nao intencional
+*/
 void handle_liga(char *input)
 {
     for (int i = 0; i < strlen(input); i++)
@@ -120,6 +138,10 @@ void handle_liga(char *input)
     input[strlen(input)] = 0;
 }
 
+/*
+* Recebe a linha, um offset e o destino do substring. Pega o conteudo dentro da string;
+* Desta vez, podemos determinar um limite para a substring
+*/
 char *subString_delimiter(const char *input, int offset, int len, char *dest)
 {
     int input_len = strlen(input);
@@ -128,6 +150,9 @@ char *subString_delimiter(const char *input, int offset, int len, char *dest)
     return dest;
 }
 
+/*
+* Recebe a linha e verifica qual mes esta na mesma, o convertendo para seu valor inteiro em datas
+*/
 int getMes(char *campo)
 {
     int resp = 0;
@@ -187,6 +212,9 @@ void imprimir(Time *time)
     printf("%s ## %s ## %d/%d/%d ## %s ## %d ## %s ## %s ## %s ## %lu ##\n", time->nome, time->apelido, time->fundacaoDia, time->fundacaoMes, time->fundacaoAno, time->estadio, time->capacidade, time->tecnico, time->liga, time->nomeArquivo, time->paginaTam);
 }
 
+/*
+* Abre e le um html, nele vai pegando as informaçoes e colocando no Time
+*/
 int ler(char *path, Time *time)
 {
     //printf("%s\n", path);
@@ -209,18 +237,25 @@ int ler(char *path, Time *time)
         perror(path);
         return (-1);
     }
-    char *html;
-    char *line;
+    char *html = NULL;
+    char *line = NULL;
+    int flag = 0;
     size_t len = 0;
-    while (!feof(arq))
+    while (!feof(arq) && flag != 1)
     {
         getline(&html, &len, arq);
 
+        /*
+        * Essa linha contem todas as informaçoes necessarias
+        */
         if (strstr(html, "Full name") != NULL)
         {
-
+            flag = 1;
             line = html;
 
+            /*
+            * Trata a linha, splittando
+            */
             char *resp = strstr(line, "Full name");
 
             char *token = multi_tok(resp, "<tr>");
@@ -240,6 +275,10 @@ int ler(char *path, Time *time)
             contador = 0;
             //
 
+            /*
+            * Mapeia toda a linha, cada vez pegando cada informaçao
+            * Ao encontrar a informaçao, é feito um substring e a remocao das tags
+            */
             do
             {
                 if (strstr(campos[contador], "Full name") != NULL)
@@ -359,8 +398,18 @@ int ler(char *path, Time *time)
                         splitted[founded_index++] = split;
                         split = multi_tok(NULL, " ");
                     }
-
-                    capacidade = atoi(splitted[0]);
+                    char *capacity_rcv = splitted[0];
+                    char capacity_out[strlen(capacity_rcv)];
+                    int cont = 0;
+                    for (int i = 0; i < strlen(capacity_rcv); i++)
+                    {
+                        if (!ispunct(capacity_rcv[i]))
+                        {
+                            capacity_out[cont++] = capacity_rcv[i];
+                        }
+                    }
+                    // printf("%s\n", capacity_out);
+                    capacidade = atoi(capacity_out);
                     (time)->capacidade = capacidade;
                     //  printf("%d\n", time->capacidade);
                 }
@@ -392,165 +441,8 @@ int ler(char *path, Time *time)
             time->paginaTam = sz;
         }
     }
-    return 1;
     fclose(arq);
-}
-
-int inserirFim(Lista lista[], Time *time)
-{
-    if (lista->n > 1000)
-    {
-        perror("Erro ao inserir");
-        return (-1);
-    }
-    lista->array[lista->n] = *time;
-    lista->n++;
-
     return 1;
-}
-
-int inserirInicio(Lista lista[], Time *time)
-{
-    if (lista->n > 1000)
-    {
-        perror("Erro ao inserir");
-        return (-1);
-    }
-
-    for (int i = lista->n; i > 0; i--)
-    {
-        lista->array[i] = lista->array[i - 1];
-    }
-
-    lista->array[0] = *time;
-
-    lista->n++;
-
-    return 1;
-}
-
-int inserir(Lista lista[], Time *time, int pos)
-{
-    if (lista->n > 1000)
-    {
-        perror("Erro ao inserir");
-        return (-1);
-    }
-
-    for (int i = lista->n; i > pos; i--)
-    {
-        lista->array[i] = lista->array[i - 1];
-    }
-
-    lista->array[pos] = *time;
-
-    lista->n++;
-
-    return 1;
-}
-
-char *removerFim(Lista lista[])
-{
-    if (lista->n <= 0)
-    {
-        perror("Erro ao remover");
-    }
-
-    char *resp = lista->array[lista->n - 1].nome;
-
-    lista->n--;
-
-    return resp;
-}
-
-char *removerInicio(Lista lista[])
-{
-    if (lista->n <= 0)
-    {
-        perror("Erro ao remover");
-    }
-
-    char *resp = lista->array[0].nome;
-
-    for (int i = 0; i < lista->n; i++)
-    {
-        lista->array[i] = lista->array[i + 1];
-    }
-
-    lista->n--;
-
-    return resp;
-}
-
-char *remover(Lista lista[], int pos)
-{
-    if (lista->n <= 0)
-    {
-        perror("Erro ao remover");
-    }
-
-    char *resp = lista->array[pos].nome;
-
-    for (int i = pos; i < lista->n; i++)
-    {
-        lista->array[i] = lista->array[i + 1];
-    }
-
-    lista->n--;
-
-    return resp;
-}
-
-void mostrar(Lista *lista)
-{
-    for (int i = 0; i < lista->n; i++)
-    {
-        printf("[%d] ", i);
-        imprimir(&lista->array[i]);
-    }
-}
-
-int binarySearch(char *chave, Lista lista[], int inicio, int fim)
-{
-    int valorChave = 0;
-    int valorLista = 0;
-    char *aux;
-
-    //printf("%d e %d\n", inicio, fim);
-
-    aux = (char *)malloc(200 * sizeof(char));
-
-    if (inicio > fim)
-    {
-        return 0;
-    }
-    int meio = (inicio + fim) / 2;
-
-    strcpy(aux, lista->array[meio].nome);
-
-    //printf("%s\n", lista->array[meio].nome);
-    //printf("%s\n", chave);
-    // printf("%lu\n", strlen(aux));
-    // printf("%lu\n", strlen(chave));
-
-    if (strcmp(aux, chave) == 0)
-    {
-
-        return 1;
-    }
-    else
-    {
-        if (strcmp(lista->array[meio].nome, chave) < 0)
-        {
-            return binarySearch(chave, lista, meio + 1, fim);
-        }
-        else
-        {
-            return binarySearch(chave, lista, inicio, meio - 1);
-        }
-    }
-
-    free(aux);
 }
 
 int main(int argc, char const *argv[])
@@ -560,9 +452,10 @@ int main(int argc, char const *argv[])
     int inputIndex = 0;
 
     Time *time;
-    Lista *lista = (Lista *)malloc(sizeof(Lista));
-    lista->n = 0;
 
+    /*
+    * Preenche um vetor com as entradas
+    */
     do
     {
 
@@ -570,6 +463,9 @@ int main(int argc, char const *argv[])
     } while (isFim(input[inputIndex++]) == false);
     inputIndex--;
     char *newline;
+    /*
+    * Para cada entrada, le e imprime o Time
+    */
     for (int i = 0; i < inputIndex; i++)
     {
         newline = strchr(input[i], '\n');
@@ -582,32 +478,8 @@ int main(int argc, char const *argv[])
         }
 
         ler(input[i], time);
-        // imprimir(time);
-        inserirFim(lista, time);
+        imprimir(time);
 
         free(time);
     }
-
-    char chave[ENTRY][LINE];
-    int chaveIndex = 0;
-
-    do
-    {
-
-        fgets(chave[chaveIndex], LINE, stdin);
-    } while (isFim(chave[chaveIndex++]) == false);
-    chaveIndex--;
-    int result = 0;
-    char *correctKey;
-    for (int i = 0; i < chaveIndex; i++)
-    {
-        correctKey = strchr(chave[i], '\n');
-        if (correctKey)
-            *correctKey = 0;
-        result = binarySearch(chave[i], lista, 0, lista->n);
-        // printf("%d\n", result);
-        result == 1 ? printf("%s\n", "SIM") : printf("%s\n", "NÃO");
-    }
-
-    free(lista);
 }
