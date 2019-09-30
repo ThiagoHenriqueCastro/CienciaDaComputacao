@@ -1,11 +1,3 @@
-
-/**
- * TP01P2Q03 Lista Sequencial em Java
- * 
- * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
- */
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-// Classe Time
 class Time {
     // Strings
     private String nome;
@@ -32,7 +23,21 @@ class Time {
     // long
     private long tamanho;
 
-    // Constructor
+     /**
+    * 
+    * @param nome nome do time
+    * @param apelido apelido do time
+    * @param estadio estadio do time
+    * @param tecnico apelido do time
+    * @param liga liga do time
+    * @param nomeArquivo nome do arquivo do time
+    * @param capacidade capacidade do estadio do time
+    * @param fundacaoDia fundacaoDia do time
+    * @param fundacaoAno fundacaoAno do time
+    * @param fundacaoMes fundacaoMes do time
+    * @param tamanho tamanho do arquivo do time
+    * @return true se 'FIM' for encontrado
+    */
     public Time(String nome, String apelido, String estadio, String tecnico, String liga, String nomeArquivo,
             int capacidade, int fundacaoDia, int fundacaoMes, int fundacaoAno, long tamanho) {
 
@@ -155,27 +160,6 @@ class Time {
     }
 
     /**
-     * Clona uma instancia do objeto Time e a retorna
-     */
-    public Time clone() {
-        Time resp = new Time();
-
-        resp.nome = this.nome;
-        resp.apelido = this.apelido;
-        resp.capacidade = this.capacidade;
-        resp.estadio = this.estadio;
-        resp.fundacaoAno = this.fundacaoAno;
-        resp.fundacaoDia = this.fundacaoDia;
-        resp.fundacaoMes = this.fundacaoMes;
-        resp.liga = this.liga;
-        resp.tecnico = this.tecnico;
-        resp.tamanho = this.tamanho;
-        resp.nomeAquivo = this.nomeAquivo;
-
-        return resp;
-    }
-
-    /**
      * imprime os atributos da classe
      */
     public void imprimir() {
@@ -209,340 +193,91 @@ class Time {
         MyIO.print(getTamanho() + " ## \n");
     }
 
-    /**
-     * Le um arquivo html e os aloca nas variaveis da classe time
-     * 
-     * @param path caminho do arquivo
-     */
-    public void ler(String path) {
-        String html = "";
-        String table = "";
-        try {
-            int controller = 0;
-            File arq = new File(path);
-            FileInputStream file = new FileInputStream(path);
-            InputStreamReader is = new InputStreamReader(file, "UTF-8");
-            BufferedReader br = new BufferedReader(is);
-
-            while ((html = br.readLine()) != null && controller != 1) {
-                if (html.contains("Full name")) {
-                    table = html;
-                    controller = 1;
-
-                }
-            }
-
-            if (path.equals("/tmp/times/AS_Saint-Etienne.html")) {
-                table += br.readLine();
-                table += br.readLine();
-                table += br.readLine();
-            }
-
-            String[] splitted = table.split("Full name");
-            String withoutTags = Crawl.removerTags(splitted[1]);
-
-            this.setNome(Crawl.crawlNome(withoutTags));
-            this.setApelido(Crawl.crawlApelido(withoutTags));
-            this.setFundacaoDia(Crawl.crawlDia(withoutTags));
-            this.setFundacaoMes(Crawl.crawlMes(withoutTags));
-            this.setFundacaoAno(Crawl.crawlAno(withoutTags));
-            this.setEstadio(Crawl.crawlEstadio(withoutTags));
-            this.setCapacidade(Crawl.crawlCapacidade(withoutTags));
-            this.setTecnico(Crawl.crawlTecnico(withoutTags));
-            this.setLiga(Crawl.crawlLiga(withoutTags));
-            this.setTamanho(arq.length());
-            this.setnomeAquivo(path);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-}
-
-class Celula {
-    public Time elemento; // Elemento inserido na celula.
-    public Celula prox; // Aponta a celula prox.
-
-    /**
-     * Construtor da classe.
-     */
-    public Celula() {
-        this(new Time());
-    }
-
-    /**
-     * Construtor da classe.
-     * 
-     * @param elemento int inserido na celula.
-     */
-    public Celula(Time elemento) {
-        this.elemento = elemento.clone();
-        this.prox = null;
-    }
-}
-
-// Classe Lista e seus metodos
-class Lista {
-    private Celula primeiro;
-    private Celula ultimo;
-
-    /**
-     * Construtor da classe que cria uma lista sem elementos (somente no cabeca).
-     */
-    public Lista() {
-        primeiro = new Celula();
-        ultimo = primeiro;
-    }
-
-    /**
-     * Insere um elemento na primeira posicao da lista.
-     * 
-     * @param x int elemento a ser inserido.
-     */
-    public void inserirInicio(Time x) {
-        Celula tmp = new Celula(x);
-        tmp.prox = primeiro.prox;
-        primeiro.prox = tmp;
-        if (primeiro == ultimo) {
-            ultimo = tmp;
-        }
-        tmp = null;
-    }
-
-    /**
-     * Insere um elemento na ultima posicao da lista.
-     * 
-     * @param x int elemento a ser inserido.
-     */
-    public void inserirFim(Time x) {
-        ultimo.prox = new Celula(x);
-        ultimo = ultimo.prox;
-    }
-
-    /**
-     * Remove um elemento da primeira posicao da lista.
-     * 
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se a lista nao contiver elementos.
-     */
-    public String removerInicio() throws Exception {
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-        }
-
-        Celula tmp = primeiro;
-        primeiro = primeiro.prox;
-        String resp = "(R) " + primeiro.elemento.getNome();
-        tmp.prox = null;
-        tmp = null;
-        return resp;
-    }
-
-    /**
-     * Remove um elemento da ultima posicao da lista.
-     * 
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se a lista nao contiver elementos.
-     */
-    public String removerFim() throws Exception {
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-        }
-
-        // Caminhar ate a penultima celula:
-        Celula i;
-        for (i = primeiro; i.prox != ultimo; i = i.prox)
-            ;
-
-        String resp = "(R) " + ultimo.elemento.getNome();
-        ultimo = i;
-        i = ultimo.prox = null;
-
-        return resp;
-    }
-
-    /**
-     * Insere um elemento em uma posicao especifica considerando que o primeiro
-     * elemento valido esta na posicao 0.
-     * 
-     * @param x   int elemento a ser inserido.
-     * @param pos int posicao da insercao.
-     * @throws Exception Se <code>posicao</code> invalida.
-     */
-    public void inserir(Time x, int pos) throws Exception {
-
-        int tamanho = tamanho();
-
-        if (pos < 0 || pos > tamanho) {
-            throw new Exception("Erro ao inserir posicao (" + pos + " / tamanho = " + tamanho + ") invalida!");
-        } else if (pos == 0) {
-            inserirInicio(x);
-        } else if (pos == tamanho) {
-            inserirFim(x);
-        } else {
-            // Caminhar ate a posicao anterior a insercao
-            Celula i = primeiro;
-            for (int j = 0; j < pos; j++, i = i.prox)
-                ;
-
-            Celula tmp = new Celula(x);
-            tmp.prox = i.prox;
-            i.prox = tmp;
-            tmp = i = null;
-        }
-    }
-
-    /**
-     * Remove um elemento de uma posicao especifica da lista considerando que o
-     * primeiro elemento valido esta na posicao 0.
-     * 
-     * @param posicao Meio da remocao.
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se <code>posicao</code> invalida.
-     */
-    public String remover(int pos) throws Exception {
-        String resp;
-        int tamanho = tamanho();
-
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-
-        } else if (pos < 0 || pos >= tamanho) {
-            throw new Exception("Erro ao remover (posicao " + pos + " / " + tamanho + " invalida!");
-        } else if (pos == 0) {
-            resp = removerInicio();
-        } else if (pos == tamanho - 1) {
-            resp = removerFim();
-        } else {
-            // Caminhar ate a posicao anterior a insercao
-            Celula i = primeiro;
-            for (int j = 0; j < pos; j++, i = i.prox)
-                ;
-
-            Celula tmp = i.prox;
-            resp = "(R) " + tmp.elemento.getNome();
-            i.prox = tmp.prox;
-            tmp.prox = null;
-            i = tmp = null;
-        }
-
-        return resp;
-    }
-
-    /**
-     * Mostra os elementos da lista separados por espacos.
-     */
-    public void mostrar() {
-
-        int j = 0;
-        for (Celula i = primeiro.prox; i != null; i = i.prox, j++) {
-            System.out.print("[" + j + "] ");
-            i.elemento.imprimir();
-        }
-    }
-
-    /**
-     * Calcula e retorna o tamanho, em numero de elementos, da lista.
-     * 
-     * @return resp int tamanho
-     */
-    public int tamanho() {
-        int tamanho = 0;
-        for (Celula i = primeiro; i != ultimo; i = i.prox, tamanho++)
-            ;
-        return tamanho;
-    }
 }
 
 public class Crawl {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
-        // Preenche o vetor de entradas e para cada uma le o arquivo
+        // preenche um array de nomes de arquivos
         do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
         inputIndex--;
 
-        Lista lista = new Lista();
-        Time time;
+        Time[] times = new Time[1000];
+        String html = "";
+        String table = "";
+        StringBuilder sb = new StringBuilder();
+        String[] splitted = new String[100];
+        String withoutTags = "";
+        String nome = "";
+        String apelido = "";
+        int dia = 0;
+        int mes = 0;
+        int ano = 0;
+        String estadio = "";
+        int capacidade = 0;
+        String tecnico = "";
+        String liga = "";
+        long tamanho = 0;
+        String nomeArquivo = "";
+        String Proxlinha = "";
+        String aux;
+        int controller;
+
+        // para cada aquivo, o abre e extrai os dados da classe do mesmo
         for (int i = 0; i < inputIndex; i++) {
+            try {
+                controller = 0;
+                File arq = new File(input[i]);
+                FileInputStream file = new FileInputStream(input[i]);
+                InputStreamReader is = new InputStreamReader(file, "UTF-8");
+                BufferedReader br = new BufferedReader(is);
 
-            time = new Time();
+                while ((html = br.readLine()) != null && controller != 1) {
+                    if (html.contains("Full name")) {
+                        table = html;
+                        controller = 1;
 
-            time.ler(input[i]);
+                    }
+                }
 
-            lista.inserirFim(time);
+                splitted = table.split("Full name");
+                withoutTags = removerTags(splitted[1]);
+
+                nome = crawlNome(withoutTags);
+                apelido = crawlApelido(withoutTags);
+                dia = crawlDia(withoutTags);
+                mes = crawlMes(withoutTags);
+                ano = crawlAno(withoutTags);
+                estadio = crawlEstadio(withoutTags);
+                capacidade = crawlCapacidade(withoutTags);
+                tecnico = crawlTecnico(withoutTags);
+                liga = crawlLiga(withoutTags);
+                tamanho = arq.length();
+                nomeArquivo = input[i];
+
+                times[i] = new Time(nome, apelido, estadio, tecnico, liga, nomeArquivo, capacidade, dia, mes, ano,
+                        tamanho);
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
         }
 
-        String tam = MyIO.readLine();
-
-        String[] set = new String[1000];
-        int setIndex = -1;
-        String[] splitOps = new String[100];
-        String ops;
-        String path = "";
-        int position = 0;
-        // para cada operacao, chama o metodo respectivo na lista
-        for (int i = 0; i < Integer.parseInt(tam); i++) {
-            set[i] = MyIO.readLine();
-            if (set[i].length() > 2) {
-                splitOps = set[i].split(" ");
-                ops = splitOps[0];
-            } else {
-                ops = set[i];
-            }
-
-            if (set[i].contains("tmp") && !set[i].contains("*")) {
-                path = splitOps[1];
-            } else {
-                if (set[i].length() > 2) {
-                    position = Integer.parseInt(splitOps[1]);
-                }
-                if (ops.charAt(0) != 'R') {
-                    path = splitOps[2];
-                }
-            }
-
-            if (ops.equals("II")) {
-
-                time = new Time();
-                time.ler(path);
-                lista.inserirInicio(time);
-            } else if (ops.equals("IF")) {
-                time = new Time();
-                time.ler(path);
-                lista.inserirFim(time);
-            } else if (ops.equals("R*")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.remover(position));
-            } else if (ops.equals("RI")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.removerInicio());
-            }
-
-            else if (ops.equals("RF")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.removerFim());
-            } else if (ops.equals("I*")) {
-                time = new Time();
-                time.ler(path);
-                lista.inserir(time, position);
-            }
+        for (int i = 0; i < inputIndex; i++) {
+            times[i].imprimir();
         }
-
-        lista.mostrar();
 
     }
-
     /**
-     * verifica se é o fim do arquivo
-     */
+     * 
+     * @param line string que devera ser verificada
+     * @return true se 'FIM' for encontrado
+    */
     public static boolean isFim(String line) {
         boolean boolValue = false;
         if (line.length() == 3 && line.charAt(0) == 'F' && line.charAt(1) == 'I' && line.charAt(2) == 'M') {
@@ -553,28 +288,29 @@ public class Crawl {
 
     /**
      * 
-     * @param line linha a ser analisada
-     * @return nome estraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o nome do time
+    */
     public static String crawlNome(String line) {
-
+        //splita a string em referencias proximas e pega o conteudo do meio
         String nome = "";
         String[] splitted = line.split(" Nickname\\(s\\)");
         nome = splitted[0];
         // MyIO.println(nome);
+        // remove strings inconvenientes que podem ter sobrado
         nome = nome.replace("&amp", "");
         nome = nome.replace("( ", "(");
         nome = nome.replace(" )", ")");
         nome = nome.replace(" &#91 1&#93", "");
         return nome;
     }
-
     /**
      * 
-     * @param line linha a ser analisada
-     * @return apelido estraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o apelido do time
+    */
     public static String crawlApelido(String line) {
+        //splita a string em referencias proximas e pega o conteudo do meio
 
         String splitted[] = new String[1000];
 
@@ -585,12 +321,11 @@ public class Crawl {
             splitted = splitted[1].split(" Short name");
 
         } else {
-
             splitted = splitted[1].split(" Founded");
         }
 
         value = splitted[0];
-
+        // remove strings inconvenientes que podem ter sobrado
         value = value.replace(" ,", ",");
         value = value.replace("( ", "(");
         value = value.replace(" )", ")");
@@ -603,13 +338,15 @@ public class Crawl {
 
         return value;
     }
-
     /**
      * 
-     * @param line linha a ser analisada
-     * @return dia extraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o die de fundacao do time
+    */
     public static int crawlDia(String line) {
+
+        //splita a string em referencias proximas e pega o conteudo do meio
+
         String splitted[] = new String[1000];
         String value = "";
         int resp = 0;
@@ -632,12 +369,11 @@ public class Crawl {
 
         return resp;
     }
-
     /**
      * 
-     * @param line linha a ser analisada
-     * @return mes extraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o mes de fundacao do time
+    */
     public static int crawlMes(String line) {
         String splitted[] = new String[1000];
         int mes = 0;
@@ -646,6 +382,7 @@ public class Crawl {
         splitted = line.split("Founded ");
         splitted = splitted[1].split(" ");
         value = splitted[1];
+        // Converte s escrita do mes para o inteiro respectivo
         if (value.matches(".*\\d.*")) {
             value = splitted[0];
         }
@@ -678,17 +415,17 @@ public class Crawl {
         }
         return mes;
     }
-
     /**
      * 
-     * @param line linha a ser analisada
-     * @return ano extraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o mes de fundacao do time
+    */
     public static int crawlAno(String line) {
-
+        // splita em referencias proximas e pega o conteudo entre as referencias
         String splitted[] = new String[1000];
         int resp = 0;
         String value = "";
+        // splita conforme a proxima referencia, o mes
         if (line.contains("January")) {
             splitted = line.split("January ");
         } else if (line.contains("February")) {
@@ -729,17 +466,17 @@ public class Crawl {
 
     /**
      * 
-     * @param line linha a ser analisada
-     * @return estadio extraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o nome do Estadio do time
+    */
     public static String crawlEstadio(String line) {
-
+        // splita em referencias e pega o conteudo
         String estadio = "";
         String[] splitted = line.split("Ground ");
         splitted = splitted[1].split("Capacity");
 
         estadio = splitted[0];
-
+        // retira inconveniencias da string resultante
         estadio = estadio.replace(" ,", ",");
 
         estadio = estadio.replace(" .", ".");
@@ -751,13 +488,12 @@ public class Crawl {
 
     /**
      * 
-     * @param line linha a ser analisada
-     * @return capacidade extraida do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return a capacidade estadio do time
+    */
     public static int crawlCapacidade(String line) {
-
+        // split em referencias proximas 
         String capacidade = "";
-
         String[] splitted = line.split("Capacity ");
         splitted = splitted[1].split(" ");
         if (splitted[0].contains(",")) {
@@ -766,29 +502,23 @@ public class Crawl {
         } else {
             capacidade = splitted[0] + splitted[1];
         }
-        capacidade = capacidade.replace("&#91", "");
-        capacidade = capacidade.replace("Chairman", "");
-        capacidade = capacidade.replace("Owner", "");
-        capacidade = capacidade.replace(".", "");
-
+        // MyIO.println(capacidade);
         return Integer.parseInt(capacidade);
     }
-
     /**
      * 
-     * @param line linha a ser analisada
-     * @return tecnico extraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return o tecnico do time
+    */
     public static String crawlTecnico(String line) {
+        // split em referencias proximas
         String tecnico = "";
-        // System.out.println(line);
         String[] splitted = line.contains("General manager") ? line.split("General manager")
                 : line.contains("Manager") ? line.split("Manager ")
                         : !line.contains("Coach ") ? line.split("Head coach ") : line.split("Coach ");
-
         splitted = line.contains("General manager") ? splitted[1].split("Chairman") : splitted[1].split("League");
         tecnico = splitted[0];
-
+        // retirando inconveniencias da string resultante
         tecnico = tecnico.replace("&#91 1&#93", "");
         tecnico = tecnico.replace("&#91 8&#93", "");
 
@@ -799,10 +529,11 @@ public class Crawl {
 
     /**
      * 
-     * @param line linha a ser analisada
-     * @return Liga extraido do arquivo
-     */
+     * @param line string que devera ser verificada
+     * @return a liga do time
+    */
     public static String crawlLiga(String line) {
+        // split em referencias proximas
         String splitted[] = new String[1000];
         String resp = "";
         if (line.contains("Viktor")) {
@@ -823,15 +554,14 @@ public class Crawl {
 
         return resp;
     }
-
     /**
      * 
-     * @param line linha a ser tratada
-     * @return a mesma linha sem tags html
-     */
+     * @param html string que devera ser verificada
+     * @return string sem tags
+    */
     public static String removerTags(String html) {
         String resp = "";
-
+        // remove tags por regex em um html
         resp = html.replaceAll("\\<(/?[^\\>]+)\\>", " ").replaceAll("\\s+", " ").trim();
         resp = resp.replaceAll(";", " ").trim();
         resp = resp.replaceAll("&#160", " ").trim();

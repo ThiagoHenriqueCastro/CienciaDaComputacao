@@ -281,176 +281,58 @@ class Celula {
     }
 }
 
-// Classe Lista e seus metodos
-class Lista {
-    private Celula primeiro;
-    private Celula ultimo;
+class Pilha {
+    private Celula topo;
 
     /**
-     * Construtor da classe que cria uma lista sem elementos (somente no cabeca).
+     * Construtor da classe que cria uma fila sem elementos.
      */
-    public Lista() {
-        primeiro = new Celula();
-        ultimo = primeiro;
+    public Pilha() {
+        topo = null;
     }
 
     /**
-     * Insere um elemento na primeira posicao da lista.
+     * Insere elemento na pilha (politica FILO).
      * 
-     * @param x int elemento a ser inserido.
+     * @param x elemento a inserir.
      */
-    public void inserirInicio(Time x) {
+    public void empilhar(Time x) {
         Celula tmp = new Celula(x);
-        tmp.prox = primeiro.prox;
-        primeiro.prox = tmp;
-        if (primeiro == ultimo) {
-            ultimo = tmp;
-        }
+        tmp.prox = topo;
+        topo = tmp;
         tmp = null;
     }
 
     /**
-     * Insere um elemento na ultima posicao da lista.
+     * Remove elemento da pilha (politica FILO).
      * 
-     * @param x int elemento a ser inserido.
+     * @return Elemento removido.
+     * @trhows Exception Se a sequencia nao contiver elementos.
      */
-    public void inserirFim(Time x) {
-        ultimo.prox = new Celula(x);
-        ultimo = ultimo.prox;
-    }
-
-    /**
-     * Remove um elemento da primeira posicao da lista.
-     * 
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se a lista nao contiver elementos.
-     */
-    public String removerInicio() throws Exception {
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
+    public String desempilhar() throws Exception {
+        if (topo == null) {
+            throw new Exception("Erro ao remover!");
         }
 
-        Celula tmp = primeiro;
-        primeiro = primeiro.prox;
-        String resp = "(R) " + primeiro.elemento.getNome();
+        String resp = "(R) " + topo.elemento.getNome();
+        Celula tmp = topo;
+        topo = topo.prox;
         tmp.prox = null;
         tmp = null;
         return resp;
     }
 
     /**
-     * Remove um elemento da ultima posicao da lista.
-     * 
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se a lista nao contiver elementos.
+     * Mostra os elementos separados por espacos, comecando do topo.
      */
-    public String removerFim() throws Exception {
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-        }
 
-        // Caminhar ate a penultima celula:
-        Celula i;
-        for (i = primeiro; i.prox != ultimo; i = i.prox)
-            ;
-
-        String resp = "(R) " + ultimo.elemento.getNome();
-        ultimo = i;
-        i = ultimo.prox = null;
-
-        return resp;
-    }
-
-    /**
-     * Insere um elemento em uma posicao especifica considerando que o primeiro
-     * elemento valido esta na posicao 0.
-     * 
-     * @param x   int elemento a ser inserido.
-     * @param pos int posicao da insercao.
-     * @throws Exception Se <code>posicao</code> invalida.
-     */
-    public void inserir(Time x, int pos) throws Exception {
-
-        int tamanho = tamanho();
-
-        if (pos < 0 || pos > tamanho) {
-            throw new Exception("Erro ao inserir posicao (" + pos + " / tamanho = " + tamanho + ") invalida!");
-        } else if (pos == 0) {
-            inserirInicio(x);
-        } else if (pos == tamanho) {
-            inserirFim(x);
-        } else {
-            // Caminhar ate a posicao anterior a insercao
-            Celula i = primeiro;
-            for (int j = 0; j < pos; j++, i = i.prox)
-                ;
-
-            Celula tmp = new Celula(x);
-            tmp.prox = i.prox;
-            i.prox = tmp;
-            tmp = i = null;
-        }
-    }
-
-    /**
-     * Remove um elemento de uma posicao especifica da lista considerando que o
-     * primeiro elemento valido esta na posicao 0.
-     * 
-     * @param posicao Meio da remocao.
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se <code>posicao</code> invalida.
-     */
-    public String remover(int pos) throws Exception {
-        String resp;
-        int tamanho = tamanho();
-
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-
-        } else if (pos < 0 || pos >= tamanho) {
-            throw new Exception("Erro ao remover (posicao " + pos + " / " + tamanho + " invalida!");
-        } else if (pos == 0) {
-            resp = removerInicio();
-        } else if (pos == tamanho - 1) {
-            resp = removerFim();
-        } else {
-            // Caminhar ate a posicao anterior a insercao
-            Celula i = primeiro;
-            for (int j = 0; j < pos; j++, i = i.prox)
-                ;
-
-            Celula tmp = i.prox;
-            resp = "(R) " + tmp.elemento.getNome();
-            i.prox = tmp.prox;
-            tmp.prox = null;
-            i = tmp = null;
-        }
-
-        return resp;
-    }
-
-    /**
-     * Mostra os elementos da lista separados por espacos.
-     */
     public void mostrar() {
 
         int j = 0;
-        for (Celula i = primeiro.prox; i != null; i = i.prox, j++) {
+        for (Celula i = topo; i != null; i = i.prox, j++) {
             System.out.print("[" + j + "] ");
             i.elemento.imprimir();
         }
-    }
-
-    /**
-     * Calcula e retorna o tamanho, em numero de elementos, da lista.
-     * 
-     * @return resp int tamanho
-     */
-    public int tamanho() {
-        int tamanho = 0;
-        for (Celula i = primeiro; i != ultimo; i = i.prox, tamanho++)
-            ;
-        return tamanho;
     }
 }
 
@@ -459,13 +341,18 @@ public class Crawl {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
-        // Preenche o vetor de entradas e para cada uma le o arquivo
-        do {
+        // Preenche o vetor 
+
+    do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
         inputIndex--;
 
-        Lista lista = new Lista();
+    
+    
+
+    
+        Pilha pilha = new Pilha();
         Time time;
         for (int i = 0; i < inputIndex; i++) {
 
@@ -473,7 +360,7 @@ public class Crawl {
 
             time.ler(input[i]);
 
-            lista.inserirFim(time);
+            pilha.empilhar(time);
 
         }
 
@@ -485,61 +372,31 @@ public class Crawl {
         String ops;
         String path = "";
         int position = 0;
-        // para cada operacao, chama o metodo respectivo na lista
+        // para cada operacao, chama o metodo respectivo na pilha
         for (int i = 0; i < Integer.parseInt(tam); i++) {
             set[i] = MyIO.readLine();
-            if (set[i].length() > 2) {
-                splitOps = set[i].split(" ");
-                ops = splitOps[0];
-            } else {
-                ops = set[i];
-            }
+            splitOps = set[i].split(" ");
+            ops = splitOps[0];
 
-            if (set[i].contains("tmp") && !set[i].contains("*")) {
+            if (ops.charAt(0) != 'R') {
                 path = splitOps[1];
+            }
+
+            if (ops.equals("I")) {
+
+                time = new Time();
+                time.ler(path);
+                pilha.empilhar(time);
             } else {
-                if (set[i].length() > 2) {
-                    position = Integer.parseInt(splitOps[1]);
-                }
-                if (ops.charAt(0) != 'R') {
-                    path = splitOps[2];
-                }
-            }
-
-            if (ops.equals("II")) {
-
-                time = new Time();
-                time.ler(path);
-                lista.inserirInicio(time);
-            } else if (ops.equals("IF")) {
-                time = new Time();
-                time.ler(path);
-                lista.inserirFim(time);
-            } else if (ops.equals("R*")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.remover(position));
-            } else if (ops.equals("RI")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.removerInicio());
-            }
-
-            else if (ops.equals("RF")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.removerFim());
-            } else if (ops.equals("I*")) {
-                time = new Time();
-                time.ler(path);
-                lista.inserir(time, position);
+                MyIO.println(pilha.desempilhar());
             }
         }
-
-        lista.mostrar();
+        
+        pilha.mostrar();
 
     }
 
+    
     /**
      * verifica se é o fim do arquivo
      */
@@ -584,8 +441,8 @@ public class Crawl {
         if (splitted[1].contains("Short name")) {
             splitted = splitted[1].split(" Short name");
 
-        } else {
 
+    
             splitted = splitted[1].split(" Founded");
         }
 
@@ -599,7 +456,7 @@ public class Crawl {
         value = value.replace("&#91 1&#93", "");
         value = value.replace("\"", "");
 
-        value = value.trim();
+    value = value.trim();
 
         return value;
     }

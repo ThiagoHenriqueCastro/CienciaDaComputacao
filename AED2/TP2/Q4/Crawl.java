@@ -259,14 +259,15 @@ class Time {
     }
 }
 
-class Celula {
-    public Time elemento; // Elemento inserido na celula.
-    public Celula prox; // Aponta a celula prox.
+class CelulaDupla {
+    public Time elemento;
+    public CelulaDupla ant;
+    public CelulaDupla prox;
 
     /**
      * Construtor da classe.
      */
-    public Celula() {
+    public CelulaDupla() {
         this(new Time());
     }
 
@@ -275,39 +276,25 @@ class Celula {
      * 
      * @param elemento int inserido na celula.
      */
-    public Celula(Time elemento) {
+    public CelulaDupla(Time elemento){
         this.elemento = elemento.clone();
-        this.prox = null;
+        this.ant = this.prox = null;
     }
 }
 
-// Classe Lista e seus metodos
-class Lista {
-    private Celula primeiro;
-    private Celula ultimo;
+class ListaDupla {
+    private CelulaDupla primeiro;
+    private CelulaDupla ultimo;
 
     /**
-     * Construtor da classe que cria uma lista sem elementos (somente no cabeca).
+     * Construtor da classe que cria uma lista dupla sem elementos (somente no
+     * cabeca).
      */
-    public Lista() {
-        primeiro = new Celula();
+    public ListaDupla() {
+        primeiro = new CelulaDupla();
         ultimo = primeiro;
     }
 
-    /**
-     * Insere um elemento na primeira posicao da lista.
-     * 
-     * @param x int elemento a ser inserido.
-     */
-    public void inserirInicio(Time x) {
-        Celula tmp = new Celula(x);
-        tmp.prox = primeiro.prox;
-        primeiro.prox = tmp;
-        if (primeiro == ultimo) {
-            ultimo = tmp;
-        }
-        tmp = null;
-    }
 
     /**
      * Insere um elemento na ultima posicao da lista.
@@ -315,127 +302,18 @@ class Lista {
      * @param x int elemento a ser inserido.
      */
     public void inserirFim(Time x) {
-        ultimo.prox = new Celula(x);
+        ultimo.prox = new CelulaDupla(x);
+        ultimo.prox.ant = ultimo;
         ultimo = ultimo.prox;
     }
-
-    /**
-     * Remove um elemento da primeira posicao da lista.
-     * 
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se a lista nao contiver elementos.
-     */
-    public String removerInicio() throws Exception {
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-        }
-
-        Celula tmp = primeiro;
-        primeiro = primeiro.prox;
-        String resp = "(R) " + primeiro.elemento.getNome();
-        tmp.prox = null;
-        tmp = null;
-        return resp;
-    }
-
-    /**
-     * Remove um elemento da ultima posicao da lista.
-     * 
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se a lista nao contiver elementos.
-     */
-    public String removerFim() throws Exception {
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-        }
-
-        // Caminhar ate a penultima celula:
-        Celula i;
-        for (i = primeiro; i.prox != ultimo; i = i.prox)
-            ;
-
-        String resp = "(R) " + ultimo.elemento.getNome();
-        ultimo = i;
-        i = ultimo.prox = null;
-
-        return resp;
-    }
-
-    /**
-     * Insere um elemento em uma posicao especifica considerando que o primeiro
-     * elemento valido esta na posicao 0.
-     * 
-     * @param x   int elemento a ser inserido.
-     * @param pos int posicao da insercao.
-     * @throws Exception Se <code>posicao</code> invalida.
-     */
-    public void inserir(Time x, int pos) throws Exception {
-
-        int tamanho = tamanho();
-
-        if (pos < 0 || pos > tamanho) {
-            throw new Exception("Erro ao inserir posicao (" + pos + " / tamanho = " + tamanho + ") invalida!");
-        } else if (pos == 0) {
-            inserirInicio(x);
-        } else if (pos == tamanho) {
-            inserirFim(x);
-        } else {
-            // Caminhar ate a posicao anterior a insercao
-            Celula i = primeiro;
-            for (int j = 0; j < pos; j++, i = i.prox)
-                ;
-
-            Celula tmp = new Celula(x);
-            tmp.prox = i.prox;
-            i.prox = tmp;
-            tmp = i = null;
-        }
-    }
-
-    /**
-     * Remove um elemento de uma posicao especifica da lista considerando que o
-     * primeiro elemento valido esta na posicao 0.
-     * 
-     * @param posicao Meio da remocao.
-     * @return resp int elemento a ser removido.
-     * @throws Exception Se <code>posicao</code> invalida.
-     */
-    public String remover(int pos) throws Exception {
-        String resp;
-        int tamanho = tamanho();
-
-        if (primeiro == ultimo) {
-            throw new Exception("Erro ao remover (vazia)!");
-
-        } else if (pos < 0 || pos >= tamanho) {
-            throw new Exception("Erro ao remover (posicao " + pos + " / " + tamanho + " invalida!");
-        } else if (pos == 0) {
-            resp = removerInicio();
-        } else if (pos == tamanho - 1) {
-            resp = removerFim();
-        } else {
-            // Caminhar ate a posicao anterior a insercao
-            Celula i = primeiro;
-            for (int j = 0; j < pos; j++, i = i.prox)
-                ;
-
-            Celula tmp = i.prox;
-            resp = "(R) " + tmp.elemento.getNome();
-            i.prox = tmp.prox;
-            tmp.prox = null;
-            i = tmp = null;
-        }
-
-        return resp;
-    }
-
+    
     /**
      * Mostra os elementos da lista separados por espacos.
      */
     public void mostrar() {
 
         int j = 0;
-        for (Celula i = primeiro.prox; i != null; i = i.prox, j++) {
+        for (CelulaDupla i = primeiro.prox; i != null; i = i.prox, j++) {
             System.out.print("[" + j + "] ");
             i.elemento.imprimir();
         }
@@ -448,7 +326,7 @@ class Lista {
      */
     public int tamanho() {
         int tamanho = 0;
-        for (Celula i = primeiro; i != ultimo; i = i.prox, tamanho++)
+        for (CelulaDupla i = primeiro; i != ultimo; i = i.prox, tamanho++)
             ;
         return tamanho;
     }
@@ -465,7 +343,7 @@ public class Crawl {
         } while (isFim(input[inputIndex++]) == false);
         inputIndex--;
 
-        Lista lista = new Lista();
+        ListaDupla lista = new ListaDupla();
         Time time;
         for (int i = 0; i < inputIndex; i++) {
 
@@ -475,65 +353,6 @@ public class Crawl {
 
             lista.inserirFim(time);
 
-        }
-
-        String tam = MyIO.readLine();
-
-        String[] set = new String[1000];
-        int setIndex = -1;
-        String[] splitOps = new String[100];
-        String ops;
-        String path = "";
-        int position = 0;
-        // para cada operacao, chama o metodo respectivo na lista
-        for (int i = 0; i < Integer.parseInt(tam); i++) {
-            set[i] = MyIO.readLine();
-            if (set[i].length() > 2) {
-                splitOps = set[i].split(" ");
-                ops = splitOps[0];
-            } else {
-                ops = set[i];
-            }
-
-            if (set[i].contains("tmp") && !set[i].contains("*")) {
-                path = splitOps[1];
-            } else {
-                if (set[i].length() > 2) {
-                    position = Integer.parseInt(splitOps[1]);
-                }
-                if (ops.charAt(0) != 'R') {
-                    path = splitOps[2];
-                }
-            }
-
-            if (ops.equals("II")) {
-
-                time = new Time();
-                time.ler(path);
-                lista.inserirInicio(time);
-            } else if (ops.equals("IF")) {
-                time = new Time();
-                time.ler(path);
-                lista.inserirFim(time);
-            } else if (ops.equals("R*")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.remover(position));
-            } else if (ops.equals("RI")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.removerInicio());
-            }
-
-            else if (ops.equals("RF")) {
-                time = new Time();
-                time.ler(path);
-                MyIO.println(lista.removerFim());
-            } else if (ops.equals("I*")) {
-                time = new Time();
-                time.ler(path);
-                lista.inserir(time, position);
-            }
         }
 
         lista.mostrar();
