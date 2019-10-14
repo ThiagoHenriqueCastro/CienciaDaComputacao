@@ -1,36 +1,46 @@
-(R) Amsterdamsche Football Club Ajax
-(R) Clube Atlético Mineiro
-(R) Cruzeiro Esporte Clube
-(R) Futbol Club Barcelona
-(R) Football Club Internazionale Milano S.p.A.&#91;1&#93;
-(R) Real Madrid Club de Fútbol&#91;1&#93;
-(R) Caernarfon Town Football ClubClwb Pêl Droed Tref Caernarfon
-(R) Fudbalski klub Iskra Danilovgrad
-(R) Royal Antwerp Football Club
-(R) Club de Regatas Vasco da Gama
-[0] Cefn Druids Association Football Club ## The Ancients, Druids ## 0/0/1872 ## The RockRhosymedreWrexham ## 3500 ## Huw Griffiths ## � ## /tmp/times/Cefn_Druids_A.F.C..html ## 118595 ##
-[1] Sportklub Rapid Wien ## Die Grün-Weißen (The Green-Whites),Hütteldorfer ## 0/1/0 ## Allianz Stadion ## 28345 ## Dietmar Kühbauer ## Austrian Bundesliga ## /tmp/times/SK_Rapid_Wien.html ## 188540 ##
-[2] Fútbol Club Encamp ## EncampadansEl degà (The Dean) ## 0/0/1950 ## Camp de Futbol d'Encamp ## 550 ## Leonel Gancedo ## Segona Divisió ## /tmp/times/FC_Encamp.html ## 93238 ##
-[3] Club Deportivo Social y Cultural Alianza Universidad de Huánuco ## Azulgranas ## 1/1/1939 ## Estadio Heraclio Tapia, Huánuco ## 20 ## Mifflin Bermúdez ## Torneo Descentralizado ## /tmp/times/Alianza_Universidad.html ## 105075 ##
-[4] Rio Ave Futebol Clube ## Vilacondenses, "Rioavistas ## 0/0/1939 ## Estádio do Rio Ave ## 12815 ##  ## Primeira Liga ## /tmp/times/Rio_Ave_F.C..html ## 168904 ##
-[5] Association Sportive de Saint-Étienne Loire ## Les Verts (The Greens)Sainté (Saints) ## 0/0/1919 ## Stade Geoffroy-Guichard ## 41965 ##  A Campeonato Mineiro Copa LibertadoPrimeira Liga ## ad.html ## /tmp/times/AS_Saint-Etienne.html ## 197914 ##
-[6] Grêmio Foot-Ball Porto Alegrense ## Imortal Tricolor (Immortal Tricolor)Rei de Copas (King of Cups) ## 15/9/1903 ## Stade Geoffroy-Guichard ## 55225 ## Renato Portaluppi ## Campeonato Brasileiro Série A ## /tmp/times/Gremio_Foot-Ball_Porto_Alegrense.html ## 479852 ##
-[7] Club de Deportes Provincial Curicó Unido ## CuriAlbirrojos (The red &amp; white)Torteros (The Cake-makers)La Banda Sangre (The Blood Stripe) Provincial Curicó Unido ## 0/0/1973 ## Estadio La Granja ## 8278 ## Dalcio Giovagnoli ## Primera División ## /tmp/times/Curico_Unido.html ## 177087 ##
-[8] Club Especializado de Alto Rendimiento El Nacional ## Puros Criollos (Pure Criollos)Equipo Militar (Military team)La Maquina Gris (The Gray Machine)El Rojo (The Red)imiento El Nacional ## 1/6/1964 ## Estadio La Granja ## 8278 ## Dalcio Giovagnoli ## Primera División ## /tmp/times/C.D._El_Nacional.html ## 102479 ##
-[9] Angers Sporting Club de l'Ouest ## Les Scoïstes ## 0/0/1919 ## Stade Raymond Kopa ## 17835 ## Dalcio Giovagnoli ## Ligue  ## /tmp/times/Angers_SCO.html ## 141084 ##
-[10] Club Atlético Cerro ## Villeros, Albicelestes, Cerrense ## 1/12/1922 ## Estadio Luis Tróccoli,Montevideo, Uruguay ## 25000 ## Richard Martínez ## Primera División Uruguaya ## /tmp/times/C.A._Cerro.html ## 97714 ##
-[11] Futboll Klub Kukësi ##  Verilindorët  (Northeasters) ## 4/3/1930 ## Zeqir Ymeri Stadium ## 5500 ## Ernest Gjoka ## Albanian Superliga ## /tmp/times/FK_Kukesi.html ## 193495 ##
-[12] Hrvatski nogometni klub Rijeka (Croatian Football Club Rijeka) ## Riječki bijeli (Rijeka's Whites) ## 29/7/1946 ## Zeqir Ymeri Stadium ## 5500 ## Ernest Gjoka ## Albanian Superliga ## /tmp/times/HNK_Rijeka.html ## 430772 ##
-[13] Maccabi Haifa Football Club ## The Greens, The green locomotive, The green apes ## 0/0/1913 ## Sammy Ofer Stadium, Haifa ## 30780 ## Marco Balbul ## � ## /tmp/times/Maccabi_Haifa_F.C..html ## 357794 ##
-[14] Sportclub Heerenveen ## De Superfriezen (The Super Frisians)Fean ## 20/7/1920 ## Abe Lenstra Stadium ## 27224 ## Johnny Jansen ## Eredivisie ## /tmp/times/SC_Heerenveen.html ## 313578 ##
-[15] Anorthosis Famagusta FC  Ανόρθωσις Αμμοχώστου ## Μεγάλη Κυρία (The Great Lady)  Οι Κυανόλευκοι (The Blue White)osis Famagusta FC  Ανόρθωσις Αμμοχώστου ## 30/1/1911 ## Abe Lenstra Stadium ## 27224 ## Johnny Jansen ## Eredivisie ## /tmp/times/Anorthosis_Famagusta_FC.html ## 242154 ##
-[16] Mosta Football Club ## Tar-Rotunda ## 0/0/1935 ## Charles Abela Memorial Stadium, Mosta ## 700 ##  Mark Miller ## � ## /tmp/times/Mosta_F.C..html ## 95681 ##
-[17] Villarreal Club de Fútbol S.A.D. ## Tar-Rotunda ## 0/0/1935 ## Charles Abela Memorial Stadium, Mosta ## 700 ##  Mark Miller ## � ## /tmp/times/Mosta_F.C..html ## 95681 ##
-[18] Club Atlético Central Córdoba ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[19] Clube Desportivo de Tondela ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[20] O'Higgins Fútbol Club ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[21] Sligo Rovers Football Club ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[22] Sociedad Deportiva Aucas ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[23] Koninklijke Racing Club Genk ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[24] West Ham United Football Club ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
-[25] Football Club Alashkert ##  ## 0/0/0 ##  ## 0 ##  ##  ##  ## 0 ##
+1900
+1904
+1909
+1907
+1907
+1907
+1913
+1913
+1909
+1907
+1901
+1513
+1520
+203594384
+407187249
+407187259
+407187639
+407187644
+407187649
+407187645
+407187645
+407187651
+407187645
+407187635
+(R) Angers Sporting Club de l'Ouest
+(R) Club Atlético Cerro
+(R) Futboll Klub Kukësi
+(R) Hrvatski nogometni klub Rijeka (Croatian Football Club Rijeka)
+1017966190
+678644764
+508984056
+407187630
+(R) Maccabi Haifa Football Club
+407187631
+407187633
+407187642
+407187641
+407187645
+407187659
+407187651
+407187658
+(R) Sligo Rovers Football Club
+(R) Sociedad Deportiva Aucas
+(R) Koninklijke Racing Club Genk
+(R) West Ham United Football Club
+(R) Football Club Alashkert

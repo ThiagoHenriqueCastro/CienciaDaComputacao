@@ -1,9 +1,9 @@
 
 /**
- * TP01P2Q03 Lista Sequencial em Java
+ * TP02Q2 Pilha Flexivel
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
+ * @version 1 09/2019 Este algoritmo preenche uma pilha flexivel
  */
 
 import java.io.BufferedReader;
@@ -326,11 +326,23 @@ class Pilha {
      * Mostra os elementos separados por espacos, comecando do topo.
      */
 
-    public void mostrar() {
+    public int getTamanho() {
 
         int j = 0;
-        for (Celula i = topo; i != null; i = i.prox, j++) {
-            System.out.print("[" + j + "] ");
+        for (Celula i = topo; i != null; i = i.prox, j++)
+            ;
+
+        return j;
+    }
+
+    public void mostrarRec() {
+        mostrarRec(topo, getTamanho());
+    }
+
+    public void mostrarRec(Celula i, int cont) {
+        if (i != null) {
+            mostrarRec(i.prox, cont - 1);
+            System.out.print("[" + (cont - 1) + "]");
             i.elemento.imprimir();
         }
     }
@@ -341,17 +353,13 @@ public class Crawl {
         String[] input = new String[1000];
         int inputIndex = 0;
         MyIO.setCharset("UTF-8");
-        // Preenche o vetor 
+        // Preenche o vetor
 
-    do {
+        do {
             input[inputIndex] = MyIO.readLine();
         } while (isFim(input[inputIndex++]) == false);
         inputIndex--;
 
-    
-    
-
-    
         Pilha pilha = new Pilha();
         Time time;
         for (int i = 0; i < inputIndex; i++) {
@@ -391,12 +399,11 @@ public class Crawl {
                 MyIO.println(pilha.desempilhar());
             }
         }
-        
-        pilha.mostrar();
+
+        pilha.mostrarRec();
 
     }
 
-    
     /**
      * verifica se é o fim do arquivo
      */
@@ -441,8 +448,6 @@ public class Crawl {
         if (splitted[1].contains("Short name")) {
             splitted = splitted[1].split(" Short name");
 
-
-    
             splitted = splitted[1].split(" Founded");
         }
 
@@ -456,7 +461,7 @@ public class Crawl {
         value = value.replace("&#91 1&#93", "");
         value = value.replace("\"", "");
 
-    value = value.trim();
+        value = value.trim();
 
         return value;
     }

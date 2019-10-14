@@ -1,8 +1,8 @@
 /**
- * TP01P2Q02 Registro em C
+ * TP02Q4 Quicksort Flexivel em C
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma struct de Times
+ * @version 1 09/2019 Este algoritmo faz um quicksort em uma lista dupla
  */
 
 #include <stdio.h>

@@ -1,9 +1,9 @@
 
 /**
- * TP01P2Q03 Lista Sequencial em Java
+ * TP02Q1 Lista Dinamica em Java
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
+ * @version 1 09/2019 Este algoritmo preenche uma lista dinamica
  */
 
 import java.io.BufferedReader;

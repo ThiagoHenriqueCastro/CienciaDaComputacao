@@ -1,8 +1,8 @@
 /**
- * TP01P2Q02 Registro em C
+ * TP02Q3 Fila Flexivel em C
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma struct de Times
+ * @version 1 09/2019 Este algoritmo preenche uma fila
  */
 
 #include <stdio.h>
@@ -56,6 +56,8 @@ Celula *novaCelula(Time time[])
 //FILA PROPRIAMENTE DITA ========================================================
 Celula *primeiro;
 Celula *ultimo;
+int n = 0;
+int ano = 0;
 
 /**
  * Cria uma fila sem elementos (somente no cabeca).
@@ -69,16 +71,6 @@ void start()
 }
 
 /**
- * Insere elemento na fila (politica FIFO).
- * @param x int Elemento a inserir.
- */
-void inserir(Time x[])
-{
-    ultimo->prox = novaCelula(x);
-    ultimo = ultimo->prox;
-}
-
-/**
  * Remove elemento da fila (politica FIFO).
  * @return Elemento removido.
  */
@@ -89,12 +81,33 @@ char *remover()
         errx(1, "Erro ao remover!");
     }
     Celula *tmp = primeiro;
+
     primeiro = primeiro->prox;
+    ano = ano - primeiro->elemento.fundacaoAno;
     char *resp = primeiro->elemento.nome;
     tmp->prox = NULL;
     free(tmp);
     tmp = NULL;
+    n--;
     return resp;
+}
+
+/**
+ * Insere elemento na fila (politica FIFO).
+ * @param x int Elemento a inserir.
+ */
+void inserir(Time x[])
+{
+
+    if (n >= 5)
+    {
+        remover();
+    }
+    ano = ano + x->fundacaoAno;
+    ultimo->prox = novaCelula(x);
+    ultimo = ultimo->prox;
+    n++;
+    printf("%d\n", ano / n);
 }
 
 void imprimir(Time *time)
@@ -613,5 +626,5 @@ int main(int argc, char const *argv[])
         free(ops);
         free(path);
     }
-    mostrar();
+    //mostrar();
 }

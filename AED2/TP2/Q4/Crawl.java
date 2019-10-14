@@ -1,9 +1,9 @@
 
 /**
- * TP01P2Q03 Lista Sequencial em Java
+ * TP02Q7 Quicksort Flexivel em Java
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma Lista
+ * @version 1 09/2019 Este algoritmo faz um quicksort em uma lista dupla
  */
 
 import java.io.BufferedReader;
@@ -276,7 +276,7 @@ class CelulaDupla {
      * 
      * @param elemento int inserido na celula.
      */
-    public CelulaDupla(Time elemento){
+    public CelulaDupla(Time elemento) {
         this.elemento = elemento.clone();
         this.ant = this.prox = null;
     }
@@ -295,7 +295,6 @@ class ListaDupla {
         ultimo = primeiro;
     }
 
-
     /**
      * Insere um elemento na ultima posicao da lista.
      * 
@@ -306,7 +305,7 @@ class ListaDupla {
         ultimo.prox.ant = ultimo;
         ultimo = ultimo.prox;
     }
-    
+
     /**
      * Mostra os elementos da lista separados por espacos.
      */
@@ -314,7 +313,7 @@ class ListaDupla {
 
         int j = 0;
         for (CelulaDupla i = primeiro.prox; i != null; i = i.prox, j++) {
-            System.out.print("[" + j + "] ");
+            // System.out.print("[" + j + "] ");
             i.elemento.imprimir();
         }
     }
@@ -329,6 +328,58 @@ class ListaDupla {
         for (CelulaDupla i = primeiro; i != ultimo; i = i.prox, tamanho++)
             ;
         return tamanho;
+    }
+
+    void swap(CelulaDupla i, CelulaDupla j) {
+        Time aux = i.elemento.clone();
+        i.elemento = j.elemento.clone();
+        j.elemento = aux.clone();
+    }
+
+    CelulaDupla lastCelula(CelulaDupla raiz) {
+        while (raiz != null && raiz.prox != null) {
+            raiz = raiz.prox;
+        }
+
+        return raiz;
+    }
+
+    CelulaDupla partition(CelulaDupla l, CelulaDupla h) {
+        Time x = h.elemento;
+
+        CelulaDupla i = l.ant;
+
+        for (CelulaDupla j = l; j != h; j = j.prox) {
+            if (j.elemento.getApelido().compareTo(x.getApelido()) < 0) {
+                i = (i == null) ? l : i.prox;
+                swap(i, j);
+            }
+        }
+        i = (i == null) ? l : i.prox;
+        swap(i, h);
+
+        return i;
+    }
+
+    void _quicksort(CelulaDupla l, CelulaDupla h) {
+        if (h != null && l != h && l != h.prox) {
+            CelulaDupla p = partition(l, h);
+            _quicksort(l, p.ant);
+            _quicksort(p.prox, h);
+        }
+    }
+
+    void quicksort(CelulaDupla raiz) {
+        CelulaDupla h = lastCelula(raiz);
+
+        _quicksort(raiz, h);
+    }
+
+    /**
+     * @return the primeiro
+     */
+    public CelulaDupla getPrimeiro() {
+        return primeiro;
     }
 }
 
@@ -355,8 +406,8 @@ public class Crawl {
 
         }
 
+        lista.quicksort(lista.getPrimeiro());
         lista.mostrar();
-
     }
 
     /**

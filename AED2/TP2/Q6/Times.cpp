@@ -1,8 +1,8 @@
 /**
- * TP01P2Q02 Registro em C
+ * TP02Q6 Pilha Flexivel em C
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo le paginas html e preenche uma struct de Times
+ * @version 1 09/2019 Este algoritmo preenche uma pilha flexivel
  */
 
 #include <stdio.h>
@@ -507,16 +507,30 @@ int ler(char *path, Time *time)
 /**
  * Mostra os elementos da lista separados por espacos.
  */
-void mostrar()
+int getTamanho()
 {
     Celula *i;
     int j = 0;
 
     for (i = topo; i != NULL; i = i->prox, j++)
+        ;
+
+    return j;
+}
+
+void mostrarRec(Celula *i, int cont)
+{
+    if (i != NULL)
     {
-        printf("[%d] ", j);
+        mostrarRec(i->prox, cont - 1);
+        printf("[%d]", (cont - 1));
         imprimir(&i->elemento);
     }
+}
+
+void mostrar()
+{
+    mostrarRec(topo, getTamanho());
 }
 
 int main(int argc, char const *argv[])
