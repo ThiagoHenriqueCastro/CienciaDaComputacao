@@ -1,0 +1,57 @@
+Matriz: [
+1 2 
+3 4 
+]
+Diagonal Principal: 
+1 4 
+Diagonal Secundaria: 
+2 3 
+Soma Matriz: [
+6 8 
+10 12 
+]
+Multiplicacao Matriz: [
+19 22 
+43 50 
+]
+Matriz: [
+1 2 3 
+4 5 6 
+7 8 9 
+]
+Diagonal Principal: 
+1 5 9 
+Diagonal Secundaria: 
+3 5 7 
+Soma Matriz: [
+2 3 4 
+5 6 7 
+8 9 10 
+]
+Multiplicacao Matriz: [
+6 6 6 
+15 15 15 
+24 24 24 
+]
+Matriz: [
+1 1 1 1 
+1 1 1 1 
+1 1 1 1 
+1 1 1 1 
+]
+Diagonal Principal: 
+1 1 1 1 
+Diagonal Secundaria: 
+1 1 1 1 
+Soma Matriz: [
+3 3 3 3 
+3 3 3 3 
+3 3 3 3 
+3 3 3 3 
+]
+Multiplicacao Matriz: [
+8 8 8 8 
+8 8 8 8 
+8 8 8 8 
+8 8 8 8 
+]
