@@ -118,6 +118,62 @@ class _Pilha {
     }
 }
 
+class _Fila_sem_no {
+    private Celula primeiro, ultimo;
+
+    public _Fila_sem_no() {
+        primeiro = ultimo = null;
+    }
+
+    /***
+     * Na fila sem o no cabeça temos um if/else. Antes de proceder para a inserçao,
+     * devemos verificar se o primeiro aponta para null. Caso aponte, devemos
+     * somente criar esse primeiro elemento e apontar o ultimo para o mesmo. Isso é
+     * similar ao criar o nó, porem este elemento é valido.
+     * 
+     * @param x
+     */
+    public void inserir(int x) {
+
+        if (primeiro == null) {
+            primeiro = new Celula(x);
+            ultimo = primeiro;
+        } else {
+            ultimo.prox = new Celula(x);
+            ultimo = ultimo.prox;
+        }
+
+    }
+
+    public int remover() throws Exception {
+        int elemento;
+        if (primeiro == null)
+            throw new Exception("Estrutura Vazia");
+        else if (primeiro == ultimo) {
+            elemento = primeiro.elemento;
+            primeiro = ultimo = null;
+        }
+        // nesse else, sei que primeiro != ultimo
+        else {
+            elemento = primeiro.elemento;
+            Celula tmp = primeiro;
+            primeiro = primeiro.prox;
+            tmp = tmp.prox = null;
+        }
+
+        return elemento;
+
+    }
+
+    public void mostrar() {
+        System.out.print("Elementos da Fila sem Nó: [ ");
+        for (Celula i = primeiro; i != null; i = i.prox) {
+            System.out.print(i.elemento + " ");
+        }
+        System.out.println("]");
+    }
+}
+
 class _Fila {
     private Celula primeiro, ultimo;
 
@@ -240,10 +296,23 @@ class _Fila {
         return soma;
     }
 
-    /*
-     * public Celula toFila(Celula i){ if(i != null){ toFila(i.prox); ultimo.prox =
-     * new Celula(i.elemento); ultimo = ultimo.prox; } }
-     */
+    private static Celula newInsert(int x) {
+        Celula i = new Celula(x);
+
+        return i;
+    }
+
+    public static Celula toFila(Celula topo) {
+        Celula primeiro = new Celula(-1);
+        Celula ultimo = primeiro;
+
+        for (Celula i = topo; i != null; i = i.prox) {
+            ultimo.prox = newInsert(i.elemento);
+            ultimo = ultimo.prox;
+        }
+
+        return primeiro;
+    }
 }
 
 public class Fila {
@@ -295,7 +364,35 @@ public class Fila {
 
         _Fila pilha_fila = new _Fila();
 
-        pilha_fila.toFila(pilha.getTopo());
+        Celula no_cabeca = pilha_fila.toFila(pilha.getTopo());
+
+        System.out.print("Elementos da pilha em fila: [ ");
+        for (Celula i = no_cabeca.prox; i != null; i = i.prox) {
+            System.out.print(i.elemento + " ");
+        }
+        System.out.println("]");
+
+        _Fila_sem_no sem_no = new _Fila_sem_no();
+
+        sem_no.inserir(0);
+        try {
+            sem_no.remover();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sem_no.inserir(1);
+        sem_no.inserir(3);
+        sem_no.inserir(5);
+        sem_no.inserir(9);
+        sem_no.inserir(7);
+        sem_no.inserir(10);
+        try {
+            sem_no.remover();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        sem_no.mostrar();
 
     }
 }

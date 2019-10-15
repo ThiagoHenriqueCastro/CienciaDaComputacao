@@ -8,6 +8,51 @@ class Celula {
     }
 }
 
+class _Pilha_com_no{
+    private Celula topo;
+
+    public _Pilha_com_no(){
+        topo = new Celula(-1);
+    }
+
+    private int tamanho(){
+        int j = 0;
+        for(Celula i = topo; i != null; i = i.prox, j++);
+
+        return j - 1;
+    }
+    
+    public void inserir(int x){
+        Celula tmp = new Celula(x);
+
+        tmp.prox = topo;
+        topo = tmp;
+        tmp = null;
+    }
+
+    public int remover() throws Exception{
+        if(tamanho() == 0) throw new Exception("Estrutura Vazia!");
+
+        int elemento = topo.elemento;
+
+        Celula tmp = topo;
+        topo = topo.prox;
+        tmp = tmp.prox = null;
+
+        return elemento;
+    }
+
+    public void mostrar() {
+        System.out.print("Elementos da Pilha com Nó Cabeça: [ ");
+        Celula j = topo;
+        for (int i = 0; i < tamanho(); i++, j = j.prox) {
+            System.out.print(j.elemento + " ");
+        }
+        System.out.println("]");
+    }
+
+}
+
 class _Pilha {
     private Celula topo;
 
@@ -136,6 +181,16 @@ public class Pilha {
         System.out.println("Maior Elemento Recursivo: " + pilha.getMaior_Recursivo());
 
         pilha.mostrar_insercao_recursivo();
+
+        _Pilha_com_no com_no = new _Pilha_com_no();
+        com_no.inserir(1);
+        com_no.inserir(3);
+        com_no.inserir(5);
+        com_no.inserir(9);
+        com_no.inserir(7);
+
+        com_no.mostrar();
+
 
     }
 }
