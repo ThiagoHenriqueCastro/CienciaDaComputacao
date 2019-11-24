@@ -1,9 +1,9 @@
 
 /**
- * TP02Q7 Quicksort Flexivel em Java
+ * TP03Q1 Arvore Binaria
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo faz um quicksort em uma lista dupla
+ * @version 1 09/2019 Arvore Binaria
  */
 
 import java.io.BufferedReader;
@@ -297,23 +297,26 @@ class _Arvore {
     }
 
     public boolean pesquisar(String x) {
+        System.out.print(x + " raiz ");
         return pesquisar(x, raiz);
     }
 
     private boolean pesquisar(String x, No i) {
         boolean resp;
         if (i == null) {
-            System.out.print("raiz ");
+            // System.out.print(" raiz ");
             resp = false;
         } else if (i.elemento.getNome().equals(x)) {
             resp = true;
-            System.out.print("raiz ");
+            // System.out.print("raiz ");
         } else if (x.compareTo(i.elemento.getNome()) < 0) {
-            resp = pesquisar(x, i.esq);
             System.out.print("esq ");
+            resp = pesquisar(x, i.esq);
+
         } else {
-            resp = pesquisar(x, i.dir);
             System.out.print("dir ");
+            resp = pesquisar(x, i.dir);
+
         }
 
         return resp;

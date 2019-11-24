@@ -1,9 +1,9 @@
 
 /**
- * TP02Q7 Quicksort Flexivel em Java
+ * TP03Q4 AN
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo faz um quicksort em uma lista dupla
+ * @version 1 09/2019 AN
  */
 
 import java.io.BufferedReader;
@@ -301,6 +301,7 @@ class _Arvore {
      *         contrario.
      */
     public boolean pesquisar(String x) {
+        System.out.print(x + " raiz ");
         return pesquisar(x, raiz);
     }
 
@@ -319,10 +320,14 @@ class _Arvore {
 
         } else if (x.equals(i.elemento.getNome())) {
             resp = true;
-        } else if (x.compareTo(i.elemento.getNome()) < 0)
+        } else if (x.compareTo(i.elemento.getNome()) < 0) {
+            System.out.print("esq ");
             resp = pesquisar(x, i.esq);
-        else {
+
+        } else {
+            System.out.print("dir ");
             resp = pesquisar(x, i.dir);
+
         }
         return resp;
     }
@@ -534,7 +539,7 @@ public class Crawl {
         }
 
         try {
-            FileWriter writer = new FileWriter("649884_arvoreBinaria.txt");
+            FileWriter writer = new FileWriter("649884_alvinegra.txt");
             writer.write("649884\t" + (System.currentTimeMillis() - start) + "\t" + arvore.comparisons);
             writer.flush();
             writer.close();

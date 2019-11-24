@@ -1,9 +1,9 @@
 
 /**
- * TP02Q7 Quicksort Flexivel em Java
+ * TP03Q5
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo faz um quicksort em uma lista dupla
+ * @version 1 09/2019 Hash com reserva
  */
 
 import java.io.BufferedReader;
@@ -305,6 +305,7 @@ class Hash {
 
     public boolean pesquisar(String nome) {
         boolean resp = false;
+        System.out.print(nome);
         long chave = 0;
         for (int i = 0; i < m; i++, comparisons++) {
             if (tabela[i] != null && tabela[i].getNome().equals(nome))
@@ -361,7 +362,7 @@ public class Crawl {
         searchIndex--;
 
         for (int i = 0; i < searchIndex; i++) {
-            System.out.println(hash.pesquisar(searches[i]) ? "SIM" : "NÃO");
+            System.out.println(hash.pesquisar(searches[i]) ? " SIM" : " NÃO");
         }
 
         try {

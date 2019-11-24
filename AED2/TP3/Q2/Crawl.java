@@ -1,9 +1,9 @@
 
 /**
- * TP02Q7 Quicksort Flexivel em Java
+ * TP03Q02 Arvore de Arvore
  * 
  * @author Thiago Henrique de Castro Oliveira
- * @version 1 09/2019 Este algoritmo faz um quicksort em uma lista dupla
+ * @version 1 11/2019 Arvore de Arvore
  */
 
 import java.io.BufferedReader;
@@ -342,6 +342,7 @@ class _Arvore {
     }
 
     public boolean pesquisar(String nome) {
+        System.out.print(nome + " raiz ");
         return pesquisar(raiz, nome);
     }
 
@@ -354,9 +355,11 @@ class _Arvore {
         } else {
             MyIO.print("esq ");
             resp = pesquisar(i.esq, nome);
+
             if (!resp) {
                 MyIO.print("dir ");
                 resp = pesquisar(i.dir, nome);
+
             }
         }
 
@@ -373,10 +376,10 @@ class _Arvore {
             // System.out.print("raiz ");
         } else if (x.compareTo(i.elemento.getNome()) < 0) {
             resp = pesquisar(i.esq, x);
-            // System.out.print("esq ");
+            System.out.print("ESQ ");
         } else {
             resp = pesquisar(i.dir, x);
-            // System.out.print("dir ");
+            System.out.print("DIR ");
         }
 
         return resp;
