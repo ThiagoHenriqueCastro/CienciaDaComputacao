@@ -3,6 +3,7 @@ import java.io.*;
 public class Parser {
     public static void main(String[] args) throws Exception {
         Parse("Files/testeula.ula");
+        Send("Files/testeula.hex");
     }
 
     public static void Parse(String path) {
@@ -119,6 +120,30 @@ public class Parser {
             brULA.close();
             frHex.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void Send(String path) {
+        try {
+            ProcessBuilder pb;
+            Process p;
+            String line;
+
+            // Gerenciamento do Hex
+            File arqHEX = new File(path);
+            FileInputStream fileHEX = new FileInputStream(arqHEX);
+            InputStreamReader isHEX = new InputStreamReader(fileHEX, "UTF-8");
+            BufferedReader brHEX = new BufferedReader(isHEX);
+            line = brHEX.readLine();
+            do {
+                // System.out.println(line);
+                pb = new ProcessBuilder("envia.exe", "com4", line); // com4 deve ser ajustado para a porta correta
+                p = pb.start();
+                p.waitFor();
+                System.in.read();
+            } while ((line = brHEX.readLine()) != null);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
