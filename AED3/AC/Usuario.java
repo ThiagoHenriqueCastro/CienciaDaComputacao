@@ -1,7 +1,7 @@
 import java.io.*;
 
 // Entidade Usuario
-class Usuario {
+public class Usuario {
 
     protected int idUsuario;
     protected String nome;
@@ -72,7 +72,7 @@ class Usuario {
     // METODOS PARA REPRESENTAÇÃO DA CLASSE EM UM VETOR DE BYTES
 
     // Escreve e devolve os atributos da classe em um vetor de bytes
-    public byte[] toByteArray() throws IOException {
+    public ByteArrayOutputStream toByteArray() throws IOException {
         // crio um fluxo de saida de dados para preencher meu output de bytes
         ByteArrayOutputStream dados = new ByteArrayOutputStream();
         DataOutputStream saida = new DataOutputStream(dados);
@@ -84,7 +84,7 @@ class Usuario {
         saida.writeUTF(this.senha);
 
         // retorno meu vetor de bytes preenchido
-        return dados.toByteArray();
+        return dados;
     }
 
     // Leio de um vetor de bytes e armazeno na classe
