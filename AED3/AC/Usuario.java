@@ -97,8 +97,11 @@ public class Usuario {
 
         // leio do meu fluxo de dados e armazeno nos atributos da classe
         this.idUsuario = entrada.readInt();
+
         this.nome = entrada.readUTF();
+
         this.email = entrada.readUTF();
+
         this.senha = entrada.readUTF();
     }
 

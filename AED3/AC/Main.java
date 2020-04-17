@@ -1,12 +1,94 @@
 import java.io.*;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
+        Scanner reader = new Scanner(System.in);
+
         Crud crud = new Crud();
 
-        System.out.println(crud.create("a", "b", "c"));
+        byte flag = 0;
+        String email = "";
+        String nome = "";
+        String senha = "";
 
+        do {
+            System.out.println("AMIGO OCULTO 1.0");
+            System.out.println("================");
+            System.out.println("ACESSO");
+            System.out.println("1) Acesso ao sistema");
+            System.out.println("2) Novo usuario (primeiro acesso)");
+            System.out.println("0) Sair");
+
+            flag = reader.nextByte();
+            reader.nextLine();
+
+            // Acesso de usuario ja existente
+            if (flag == 1) {
+                System.out.println("ACESSO AO SISTEMA");
+                System.out.print("Email: ");
+                email = reader.nextLine();
+                int isRegistered = 0;
+                try {
+                    isRegistered = crud.emailExists(email);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (isRegistered == -1) {
+                    System.out.println("NÃO EXISTE NENHUMA CONTA ASSOCIADA A ESSE EMAIL\n");
+                    press_toContinue();
+                } else {
+                    System.out.print("Senha: ");
+                    senha = reader.nextLine();
+                    Usuario user = new Usuario();
+                    user = crud.read(email);
+                    if (user.getSenha().equals(senha)) {
+                        System.out.println("EM CONSTRUÇÃO");
+                        press_toContinue();
+                    } else {
+                        System.out.println("SENHA INCORRETA\n");
+                        press_toContinue();
+                    }
+                }
+            }
+            // Novo usuario
+            if (flag == 2) {
+                System.out.println("NOVO USUARIO");
+                System.out.print("Email: ");
+                email = reader.nextLine();
+                // Verificar se o email existe
+                int isRegistered = 0;
+                try {
+                    isRegistered = crud.emailExists(email);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (isRegistered == -1) {
+                    System.out.print("Nome: ");
+                    nome = reader.nextLine();
+                    System.out.print("Senha: ");
+                    senha = reader.nextLine();
+
+                    String confirm = "";
+                    System.out.println("DESEJA CRIAR A CONTA COM ESSAS INFORMAÇÕES?(S/N)");
+                    confirm = reader.nextLine();
+                    if (confirm.equals("s") || confirm.equals("S")) {
+                        crud.create(nome, email, senha);
+                        System.out.println("Cadastro realizado com sucesso!\n");
+                        press_toContinue();
+                    }
+
+                } else {
+                    System.out.println("Email ja cadastrado\n");
+                    press_toContinue();
+                }
+
+            }
+
+        } while (flag != 0);
         // TESTES DE IMPLEMENTAÇÃO APENAS!
         /*
          * Usuario user1 = new Usuario(1, "Thiago Henrique", "titico@titico.com",
@@ -22,5 +104,15 @@ public class Main {
          * 
          * catch (IOException e) { e.printStackTrace(); }
          */
+    }
+
+    static void press_toContinue() {
+        try {
+            System.out.println("Pressione uma tecla para continuar...");
+            System.in.read();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

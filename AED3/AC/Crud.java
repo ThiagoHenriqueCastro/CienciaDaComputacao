@@ -56,4 +56,41 @@ class Crud {
         return current_id;
     }
 
+    // Busca pela chave primaria id
+    public Usuario read(int id) {
+        Usuario user = new Usuario();
+        try {
+            long endereco = indice_direto.read(id);
+            arq.seek(endereco + 1);
+            short reg_size = arq.readShort();
+            // System.out.println(reg_size);
+            arq.seek(endereco + 3);
+            byte[] data = new byte[reg_size];
+            arq.readFully(data);
+
+            user.fromByteArray(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    // Busca pela chave secundaria email
+    public Usuario read(String email) {
+        Usuario user = new Usuario();
+        try {
+            int id = indice_indireto.read(email);
+            user = read(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    public int emailExists(String email) throws Exception {
+        return indice_indireto.read(email);
+    }
+
 }
