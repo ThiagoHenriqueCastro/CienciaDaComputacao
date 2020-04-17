@@ -1,7 +1,7 @@
 import java.io.*;
 
 // Entidade Usuario
-public class Usuario {
+public class Usuario implements Registro {
 
     protected int idUsuario;
     protected String nome;
@@ -72,37 +72,45 @@ public class Usuario {
     // METODOS PARA REPRESENTAÇÃO DA CLASSE EM UM VETOR DE BYTES
 
     // Escreve e devolve os atributos da classe em um vetor de bytes
-    public ByteArrayOutputStream toByteArray() throws IOException {
-        // crio um fluxo de saida de dados para preencher meu output de bytes
-        ByteArrayOutputStream dados = new ByteArrayOutputStream();
-        DataOutputStream saida = new DataOutputStream(dados);
+    public ByteArrayOutputStream toByteArray() {
+        ByteArrayOutputStream dados = null;
+        DataOutputStream saida = null;
+        try {
+            // crio um fluxo de saida de dados para preencher meu output de bytes
+            dados = new ByteArrayOutputStream();
+            saida = new DataOutputStream(dados);
 
-        // escrevo no fluxo de saida os meus dados
-        saida.writeInt(this.idUsuario);
-        saida.writeUTF(this.nome);
-        saida.writeUTF(this.email);
-        saida.writeUTF(this.senha);
-
+            // escrevo no fluxo de saida os meus dados
+            saida.writeInt(this.idUsuario);
+            saida.writeUTF(this.nome);
+            saida.writeUTF(this.email);
+            saida.writeUTF(this.senha);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // retorno meu vetor de bytes preenchido
         return dados;
     }
 
     // Leio de um vetor de bytes e armazeno na classe
-    public void fromByteArray(byte[] bytes) throws IOException {
+    public void fromByteArray(byte[] bytes) {
+        try {
+            // com o vetor de bytes recebido por parametro, crio um fluxo de entrada que
+            // sera manuseado pelo meu fluxo de dados
+            ByteArrayInputStream dados = new ByteArrayInputStream(bytes);
+            DataInputStream entrada = new DataInputStream(dados);
 
-        // com o vetor de bytes recebido por parametro, crio um fluxo de entrada que
-        // sera manuseado pelo meu fluxo de dados
-        ByteArrayInputStream dados = new ByteArrayInputStream(bytes);
-        DataInputStream entrada = new DataInputStream(dados);
+            // leio do meu fluxo de dados e armazeno nos atributos da classe
+            this.idUsuario = entrada.readInt();
 
-        // leio do meu fluxo de dados e armazeno nos atributos da classe
-        this.idUsuario = entrada.readInt();
+            this.nome = entrada.readUTF();
 
-        this.nome = entrada.readUTF();
+            this.email = entrada.readUTF();
 
-        this.email = entrada.readUTF();
-
-        this.senha = entrada.readUTF();
+            this.senha = entrada.readUTF();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

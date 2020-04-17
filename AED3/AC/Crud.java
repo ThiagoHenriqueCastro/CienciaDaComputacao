@@ -1,12 +1,14 @@
 import java.io.*;
+import java.lang.reflect.Constructor;
 
-class Crud {
+class Crud<T extends Registro> {
     private RandomAccessFile arq;
     private HashExtensivel indice_direto;
     private ArvoreBMais_String_Int indice_indireto;
+    Constructor<T> construtor;
 
-    public Crud() {
-
+    public Crud(Constructor<T> construtor) {
+        this.construtor = construtor;
         try {
             arq = new RandomAccessFile("dados/dados.db", "rw");
 
@@ -48,7 +50,7 @@ class Crud {
 
             // Indices
             indice_direto.create(user.getId(), begin);
-            indice_indireto.create(user.getEmail(), user.getId());
+            indice_indireto.create(email, user.getId());
 
         } catch (Exception e) {
             e.printStackTrace();
