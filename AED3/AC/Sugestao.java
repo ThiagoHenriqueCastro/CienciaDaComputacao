@@ -93,8 +93,8 @@ public class Sugestao implements Registro {
 
     // Escreve e devolve os atributos da classe em um vetor de bytes
     public ByteArrayOutputStream toByteArray() {
-        ByteArrayOutputStream dados;
-        DataOutputStream saida;
+        ByteArrayOutputStream dados = null;
+        DataOutputStream saida = null;
         try {
             // crio um fluxo de saida de dados para preencher meu output de bytes
             dados = new ByteArrayOutputStream();

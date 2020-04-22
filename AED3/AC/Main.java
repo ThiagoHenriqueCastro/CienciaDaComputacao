@@ -56,6 +56,10 @@ public class Main {
                         active_id = user.getId();
                         byte flag1 = 0;
                         byte flag2 = 0;
+                        String produto = "";
+                        String loja = "";
+                        float valor = 0;
+                        String obs = "";
                         System.out.println("AMIGO OCULTO 1.0");
                         System.out.println("================");
                         System.out.println("INICIO");
@@ -79,6 +83,30 @@ public class Main {
 
                             flag2 = reader.nextByte();
                             reader.nextLine();
+
+                            if (flag2 == 2) {
+                                System.out.print("Digite o nome do produto: ");
+                                produto = reader.nextLine();
+
+                                if (!produto.equals("")) {
+                                    System.out.print("Digite o nome da loja: ");
+                                    loja = reader.nextLine();
+                                    System.out.print("Digite o valor do produto: ");
+                                    valor = reader.nextFloat();
+                                    reader.nextLine();
+                                    System.out.print("Digite suas observações sobre o produto: ");
+                                    obs = reader.nextLine();
+
+                                    String confirm = "";
+                                    System.out.println("DESEJA CRIAR A SUGESTÃO COM ESSAS INFORMAÇÕES?(S/N)");
+                                    confirm = reader.nextLine();
+                                    if (confirm.equals("s") || confirm.equals("S")) {
+                                        crud.create(active_id, produto, loja, valor, obs);
+                                        System.out.println("Cadastro de sugestão realizado com sucesso!\n");
+                                        press_toContinue();
+                                    }
+                                }
+                            }
                         }
                     } else {
                         System.out.println("SENHA INCORRETA\n");
