@@ -60,54 +60,63 @@ public class Main {
                         String loja = "";
                         float valor = 0;
                         String obs = "";
-                        System.out.println("AMIGO OCULTO 1.0");
-                        System.out.println("================");
-                        System.out.println("INICIO");
-                        System.out.println("1) Sugestões de presentes");
-                        System.out.println("2) Grupos");
-                        System.out.println("3) Novos convites: 0");
-                        System.out.println("0) Sair");
-
-                        flag1 = reader.nextByte();
-                        reader.nextLine();
-
-                        if (flag == 1) {
+                        do {
                             System.out.println("AMIGO OCULTO 1.0");
-                            System.out.println("================\n");
-                            System.out.println("INICIO > SUGESTÕES\n\n");
-                            System.out.println("1) Listar");
-                            System.out.println("2) Incluir");
-                            System.out.println("3) Alterar");
-                            System.out.println("3) Excluir");
-                            System.out.println("0) Retornar ao menu anterior");
+                            System.out.println("================");
+                            System.out.println("INICIO");
+                            System.out.println("1) Sugestões de presentes");
+                            System.out.println("2) Grupos");
+                            System.out.println("3) Novos convites: 0");
+                            System.out.println("0) Sair");
 
-                            flag2 = reader.nextByte();
+                            flag1 = reader.nextByte();
                             reader.nextLine();
 
-                            if (flag2 == 2) {
-                                System.out.print("Digite o nome do produto: ");
-                                produto = reader.nextLine();
+                            if (flag1 == 1) {
+                                System.out.println("AMIGO OCULTO 1.0");
+                                System.out.println("================\n");
+                                System.out.println("INICIO > SUGESTÕES\n\n");
+                                System.out.println("1) Listar");
+                                System.out.println("2) Incluir");
+                                System.out.println("3) Alterar");
+                                System.out.println("3) Excluir");
+                                System.out.println("0) Retornar ao menu anterior");
 
-                                if (!produto.equals("")) {
-                                    System.out.print("Digite o nome da loja: ");
-                                    loja = reader.nextLine();
-                                    System.out.print("Digite o valor do produto: ");
-                                    valor = reader.nextFloat();
-                                    reader.nextLine();
-                                    System.out.print("Digite suas observações sobre o produto: ");
-                                    obs = reader.nextLine();
+                                flag2 = reader.nextByte();
+                                reader.nextLine();
 
-                                    String confirm = "";
-                                    System.out.println("DESEJA CRIAR A SUGESTÃO COM ESSAS INFORMAÇÕES?(S/N)");
-                                    confirm = reader.nextLine();
-                                    if (confirm.equals("s") || confirm.equals("S")) {
-                                        crud.create(active_id, produto, loja, valor, obs);
-                                        System.out.println("Cadastro de sugestão realizado com sucesso!\n");
-                                        press_toContinue();
+                                if (flag2 == 1) {
+                                    System.out.println("MINHAS SUGESTÕES");
+
+                                    crud.list(active_id);
+                                    System.out.println("");
+                                    press_toContinue();
+
+                                } else if (flag2 == 2) {
+                                    System.out.print("Digite o nome do produto: ");
+                                    produto = reader.nextLine();
+
+                                    if (!produto.equals("")) {
+                                        System.out.print("Digite o nome da loja: ");
+                                        loja = reader.nextLine();
+                                        System.out.print("Digite o valor do produto: ");
+                                        valor = reader.nextFloat();
+                                        reader.nextLine();
+                                        System.out.print("Digite suas observações sobre o produto: ");
+                                        obs = reader.nextLine();
+
+                                        String confirm = "";
+                                        System.out.println("DESEJA CRIAR A SUGESTÃO COM ESSAS INFORMAÇÕES?(S/N)");
+                                        confirm = reader.nextLine();
+                                        if (confirm.equals("s") || confirm.equals("S")) {
+                                            crud.create(active_id, produto, loja, valor, obs);
+                                            System.out.println("Cadastro de sugestão realizado com sucesso!\n");
+                                            press_toContinue();
+                                        }
                                     }
                                 }
                             }
-                        }
+                        } while (flag1 != 0);
                     } else {
                         System.out.println("SENHA INCORRETA\n");
                         press_toContinue();

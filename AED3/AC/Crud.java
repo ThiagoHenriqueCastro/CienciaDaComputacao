@@ -1,5 +1,6 @@
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 class Crud<T extends Registro> {
     private RandomAccessFile arq;
@@ -24,7 +25,7 @@ class Crud<T extends Registro> {
 
             indice_direto = new HashExtensivel(5, "dados/diretorio.db", "dados/bucket.db");
             indice_indireto = new ArvoreBMais_String_Int(5, "dados/AB.db");
-            indice_sugestions = new AB_sugestions(100, "dados/sugestions.db");
+            indice_sugestions = new AB_sugestions("dados/sugestions.db");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +70,7 @@ class Crud<T extends Registro> {
     public int create(int id, String p, String l, float f, String o) {
         int last_id = 0;
         int current_id = 0;
+        long begin = 0;
         try {
             arq_s.seek(0);
             last_id = arq_s.readInt();
@@ -80,8 +82,8 @@ class Crud<T extends Registro> {
             Sugestao sugestao = new Sugestao(current_id, id, p, l, f, o);
 
             // Movo o ponteiro pro fim do arquivo
-            arq.seek(arq_s.length());
-            long begin = arq_s.getFilePointer();
+            arq_s.seek(arq_s.length());
+            begin = arq_s.getFilePointer();
             // System.out.println(begin);
             arq_s.writeByte('*');
             arq_s.seek(arq_s.length());
@@ -89,14 +91,40 @@ class Crud<T extends Registro> {
             arq_s.seek(arq_s.length());
             arq_s.write(sugestao.toByteArray().toByteArray());
 
-            // Indices
-
-            indice_sugestions.inserir(current_id, id);
+            indice_sugestions.insere(current_id, begin);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return current_id;
+    }
+
+    // Lista as sugestões de um dado usuario
+    public void list(int idU) {
+        ArrayList<Long> sugestoes = null;
+        String p = "";
+        try {
+            sugestoes = indice_sugestions.getSugestions(idU);
+
+            for (int i = 0; i < sugestoes.size(); i++) {
+                arq_s.seek(sugestoes.get(i));
+                byte lapide = arq_s.readByte();
+                short tamanho_reg = arq_s.readShort();
+                int idSugestao = arq_s.readInt();
+                int idUsuario = arq_s.readInt();
+                String produto = arq_s.readUTF();
+                String loja = arq_s.readUTF();
+                Float valor = arq_s.readFloat();
+                String obs = arq_s.readUTF();
+
+                System.out.println((i + 1) + ". " + produto);
+                System.out.println(loja);
+                System.out.println("R$ " + valor);
+                System.out.println(obs);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Busca um usuario no arquivo de dados pela chave primaria id
