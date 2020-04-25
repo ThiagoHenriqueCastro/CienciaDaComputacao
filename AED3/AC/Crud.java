@@ -158,17 +158,44 @@ class Crud<T extends Registro> {
                 Float valor = arq_s.readFloat();
                 String obs = arq_s.readUTF();
 
-                System.out.println((i + 1) + ". " + produto);
-                System.out.println(loja);
-                System.out.println("R$ " + valor);
-                System.out.println(obs);
+                if (lapide == '*') {
+
+                    System.out.println((i + 1) + ". " + produto);
+                    System.out.println(loja);
+                    System.out.println("R$ " + valor);
+                    System.out.println(obs);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Altera uma sugestão com base no id da mesma
+    // Altera uma sugestão
+    public void update_sugestao(Sugestao s) throws Exception {
+        long endereco = indice_direto_sugestoes.read(s.getId());
+        arq_s.seek(endereco + 1);
+        long old_size = arq_s.readShort();
+        if (old_size == s.toByteArray().size()) {
+            arq_s.seek(endereco);
+            arq_s.writeByte('*');
+            arq_s.writeShort(s.toByteArray().size());
+            arq_s.write(s.toByteArray().toByteArray());
+
+        } else {
+            arq_s.seek(endereco);
+            arq_s.writeByte('$');
+            arq_s.seek(arq_s.length());
+            long begin = arq_s.getFilePointer();
+            arq_s.writeByte('*');
+            arq_s.writeShort(s.toByteArray().size());
+            arq_s.write(s.toByteArray().toByteArray());
+
+            indice_sugestions.insere(s.getIdUsuario(), begin);
+            indice_direto_sugestoes.update(s.getId(), begin);
+
+        }
+    }
 
     // Busca um usuario no arquivo de dados pela chave primaria id
     public Sugestao read_Sugestao(int pseudo_id) {

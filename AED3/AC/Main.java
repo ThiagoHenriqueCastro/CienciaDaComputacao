@@ -136,6 +136,39 @@ public class Main {
                                         System.out.println("R$ " + s.getValor());
                                         System.out.println(s.getObservacoes());
                                         System.out.println("");
+                                        System.out.print("Digite o novo produto: ");
+                                        String new_produto = reader.nextLine();
+                                        if (new_produto.equals(""))
+                                            new_produto = s.getProduto();
+                                        System.out.print("Digite a nova loja: ");
+                                        String new_loja = reader.nextLine();
+                                        if (new_loja.equals(""))
+                                            new_loja = s.getLoja();
+                                        System.out.print("Digite o novo valor: ");
+                                        String new_valor = reader.nextLine();
+                                        float new_valor_float;
+                                        if (new_valor.equals("")) {
+                                            new_valor_float = s.getValor();
+                                        } else {
+                                            new_valor_float = Float.parseFloat(new_valor);
+                                        }
+                                        System.out.print("Digite a nova observação: ");
+                                        String new_obs = reader.nextLine();
+                                        if (new_obs.equals(""))
+                                            new_obs = s.getObservacoes();
+
+                                        Sugestao updated_sugestao = new Sugestao(s.getId(), s.getIdUsuario(),
+                                                new_produto, new_loja, new_valor_float, new_obs);
+
+                                        try {
+                                            crud.update_sugestao(updated_sugestao);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        System.out.println("Sugestão alterada com sucesso!");
+                                        press_toContinue();
+
                                     }
                                 }
                             }
