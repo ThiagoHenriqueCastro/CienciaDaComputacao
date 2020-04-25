@@ -91,7 +91,7 @@ class Crud<T extends Registro> {
             arq_s.seek(arq_s.length());
             arq_s.write(sugestao.toByteArray().toByteArray());
 
-            indice_sugestions.insere(current_id, begin);
+            indice_sugestions.insere(id, begin);
 
         } catch (Exception e) {
             e.printStackTrace();
