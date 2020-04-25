@@ -7,11 +7,24 @@ class Crud<T extends Registro> {
     private RandomAccessFile arq_s;
     private HashExtensivel indice_direto;
     private ArvoreBMais_String_Int indice_indireto;
+    private HashExtensivel indice_direto_sugestoes;
     private AB_sugestions indice_sugestions;
+    private int[][] associacao_vetorid;
+    private int associacao_n;
     Constructor<T> construtor;
 
     public Crud(Constructor<T> construtor) {
         this.construtor = construtor;
+        associacao_n = 500; // Mudar conforme necessidade
+        associacao_vetorid = new int[associacao_n][2];
+
+        for (int i = 0; i < associacao_n; i++) {
+            associacao_vetorid[i][0] = -1;
+        }
+        for (int i = 0; i < associacao_n; i++) {
+            associacao_vetorid[i][1] = -1;
+        }
+
         try {
             arq = new RandomAccessFile("dados/dados.db", "rw");
             arq_s = new RandomAccessFile("dados/dados_s.db", "rw");
@@ -26,6 +39,8 @@ class Crud<T extends Registro> {
             indice_direto = new HashExtensivel(5, "dados/diretorio.db", "dados/bucket.db");
             indice_indireto = new ArvoreBMais_String_Int(5, "dados/AB.db");
             indice_sugestions = new AB_sugestions("dados/sugestions.db");
+            indice_direto_sugestoes = new HashExtensivel(5, "dados/diretorio_sugestions.db",
+                    "dados/bucket_sugestions.db");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,11 +107,37 @@ class Crud<T extends Registro> {
             arq_s.write(sugestao.toByteArray().toByteArray());
 
             indice_sugestions.insere(id, begin);
+            indice_direto_sugestoes.create(current_id, begin);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return current_id;
+    }
+
+    public void organiza_vetor(int id) {
+        ArrayList<Long> sugestoes = null;
+
+        try {
+            sugestoes = indice_sugestions.getSugestions(id);
+            for (int i = 0; i < sugestoes.size(); i++) {
+                arq_s.seek(sugestoes.get(i));
+                byte lapide = arq_s.readByte();
+                short tamanho_reg = arq_s.readShort();
+                int idSugestao = arq_s.readInt();
+                int idUsuario = arq_s.readInt();
+                String produto = arq_s.readUTF();
+                String loja = arq_s.readUTF();
+                Float valor = arq_s.readFloat();
+                String obs = arq_s.readUTF();
+
+                associacao_vetorid[i][0] = i + 1;
+                associacao_vetorid[i][1] = idSugestao;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Lista as sugestões de um dado usuario
@@ -125,6 +166,35 @@ class Crud<T extends Registro> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Altera uma sugestão com base no id da mesma
+
+    // Busca um usuario no arquivo de dados pela chave primaria id
+    public Sugestao read_Sugestao(int pseudo_id) {
+        Sugestao s = new Sugestao();
+        int idSugestao = 0;
+        for (int i = 0; i < associacao_vetorid.length; i++) {
+            // System.out.println(associacao_vetorid[i][1]);
+            if (associacao_vetorid[i][0] == pseudo_id) {
+                idSugestao = associacao_vetorid[i][1];
+            }
+        }
+        try {
+            long endereco = indice_direto_sugestoes.read(idSugestao);
+            arq_s.seek(endereco + 1);
+            short reg_size = arq_s.readShort();
+            // System.out.println(reg_size);
+            arq_s.seek(endereco + 3);
+            byte[] data = new byte[reg_size];
+            arq_s.readFully(data);
+
+            s.fromByteArray(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return s;
     }
 
     // Busca um usuario no arquivo de dados pela chave primaria id

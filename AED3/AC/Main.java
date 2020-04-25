@@ -114,6 +114,29 @@ public class Main {
                                             press_toContinue();
                                         }
                                     }
+                                } else if (flag2 == 3) {
+                                    System.out.println("ALTERAR SUGESTÃO");
+
+                                    crud.list(active_id);
+                                    System.out.println("");
+                                    System.out.print("Digite o numero de qual sugestão deseja alterar: ");
+                                    int update_id = reader.nextInt();
+                                    reader.nextLine();
+                                    if (update_id == 0) {
+                                        System.out.println("Retornando ao menu...");
+                                        press_toContinue();
+                                    } else {
+                                        crud.organiza_vetor(active_id);
+                                        Sugestao s = crud.read_Sugestao(update_id);
+
+                                        System.out.println("SUGESTÃO " + update_id);
+                                        System.out.println("");
+                                        System.out.println(s.getProduto());
+                                        System.out.println(s.getLoja());
+                                        System.out.println("R$ " + s.getValor());
+                                        System.out.println(s.getObservacoes());
+                                        System.out.println("");
+                                    }
                                 }
                             }
                         } while (flag1 != 0);

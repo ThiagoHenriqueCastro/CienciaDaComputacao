@@ -55,7 +55,7 @@ public class AB_sugestions {
                 id = arq.readInt();
                 endereco = arq.readLong();
                 if (id == idUsuario) {
-                    System.out.println(id);
+
                     sugestions.add(endereco);
 
                 }
