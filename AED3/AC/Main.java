@@ -1,4 +1,7 @@
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -56,6 +59,9 @@ public class Main {
                         active_id = user.getId();
                         byte flag1 = 0;
                         byte flag2 = 0;
+                        byte flag3 = 0;
+                        byte flag4 = 0;
+                        byte flag5 = 0;
                         String produto = "";
                         String loja = "";
                         float valor = 0;
@@ -79,7 +85,7 @@ public class Main {
                                 System.out.println("1) Listar");
                                 System.out.println("2) Incluir");
                                 System.out.println("3) Alterar");
-                                System.out.println("3) Excluir");
+                                System.out.println("4) Excluir");
                                 System.out.println("0) Retornar ao menu anterior");
 
                                 flag2 = reader.nextByte();
@@ -170,6 +176,126 @@ public class Main {
                                         press_toContinue();
 
                                     }
+                                } else if (flag2 == 4) {
+                                    System.out.println("EXCLUIR SUGESTÃO");
+                                    crud.list(active_id);
+                                    System.out.println("");
+                                    System.out.print("Digite o numero de qual sugestão deseja apagar: ");
+                                    int delete_id = reader.nextInt();
+                                    reader.nextLine();
+
+                                    if (delete_id == 0) {
+                                        System.out.println("Retornando ao menu...");
+                                        press_toContinue();
+                                    } else {
+                                        crud.organiza_vetor(active_id);
+                                        Sugestao s = crud.read_Sugestao(delete_id);
+
+                                        System.out.println("SUGESTÃO " + delete_id);
+                                        System.out.println("");
+                                        System.out.println(s.getProduto());
+                                        System.out.println(s.getLoja());
+                                        System.out.println("R$ " + s.getValor());
+                                        System.out.println(s.getObservacoes());
+                                        System.out.println("");
+                                        String confirm = "";
+                                        System.out.println("DESEJA APAGAR A SUGESTÃO COM ESSAS INFORMAÇÕES?(S/N)");
+                                        confirm = reader.nextLine();
+                                        if (confirm.equals("s") || confirm.equals("S")) {
+                                            crud.delete_sugestao(delete_id);
+                                            System.out.println("Sugestão apagada com sucesso!");
+                                            press_toContinue();
+                                        }
+                                    }
+                                }
+                            } else if (flag1 == 2) {
+                                System.out.println("AMIGO OCULTO 1.0");
+                                System.out.println("================\n");
+                                System.out.println("INICIO > GRUPOS\n\n");
+                                System.out.println("1) Criação e gerenciamento de grupos");
+                                System.out.println("2) Participação nos grupos");
+                                System.out.println("0) Retornar ao menu anterior");
+
+                                flag3 = reader.nextByte();
+                                reader.nextLine();
+
+                                if (flag3 == 1) {
+                                    System.out.println("AMIGO OCULTO 1.0");
+                                    System.out.println("================\n");
+                                    System.out.println("INICIO > GRUPOS > GERENCIAMENTO DE GRUPOS\n\n");
+                                    System.out.println("1) Grupos");
+                                    System.out.println("2) Convites");
+                                    System.out.println("3) Participantes");
+                                    System.out.println("4) Sorteio");
+                                    System.out.println("0) Retornar ao menu anterior");
+
+                                    flag4 = reader.nextByte();
+                                    reader.nextLine();
+
+                                    if (flag4 == 1) {
+                                        System.out.println("AMIGO OCULTO 1.0");
+                                        System.out.println("================\n");
+                                        System.out.println("INICIO > GRUPOS > GERENCIAMENTO DE GRUPOS > GRUPOS\n\n");
+                                        System.out.println("1) Listar");
+                                        System.out.println("2) Incluir");
+                                        System.out.println("3) Alterar");
+                                        System.out.println("4) Desativar");
+                                        System.out.println("0) Retornar ao menu anterior");
+
+                                        flag5 = reader.nextByte();
+                                        reader.nextLine();
+
+                                        if (flag5 == 2) {
+                                            Date now = new Date();
+                                            System.out.println("INCLUSÃO DE GRUPO\n");
+                                            System.out.print("Digite o nome do grupo: ");
+                                            String nomeGrupo = reader.nextLine();
+                                            System.out.print("Digite a data do sorteio(dia-mes-ano hora:minutos): ");
+                                            String data = reader.nextLine();
+                                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+                                            Date date = null;
+                                            try {
+                                                date = format.parse(data);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            long momentoSorteio = date.getTime();
+                                            if (momentoSorteio < now.getTime()) {
+                                                System.out.println("Data invalida!");
+                                            }
+                                            System.out.print("Digite o valor medio dos presentes: ");
+                                            float medio_valor = reader.nextFloat();
+                                            reader.nextLine();
+                                            System.out.print("Digite a data do encontro(dia-mes-ano hora:minutos): ");
+                                            String data_encontro = reader.nextLine();
+                                            Date date_encontro = null;
+                                            try {
+                                                date_encontro = format.parse(data_encontro);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            long momentoEncontro = date_encontro.getTime();
+                                            if (momentoEncontro < momentoSorteio) {
+                                                System.out.println("Data invalida!");
+                                            }
+                                            System.out.print("Digite o local do encontro: ");
+                                            String localEncontro = reader.nextLine();
+                                            System.out.print("Digite as observações: ");
+                                            String observacoes = reader.nextLine();
+
+                                            String confirm = "";
+                                            System.out.println("DESEJA CRIAR UM GRUPO COM ESSAS INFORMAÇÕES?(S/N)");
+                                            confirm = reader.nextLine();
+                                            if (confirm.equals("s") || confirm.equals("S")) {
+                                                crud.create(active_id, nomeGrupo, momentoSorteio, medio_valor,
+                                                        momentoEncontro, localEncontro, observacoes, false, true);
+                                                System.out.println("Grupo criado com sucesso!");
+                                                press_toContinue();
+                                            }
+
+                                        }
+                                    }
+
                                 }
                             }
                         } while (flag1 != 0);

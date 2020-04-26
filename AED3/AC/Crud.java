@@ -5,18 +5,26 @@ import java.util.ArrayList;
 class Crud<T extends Registro> {
     private RandomAccessFile arq;
     private RandomAccessFile arq_s;
+    private RandomAccessFile arq_g;
     private HashExtensivel indice_direto;
     private ArvoreBMais_String_Int indice_indireto;
     private HashExtensivel indice_direto_sugestoes;
+    private HashExtensivel indice_direto_grupo;
     private AB_sugestions indice_sugestions;
+    private AB_grupos indice_grupos;
     private int[][] associacao_vetorid;
     private int associacao_n;
+    private int[][] associacao_vetorid_grupo;
+    private int associacao_n_grupo;
     Constructor<T> construtor;
 
     public Crud(Constructor<T> construtor) {
         this.construtor = construtor;
         associacao_n = 500; // Mudar conforme necessidade
         associacao_vetorid = new int[associacao_n][2];
+
+        associacao_n_grupo = 500; // Mudar conforme necessidade
+        associacao_vetorid_grupo = new int[associacao_n_grupo][2];
 
         for (int i = 0; i < associacao_n; i++) {
             associacao_vetorid[i][0] = -1;
@@ -25,9 +33,17 @@ class Crud<T extends Registro> {
             associacao_vetorid[i][1] = -1;
         }
 
+        for (int i = 0; i < associacao_n_grupo; i++) {
+            associacao_vetorid_grupo[i][0] = -1;
+        }
+        for (int i = 0; i < associacao_n; i++) {
+            associacao_vetorid_grupo[i][1] = -1;
+        }
+
         try {
             arq = new RandomAccessFile("dados/dados.db", "rw");
             arq_s = new RandomAccessFile("dados/dados_s.db", "rw");
+            arq_g = new RandomAccessFile("dados/dados_g.db", "rw");
 
             // Verifico se o arquivo está vazio. Se estiver, trato de inicializar o
             // cabeçalho
@@ -35,12 +51,16 @@ class Crud<T extends Registro> {
                 arq.writeInt(0);
             if (arq_s.length() == 0)
                 arq_s.writeInt(0);
+            if (arq_g.length() == 0)
+                arq_g.writeInt(0);
 
             indice_direto = new HashExtensivel(5, "dados/diretorio.db", "dados/bucket.db");
             indice_indireto = new ArvoreBMais_String_Int(5, "dados/AB.db");
             indice_sugestions = new AB_sugestions("dados/sugestions.db");
             indice_direto_sugestoes = new HashExtensivel(5, "dados/diretorio_sugestions.db",
                     "dados/bucket_sugestions.db");
+            indice_grupos = new AB_grupos("dados/grupos.db");
+            indice_direto_grupo = new HashExtensivel(5, "dados/diretorio_grupos.db", "dados/bucket_grupos.db");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,6 +128,40 @@ class Crud<T extends Registro> {
 
             indice_sugestions.insere(id, begin);
             indice_direto_sugestoes.create(current_id, begin);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return current_id;
+    }
+
+    // Cria uma grupo no arquivo de dados
+    public int create(int idU, String n, long ms, float v, long me, String le, String o, boolean s, boolean a) {
+        int last_id = 0;
+        int current_id = 0;
+        long begin = 0;
+        try {
+            arq_g.seek(0);
+            last_id = arq_g.readInt();
+            current_id = last_id + 1;
+            arq_g.seek(0);
+            arq_g.writeInt(current_id);
+
+            // Criando o objeto usuario
+            Grupo grupo = new Grupo(current_id, idU, n, ms, v, me, le, o, s, a);
+
+            // Movo o ponteiro pro fim do arquivo
+            arq_g.seek(arq_g.length());
+            begin = arq_g.getFilePointer();
+            // System.out.println(begin);
+            arq_g.writeByte('*');
+            arq_g.seek(arq_g.length());
+            arq_g.writeShort(grupo.toByteArray().size());
+            arq_g.seek(arq_g.length());
+            arq_g.write(grupo.toByteArray().toByteArray());
+
+            indice_grupos.insere(idU, begin);
+            indice_direto_grupo.create(current_id, begin);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,6 +248,24 @@ class Crud<T extends Registro> {
             indice_sugestions.insere(s.getIdUsuario(), begin);
             indice_direto_sugestoes.update(s.getId(), begin);
 
+        }
+    }
+
+    public void delete_sugestao(int pseudo_id) {
+        int idSugestao = 0;
+        for (int i = 0; i < associacao_vetorid.length; i++) {
+            // System.out.println(associacao_vetorid[i][1]);
+            if (associacao_vetorid[i][0] == pseudo_id) {
+                idSugestao = associacao_vetorid[i][1];
+            }
+        }
+        try {
+            long endereco = indice_direto_sugestoes.read(idSugestao);
+            arq_s.seek(endereco);
+            arq_s.writeByte('$');
+            indice_direto_sugestoes.delete(idSugestao);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
