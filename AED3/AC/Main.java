@@ -245,7 +245,13 @@ public class Main {
                                         flag5 = reader.nextByte();
                                         reader.nextLine();
 
-                                        if (flag5 == 2) {
+                                        if (flag5 == 1) {
+                                            System.out.println("MEUS GRUPOS");
+
+                                            crud.list_grupo(active_id);
+                                            System.out.println("");
+                                            press_toContinue();
+                                        } else if (flag5 == 2) {
                                             Date now = new Date();
                                             System.out.println("INCLUSÃO DE GRUPO\n");
                                             System.out.print("Digite o nome do grupo: ");

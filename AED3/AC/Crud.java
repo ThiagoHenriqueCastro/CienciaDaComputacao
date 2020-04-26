@@ -152,7 +152,6 @@ class Crud<T extends Registro> {
 
             // Movo o ponteiro pro fim do arquivo
             arq_g.seek(arq_g.length());
-            begin = arq_g.getFilePointer();
             // System.out.println(begin);
             arq_g.writeByte('*');
             arq_g.seek(arq_g.length());
@@ -218,6 +217,38 @@ class Crud<T extends Registro> {
                     System.out.println(loja);
                     System.out.println("R$ " + valor);
                     System.out.println(obs);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Lista os grupos de um dado usuario
+    public void list_grupo(int idU) {
+        ArrayList<Long> grupos = null;
+        String p = "";
+        try {
+            grupos = indice_grupos.getGrupos(idU);
+
+            for (int i = 0; i < grupos.size(); i++) {
+                arq_g.seek(grupos.get(i));
+                byte lapide = arq_g.readByte();
+                short tamanho_reg = arq_g.readShort();
+                int idGrupo = arq_g.readInt();
+                int idUsuario = arq_g.readInt();
+                String nome = arq_g.readUTF();
+                long momentoSorteio = arq_g.readLong();
+                float valor = arq_g.readFloat();
+                long momentoEncontro = arq_g.readLong();
+                String local = arq_g.readUTF();
+                String obs = arq_g.readUTF();
+                boolean sorteado = arq_g.readBoolean();
+                boolean ativo = arq_g.readBoolean();
+
+                if (ativo == true) {
+
+                    System.out.println((i + 1) + ". " + nome);
                 }
             }
         } catch (IOException e) {
