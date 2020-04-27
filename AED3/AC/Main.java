@@ -299,6 +299,98 @@ public class Main {
                                                 press_toContinue();
                                             }
 
+                                        } else if (flag5 == 3) {
+                                            System.out.println("ALTERAR GRUPO");
+
+                                            crud.list_grupo(active_id);
+                                            System.out.println("");
+                                            System.out.print("Digite o numero de qual grupo deseja alterar: ");
+                                            int update_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (update_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+                                                Grupo g = crud.read_grupo(update_id);
+                                                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+                                                Date ms = new Date(g.getMomentoSorteio());
+                                                Date me = new Date(g.getMomentoEncontro());
+
+                                                System.out.println("GRUPO " + update_id);
+                                                System.out.println("");
+                                                System.out.println(g.getNome());
+                                                System.out.println("Data do sorteio: " + format.format(ms));
+                                                System.out.println("Preço medio: R$ " + g.getValor());
+                                                System.out.println("Data do encontro: " + format.format(me));
+                                                System.out.println(g.getLocalEncontro());
+                                                System.out.println(g.getObservacoes());
+                                                System.out.println("");
+                                                System.out.print("Digite o novo nome do grupo: ");
+                                                String new_nome = reader.nextLine();
+                                                if (new_nome.equals(""))
+                                                    new_nome = g.getNome();
+                                                System.out.print("Digite a nova data do sorteio: ");
+                                                String data_sorteio = reader.nextLine();
+                                                Date date_sorteio = null;
+                                                long new_momento_sorteio = 0;
+                                                if (!data_sorteio.equals("")) {
+                                                    try {
+                                                        date_sorteio = format.parse(data_sorteio);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    new_momento_sorteio = date_sorteio.getTime();
+                                                } else {
+                                                    new_momento_sorteio = g.getMomentoSorteio();
+                                                }
+                                                System.out.print("Digite o novo valor medio: ");
+                                                String new_valor_medio = reader.nextLine();
+                                                float new_valor_medio_float;
+                                                if (new_valor_medio.equals("")) {
+                                                    new_valor_medio_float = g.getValor();
+                                                } else {
+                                                    new_valor_medio_float = Float.parseFloat(new_valor_medio);
+                                                }
+                                                System.out.print("Digite a nova data do encontro: ");
+                                                String data_encontro = reader.nextLine();
+                                                Date date_encontro = null;
+                                                long new_momento_encontro = 0;
+                                                if (!data_encontro.equals("")) {
+                                                    try {
+                                                        date_encontro = format.parse(data_encontro);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    new_momento_encontro = date_encontro.getTime();
+                                                } else {
+                                                    new_momento_encontro = g.getMomentoEncontro();
+                                                }
+                                                System.out.print("Digite o novo local do encontro do grupo: ");
+                                                String new_local = reader.nextLine();
+                                                if (new_local.equals(""))
+                                                    new_local = g.getLocalEncontro();
+
+                                                System.out.print("Digite a nova observação: ");
+                                                String new_observacao = reader.nextLine();
+                                                if (new_observacao.equals(""))
+                                                    new_observacao = g.getLocalEncontro();
+
+                                                Grupo updated_grupo = new Grupo(g.getId(), g.getIdUsuario(), new_nome,
+                                                        new_momento_sorteio, new_valor_medio_float,
+                                                        new_momento_encontro, new_local, new_observacao,
+                                                        g.getSorteado(), g.getAtivo());
+
+                                                try {
+                                                    crud.update_grupo(updated_grupo);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                System.out.println("Grupo alterado com sucesso!");
+                                                press_toContinue();
+
+                                            }
                                         }
                                     }
 

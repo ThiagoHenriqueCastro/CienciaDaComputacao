@@ -194,6 +194,34 @@ class Crud<T extends Registro> {
         }
     }
 
+    public void organiza_vetor_grupos(int id) {
+        ArrayList<Long> grupos = null;
+
+        try {
+            grupos = indice_grupos.getGrupos(id);
+            for (int i = 0; i < grupos.size(); i++) {
+                arq_g.seek(grupos.get(i));
+                byte lapide = arq_g.readByte();
+                short tamanho_reg = arq_g.readShort();
+                int idGrupo = arq_g.readInt();
+                int idUsuario = arq_g.readInt();
+                String nome = arq_g.readUTF();
+                long momentoSorteio = arq_g.readLong();
+                float valor = arq_g.readFloat();
+                long momentoEncontro = arq_g.readLong();
+                String local = arq_g.readUTF();
+                String obs = arq_g.readUTF();
+                boolean sorteado = arq_g.readBoolean();
+                boolean ativo = arq_g.readBoolean();
+                associacao_vetorid_grupo[i][0] = i + 1;
+                associacao_vetorid_grupo[i][1] = idGrupo;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // Lista as sugestões de um dado usuario
     public void list(int idU) {
         ArrayList<Long> sugestoes = null;
@@ -248,7 +276,7 @@ class Crud<T extends Registro> {
                 boolean sorteado = arq_g.readBoolean();
                 boolean ativo = arq_g.readBoolean();
 
-                if (ativo == true) {
+                if (ativo == true && lapide == '*') {
 
                     System.out.println((i + 1) + ". " + nome);
                 }
@@ -280,6 +308,32 @@ class Crud<T extends Registro> {
 
             indice_sugestions.insere(s.getIdUsuario(), begin);
             indice_direto_sugestoes.update(s.getId(), begin);
+
+        }
+    }
+
+    // Altera um grupo
+    public void update_grupo(Grupo g) throws Exception {
+        long endereco = indice_direto_grupo.read(g.getId());
+        arq_g.seek(endereco + 1);
+        long old_size = arq_g.readShort();
+        if (old_size == g.toByteArray().size()) {
+            arq_g.seek(endereco);
+            arq_g.writeByte('*');
+            arq_g.writeShort(g.toByteArray().size());
+            arq_g.write(g.toByteArray().toByteArray());
+
+        } else {
+            arq_g.seek(endereco);
+            arq_g.writeByte('$');
+            arq_g.seek(arq_g.length());
+            long begin = arq_g.getFilePointer();
+            arq_g.writeByte('*');
+            arq_g.writeShort(g.toByteArray().size());
+            arq_g.write(g.toByteArray().toByteArray());
+
+            indice_grupos.insere(g.getIdUsuario(), begin);
+            indice_direto_grupo.update(g.getId(), begin);
 
         }
     }
@@ -327,6 +381,34 @@ class Crud<T extends Registro> {
         }
 
         return s;
+    }
+
+    // Busca um grupo pelo pseudo id da interface
+    public Grupo read_grupo(int pseudo_id) {
+        Grupo g = new Grupo();
+        int idGrupo = 0;
+        for (int i = 0; i < associacao_vetorid_grupo.length; i++) {
+            // System.out.println(associacao_vetorid[i][1]);
+            if (associacao_vetorid_grupo[i][0] == pseudo_id) {
+                idGrupo = associacao_vetorid_grupo[i][1];
+            }
+        }
+        try {
+            long endereco = indice_direto_grupo.read(idGrupo);
+
+            arq_g.seek(endereco + 1);
+            short reg_size = arq_g.readShort();
+            // System.out.println(reg_size);
+            arq_g.seek(endereco + 3);
+            byte[] data = new byte[reg_size];
+            arq_g.readFully(data);
+
+            g.fromByteArray(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return g;
     }
 
     // Busca um usuario no arquivo de dados pela chave primaria id
