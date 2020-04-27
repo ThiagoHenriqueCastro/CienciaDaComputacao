@@ -152,6 +152,7 @@ class Crud<T extends Registro> {
 
             // Movo o ponteiro pro fim do arquivo
             arq_g.seek(arq_g.length());
+            begin = arq_g.getFilePointer();
             // System.out.println(begin);
             arq_g.writeByte('*');
             arq_g.seek(arq_g.length());
@@ -232,6 +233,7 @@ class Crud<T extends Registro> {
             grupos = indice_grupos.getGrupos(idU);
 
             for (int i = 0; i < grupos.size(); i++) {
+                // System.out.println(grupos.get(i));
                 arq_g.seek(grupos.get(i));
                 byte lapide = arq_g.readByte();
                 short tamanho_reg = arq_g.readShort();
