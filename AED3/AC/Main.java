@@ -391,6 +391,47 @@ public class Main {
                                                 press_toContinue();
 
                                             }
+                                        } else if (flag5 == 4) {
+                                            System.out.println("DESATIVAR GRUPO");
+
+                                            crud.list_grupo(active_id);
+                                            System.out.println("");
+                                            System.out.print("Digite o numero de qual grupo deseja desativar: ");
+                                            int desativar_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (desativar_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+                                                Grupo g = crud.read_grupo(desativar_id);
+                                                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+                                                Date ms = new Date(g.getMomentoSorteio());
+                                                Date me = new Date(g.getMomentoEncontro());
+
+                                                System.out.println("GRUPO " + desativar_id);
+                                                System.out.println("");
+                                                System.out.println(g.getNome());
+                                                System.out.println("Data do sorteio: " + format.format(ms));
+                                                System.out.println("Preço medio: R$ " + g.getValor());
+                                                System.out.println("Data do encontro: " + format.format(me));
+                                                System.out.println(g.getLocalEncontro());
+                                                System.out.println(g.getObservacoes());
+                                                System.out.println("");
+                                                String confirm = "";
+                                                System.out.println("DESEJA DESATIVAR ESTE GRUPO?(S/N)");
+                                                confirm = reader.nextLine();
+                                                if (confirm.equals("s") || confirm.equals("S")) {
+                                                    g.setAtivo(false);
+                                                    try {
+                                                        crud.update_grupo(g);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    System.out.println("Grupo Alterado com sucesso!");
+                                                    press_toContinue();
+                                                }
+                                            }
                                         }
                                     }
 
