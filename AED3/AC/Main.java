@@ -560,14 +560,16 @@ public class Main {
                                                 Date mc = null;
                                                 for (int i = 0; i < convites.size(); i++) {
                                                     mc = new Date(convites.get(i).getMomentoConvite());
-                                                    System.out.println((i + 1) + ". " + convites.get(i).getEmail()
-                                                            + " (" + df.format(mc) + " - "
-                                                            + (convites.get(i).getEstado() == 0 ? "pendente"
-                                                                    : convites.get(i).getEstado() == 1 ? "aceito"
-                                                                            : convites.get(i).getEstado() == 2
-                                                                                    ? "recusado"
-                                                                                    : "cancelado")
-                                                            + ")");
+                                                    if (convites.get(i).getEstado() != 3) {
+                                                        System.out.println((i + 1) + ". " + convites.get(i).getEmail()
+                                                                + " (" + df.format(mc) + " - "
+                                                                + (convites.get(i).getEstado() == 0 ? "pendente"
+                                                                        : convites.get(i).getEstado() == 1 ? "aceito"
+                                                                                : convites.get(i).getEstado() == 2
+                                                                                        ? "recusado"
+                                                                                        : "cancelado")
+                                                                + ")");
+                                                    }
                                                 }
                                                 System.out.print("Escolha qual convite deseja cancelar: ");
                                                 int cancel = reader.nextInt();
