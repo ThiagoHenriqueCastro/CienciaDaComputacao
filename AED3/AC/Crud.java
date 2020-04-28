@@ -1,5 +1,8 @@
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 class Crud<T extends Registro> {
@@ -393,6 +396,34 @@ class Crud<T extends Registro> {
 
                     System.out.println((i + 1) + ". " + nome);
                 }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Lista os grupos de um dado usuario
+    public void list_convites(int idG) {
+        ArrayList<Long> convites = null;
+        String p = "";
+        try {
+            convites = indice_convites.getConvites(idG);
+
+            for (int i = 0; i < convites.size(); i++) {
+                // System.out.println(grupos.get(i));
+                arq_c.seek(convites.get(i));
+                byte lapide = arq_c.readByte();
+                short tamanho_reg = arq_c.readShort();
+                int idConvite = arq_c.readInt();
+                int idGrupo = arq_c.readInt();
+                String email = arq_c.readUTF();
+                long momentoConvite = arq_c.readLong();
+                byte estado = arq_c.readByte();
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                Date mc = new Date(momentoConvite);
+                System.out.println((i + 1) + ". " + email + " (" + df.format(mc) + " - "
+                        + (estado == 0 ? "pendente" : estado == 1 ? "aceito" : "cancelado") + ")");
+
             }
         } catch (IOException e) {
             e.printStackTrace();

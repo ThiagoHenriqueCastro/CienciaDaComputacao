@@ -447,6 +447,28 @@ public class Main {
                                         reader.nextLine();
 
                                         if (flag6 == 1) {
+                                            System.out.println("LISTAR CONVITES");
+
+                                            crud.list_grupo(active_id);
+                                            System.out.println("");
+                                            System.out.print(
+                                                    "Digite o numero de qual grupo deseja visualizar os convites: ");
+                                            int list_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (list_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+
+                                                Grupo g = crud.read_grupo(list_id);
+                                                crud.organiza_vetor_convites(g.getId());
+
+                                                System.out.println("\n\nCONVITES DO GRUPO " + g.getNome());
+                                                System.out.println("\n");
+                                                crud.list_convites(g.idGrupo);
+                                                press_toContinue();
+                                            }
 
                                         } else if (flag6 == 2) {
                                             System.out.println("EMISSAO DE CONVITE PARA GRUPOS");
