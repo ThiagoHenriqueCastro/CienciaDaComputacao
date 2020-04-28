@@ -59,6 +59,10 @@ public class Convite implements Registro {
 
     // SETTERS
 
+    public void setEstado(byte e) {
+        this.estado = e;
+    }
+
     // METODOS PARA REPRESENTAÇÃO DA CLASSE EM UM VETOR DE BYTES
 
     // Escreve e devolve os atributos da classe em um vetor de bytes

@@ -1,6 +1,7 @@
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -466,7 +467,7 @@ public class Main {
 
                                                 System.out.println("\n\nCONVITES DO GRUPO " + g.getNome());
                                                 System.out.println("\n");
-                                                crud.list_convites(g.idGrupo);
+                                                crud.list_convites(g.idGrupo, true);
                                                 press_toContinue();
                                             }
 
@@ -535,6 +536,64 @@ public class Main {
                                                 }
 
                                             }
+                                        } else if (flag6 == 3) {
+                                            System.out.println("CANCELAMENTO DE CONVITE");
+                                            crud.list_grupo(active_id, true);
+                                            System.out.println("");
+                                            System.out.print(
+                                                    "Digite o numero para qual grupo deseja cancelar um convite: ");
+                                            int cancel_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (cancel_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+
+                                                Grupo g = crud.read_grupo(cancel_id);
+                                                crud.organiza_vetor_convites(g.getId());
+
+                                                System.out.println("\n\nCONVITES DO GRUPO " + g.getNome());
+                                                System.out.println("\n");
+                                                ArrayList<Convite> convites = crud.list_convites(g.idGrupo, false);
+                                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                                                Date mc = null;
+                                                for (int i = 0; i < convites.size(); i++) {
+                                                    mc = new Date(convites.get(i).getMomentoConvite());
+                                                    System.out.println((i + 1) + ". " + convites.get(i).getEmail()
+                                                            + " (" + df.format(mc) + " - "
+                                                            + (convites.get(i).getEstado() == 0 ? "pendente"
+                                                                    : convites.get(i).getEstado() == 1 ? "aceito"
+                                                                            : convites.get(i).getEstado() == 2
+                                                                                    ? "recusado"
+                                                                                    : "cancelado")
+                                                            + ")");
+                                                }
+                                                System.out.print("Escolha qual convite deseja cancelar: ");
+                                                int cancel = reader.nextInt();
+                                                reader.nextLine();
+                                                if (cancel == 0) {
+                                                    System.out.println("Retornando ao menu anterior...");
+                                                    press_toContinue();
+                                                } else {
+                                                    String confirm = "";
+                                                    System.out.println("DESEJA CANCELAR ESSE CONVITE?(S/N)");
+                                                    confirm = reader.nextLine();
+                                                    if (confirm.equals("s") || confirm.equals("S")) {
+                                                        Convite new_convite = convites.get(cancel - 1);
+                                                        byte new_e = 3;
+                                                        new_convite.setEstado(new_e);
+                                                        try {
+                                                            crud.update_convite(new_convite);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        System.out.println("Convite cancelado com sucesso!\n");
+                                                        press_toContinue();
+                                                    }
+
+                                                }
+                                            }
                                         }
 
                                     }
@@ -583,6 +642,7 @@ public class Main {
             }
 
         } while (flag != 0);
+
         // TESTES DE IMPLEMENTAÇÃO APENAS!
         /*
          * Usuario user1 = new Usuario(1, "Thiago Henrique", "titico@titico.com",

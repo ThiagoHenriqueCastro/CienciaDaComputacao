@@ -403,8 +403,10 @@ class Crud<T extends Registro> {
     }
 
     // Lista os grupos de um dado usuario
-    public void list_convites(int idG) {
+    public ArrayList<Convite> list_convites(int idG, boolean flag) {
         ArrayList<Long> convites = null;
+        ArrayList<Convite> out = new ArrayList<Convite>();
+        Convite c = null;
         String p = "";
         try {
             convites = indice_convites.getConvites(idG);
@@ -421,13 +423,22 @@ class Crud<T extends Registro> {
                 byte estado = arq_c.readByte();
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
                 Date mc = new Date(momentoConvite);
-                System.out.println((i + 1) + ". " + email + " (" + df.format(mc) + " - "
-                        + (estado == 0 ? "pendente" : estado == 1 ? "aceito" : "cancelado") + ")");
-
+                if (flag) {
+                    System.out
+                            .println(
+                                    (i + 1) + ". " + email + " (" + df.format(mc) + " - "
+                                            + (estado == 0 ? "pendente"
+                                                    : estado == 1 ? "aceito" : estado == 2 ? "recusado" : "cancelado")
+                                            + ")");
+                }
+                c = new Convite(idConvite, idGrupo, email, momentoConvite, estado);
+                out.add(c);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return out;
     }
 
     // Altera uma sugestão
@@ -480,6 +491,19 @@ class Crud<T extends Registro> {
             indice_direto_grupo.update(g.getId(), begin);
 
         }
+    }
+
+    // Altera um grupo
+    public void update_convite(Convite c) throws Exception {
+        long endereco = indice_direto_convite.read(c.getId());
+        arq_c.seek(endereco + 1);
+        long old_size = arq_c.readShort();
+
+        arq_c.seek(endereco);
+        arq_c.writeByte('*');
+        arq_c.writeShort(c.toByteArray().size());
+        arq_c.write(c.toByteArray().toByteArray());
+
     }
 
     public void delete_sugestao(int pseudo_id) {
