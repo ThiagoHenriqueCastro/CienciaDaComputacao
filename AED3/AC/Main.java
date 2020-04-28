@@ -474,17 +474,41 @@ public class Main {
                                                     System.out.println("Retornando ao menu anterior...");
                                                     press_toContinue();
                                                 } else {
-
-                                                    String confirm = "";
-                                                    System.out.println("DESEJA EMITIR O CONVITE PARA ESSE EMAIL?(S/N)");
-                                                    confirm = reader.nextLine();
-                                                    if (confirm.equals("s") || confirm.equals("S")) {
-                                                        Date now = new Date();
-                                                        byte estado = 0;
-                                                        crud.create(g.getId(), emissao_email, now.getTime(), estado);
-                                                        // ESTADO 0 É UM CONVITE ABERTO
-                                                        System.out.println("Convite emitido com sucesso!\n");
-                                                        press_toContinue();
+                                                    Convite c = crud.convite_Exists(emissao_email, g.getId());
+                                                    if (c != null) {
+                                                        // Vejo se status do convite aceito ou pendente
+                                                        if (c.getEstado() == 0 || c.getEstado() == 1) {
+                                                            System.out.println("Convite ja emitido!");
+                                                            press_toContinue();
+                                                        } else {
+                                                            System.out
+                                                                    .println("Convite ja emitido, mas nao confirmado!");
+                                                            String confirm = "";
+                                                            System.out.println("DESEJA REENVIAR O CONVITE?(S/N)");
+                                                            if (confirm.equals("s") || confirm.equals("S")) {
+                                                                Date now = new Date();
+                                                                byte estado = 0;
+                                                                crud.create(g.getId(), emissao_email, now.getTime(),
+                                                                        estado);
+                                                                // ESTADO 0 É UM CONVITE ABERTO
+                                                                System.out.println("Convite reemitido com sucesso!\n");
+                                                                press_toContinue();
+                                                            }
+                                                        }
+                                                    } else {
+                                                        String confirm = "";
+                                                        System.out.println(
+                                                                "DESEJA EMITIR O CONVITE PARA ESSE EMAIL?(S/N)");
+                                                        confirm = reader.nextLine();
+                                                        if (confirm.equals("s") || confirm.equals("S")) {
+                                                            Date now = new Date();
+                                                            byte estado = 0;
+                                                            crud.create(g.getId(), emissao_email, now.getTime(),
+                                                                    estado);
+                                                            // ESTADO 0 É UM CONVITE ABERTO
+                                                            System.out.println("Convite emitido com sucesso!\n");
+                                                            press_toContinue();
+                                                        }
                                                     }
                                                 }
 

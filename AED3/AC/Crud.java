@@ -11,6 +11,7 @@ class Crud<T extends Registro> {
     private ArvoreBMais_String_Int indice_indireto;
     private HashExtensivel indice_direto_sugestoes;
     private HashExtensivel indice_direto_grupo;
+    private HashExtensivel indice_direto_convite;
     private ArvoreBMais_ChaveComposta_String_Int lista_convites;
     private AB_sugestions indice_sugestions;
     private AB_grupos indice_grupos;
@@ -81,6 +82,7 @@ class Crud<T extends Registro> {
             indice_direto_grupo = new HashExtensivel(5, "dados/diretorio_grupos.db", "dados/bucket_grupos.db");
             indice_convites = new AB_convites("dados/convites.db");
             lista_convites = new ArvoreBMais_ChaveComposta_String_Int(5, "dados/lista_convites.db");
+            indice_direto_convite = new HashExtensivel(5, "dados/diretorio_convite.db", "dados/bucket_convite.db");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,6 +217,7 @@ class Crud<T extends Registro> {
             arq_c.write(convite.toByteArray().toByteArray());
 
             indice_convites.insere(idGrupo, begin);
+            indice_direto_convite.create(current_id, begin);
             lista_convites.create(e, current_id);
 
         } catch (Exception ex) {
@@ -269,6 +272,29 @@ class Crud<T extends Registro> {
                 boolean ativo = arq_g.readBoolean();
                 associacao_vetorid_grupo[i][0] = i + 1;
                 associacao_vetorid_grupo[i][1] = idGrupo;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void organiza_vetor_convites(int id) {
+        ArrayList<Long> convites = null;
+
+        try {
+            convites = indice_convites.getConvites(id);
+            for (int i = 0; i < convites.size(); i++) {
+                arq_c.seek(convites.get(i));
+                byte lapide = arq_c.readByte();
+                short tamanho_reg = arq_c.readShort();
+                int idConvite = arq_c.readInt();
+                int idGrupo = arq_c.readInt();
+                String email = arq_c.readUTF();
+                long momentoConvite = arq_c.readLong();
+                byte estado = arq_c.readByte();
+                associacao_vetorid_convite[i][0] = i + 1;
+                associacao_vetorid_convite[i][1] = idConvite;
 
             }
         } catch (Exception e) {
@@ -496,6 +522,48 @@ class Crud<T extends Registro> {
         }
 
         return g;
+    }
+
+    // Busca um grupo pelo pseudo id da interface
+    public Convite read_convite(int idC) {
+        Convite c = new Convite();
+
+        try {
+            long endereco = indice_direto_convite.read(idC);
+
+            arq_c.seek(endereco + 1);
+            short reg_size = arq_c.readShort();
+            // System.out.println(reg_size);
+            arq_c.seek(endereco + 3);
+            byte[] data = new byte[reg_size];
+            arq_c.readFully(data);
+
+            c.fromByteArray(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return c;
+    }
+
+    public Convite convite_Exists(String email, int idG) {
+        int[] lista = null;
+        try {
+            lista = lista_convites.read(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Convite c = null;
+        boolean flag = false;
+        for (int i = 0; (i < lista.length) && !flag; i++) {
+            c = read_convite(lista[i]);
+            if (c.getEmail().equals(email) && c.getIdGrupo() == idG)
+                flag = true;
+
+        }
+
+        return c;
+
     }
 
     // Busca um usuario no arquivo de dados pela chave primaria id
