@@ -62,6 +62,7 @@ public class Main {
                         byte flag3 = 0;
                         byte flag4 = 0;
                         byte flag5 = 0;
+                        byte flag6 = 0;
                         String produto = "";
                         String loja = "";
                         float valor = 0;
@@ -433,8 +434,64 @@ public class Main {
                                                 }
                                             }
                                         }
-                                    }
+                                    } else if (flag4 == 2) {
+                                        System.out.println("AMIGO OCULTO 1.0");
+                                        System.out.println("================\n");
+                                        System.out.println("INICIO > GRUPOS > GERENCIAMENTO DE GRUPOS > CONVITES\n\n");
+                                        System.out.println("1) Listagem dos convites");
+                                        System.out.println("2) Emissao de convites");
+                                        System.out.println("3) Cancelamento de convites");
+                                        System.out.println("0) Retornar ao menu anterior");
 
+                                        flag6 = reader.nextByte();
+                                        reader.nextLine();
+
+                                        if (flag6 == 1) {
+
+                                        } else if (flag6 == 2) {
+                                            System.out.println("EMISSAO DE CONVITE PARA GRUPOS");
+
+                                            crud.list_grupo(active_id, true);
+                                            System.out.println("");
+                                            System.out.print(
+                                                    "Digite o numero para qual grupo deseja emitir um convite: ");
+                                            int emissao_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (emissao_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+                                                Grupo g = crud.read_grupo(emissao_id);
+
+                                                System.out.println("GRUPO " + emissao_id);
+                                                System.out.println("");
+                                                System.out.println(g.getNome());
+                                                System.out.println("\n\n");
+                                                System.out.print("Digite o email do destinatario do convite: ");
+                                                String emissao_email = reader.nextLine();
+                                                if (emissao_email.equals("")) {
+                                                    System.out.println("Retornando ao menu anterior...");
+                                                    press_toContinue();
+                                                } else {
+
+                                                    String confirm = "";
+                                                    System.out.println("DESEJA EMITIR O CONVITE PARA ESSE EMAIL?(S/N)");
+                                                    confirm = reader.nextLine();
+                                                    if (confirm.equals("s") || confirm.equals("S")) {
+                                                        Date now = new Date();
+                                                        byte estado = 0;
+                                                        crud.create(g.getId(), emissao_email, now.getTime(), estado);
+                                                        // ESTADO 0 É UM CONVITE ABERTO
+                                                        System.out.println("Convite emitido com sucesso!\n");
+                                                        press_toContinue();
+                                                    }
+                                                }
+
+                                            }
+                                        }
+
+                                    }
                                 }
                             }
                         } while (flag1 != 0);

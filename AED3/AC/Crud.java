@@ -6,16 +6,21 @@ class Crud<T extends Registro> {
     private RandomAccessFile arq;
     private RandomAccessFile arq_s;
     private RandomAccessFile arq_g;
+    private RandomAccessFile arq_c;
     private HashExtensivel indice_direto;
     private ArvoreBMais_String_Int indice_indireto;
     private HashExtensivel indice_direto_sugestoes;
     private HashExtensivel indice_direto_grupo;
+    private ArvoreBMais_ChaveComposta_String_Int lista_convites;
     private AB_sugestions indice_sugestions;
     private AB_grupos indice_grupos;
+    private AB_convites indice_convites;
     private int[][] associacao_vetorid;
     private int associacao_n;
     private int[][] associacao_vetorid_grupo;
     private int associacao_n_grupo;
+    private int[][] associacao_vetorid_convite;
+    private int associacao_n_convite;
     Constructor<T> construtor;
 
     public Crud(Constructor<T> construtor) {
@@ -25,6 +30,9 @@ class Crud<T extends Registro> {
 
         associacao_n_grupo = 500; // Mudar conforme necessidade
         associacao_vetorid_grupo = new int[associacao_n_grupo][2];
+
+        associacao_n_convite = 500; // Mudar conforme necessidade
+        associacao_vetorid_convite = new int[associacao_n_convite][2];
 
         for (int i = 0; i < associacao_n; i++) {
             associacao_vetorid[i][0] = -1;
@@ -36,14 +44,22 @@ class Crud<T extends Registro> {
         for (int i = 0; i < associacao_n_grupo; i++) {
             associacao_vetorid_grupo[i][0] = -1;
         }
-        for (int i = 0; i < associacao_n; i++) {
+        for (int i = 0; i < associacao_n_grupo; i++) {
             associacao_vetorid_grupo[i][1] = -1;
+        }
+
+        for (int i = 0; i < associacao_n_convite; i++) {
+            associacao_vetorid_convite[i][0] = -1;
+        }
+        for (int i = 0; i < associacao_n_convite; i++) {
+            associacao_vetorid_convite[i][1] = -1;
         }
 
         try {
             arq = new RandomAccessFile("dados/dados.db", "rw");
             arq_s = new RandomAccessFile("dados/dados_s.db", "rw");
             arq_g = new RandomAccessFile("dados/dados_g.db", "rw");
+            arq_c = new RandomAccessFile("dados/dados_c.db", "rw");
 
             // Verifico se o arquivo está vazio. Se estiver, trato de inicializar o
             // cabeçalho
@@ -53,6 +69,8 @@ class Crud<T extends Registro> {
                 arq_s.writeInt(0);
             if (arq_g.length() == 0)
                 arq_g.writeInt(0);
+            if (arq_c.length() == 0)
+                arq_c.writeInt(0);
 
             indice_direto = new HashExtensivel(5, "dados/diretorio.db", "dados/bucket.db");
             indice_indireto = new ArvoreBMais_String_Int(5, "dados/AB.db");
@@ -61,6 +79,8 @@ class Crud<T extends Registro> {
                     "dados/bucket_sugestions.db");
             indice_grupos = new AB_grupos("dados/grupos.db");
             indice_direto_grupo = new HashExtensivel(5, "dados/diretorio_grupos.db", "dados/bucket_grupos.db");
+            indice_convites = new AB_convites("dados/convites.db");
+            lista_convites = new ArvoreBMais_ChaveComposta_String_Int(5, "dados/lista_convites.db");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,6 +185,40 @@ class Crud<T extends Registro> {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return current_id;
+    }
+
+    // Cria uma convite no arquivo de dados
+    public int create(int idGrupo, String e, long mc, byte estado) {
+        int last_id = 0;
+        int current_id = 0;
+        long begin = 0;
+        try {
+            arq_c.seek(0);
+            last_id = arq_c.readInt();
+            current_id = last_id + 1;
+            arq_c.seek(0);
+            arq_c.writeInt(current_id);
+
+            // Criando o objeto usuario
+            Convite convite = new Convite(current_id, idGrupo, e, mc, estado);
+
+            // Movo o ponteiro pro fim do arquivo
+            arq_c.seek(arq_c.length());
+            begin = arq_c.getFilePointer();
+            // System.out.println(begin);
+            arq_c.writeByte('*');
+            arq_c.seek(arq_c.length());
+            arq_c.writeShort(convite.toByteArray().size());
+            arq_c.seek(arq_c.length());
+            arq_c.write(convite.toByteArray().toByteArray());
+
+            indice_convites.insere(idGrupo, begin);
+            lista_convites.create(e, current_id);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return current_id;
     }
@@ -277,6 +331,39 @@ class Crud<T extends Registro> {
                 boolean ativo = arq_g.readBoolean();
 
                 if (ativo == true && lapide == '*') {
+
+                    System.out.println((i + 1) + ". " + nome);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Lista os grupos de um dado usuario
+    public void list_grupo(int idU, boolean sorteio) {
+        ArrayList<Long> grupos = null;
+        String p = "";
+        try {
+            grupos = indice_grupos.getGrupos(idU);
+
+            for (int i = 0; i < grupos.size(); i++) {
+                // System.out.println(grupos.get(i));
+                arq_g.seek(grupos.get(i));
+                byte lapide = arq_g.readByte();
+                short tamanho_reg = arq_g.readShort();
+                int idGrupo = arq_g.readInt();
+                int idUsuario = arq_g.readInt();
+                String nome = arq_g.readUTF();
+                long momentoSorteio = arq_g.readLong();
+                float valor = arq_g.readFloat();
+                long momentoEncontro = arq_g.readLong();
+                String local = arq_g.readUTF();
+                String obs = arq_g.readUTF();
+                boolean sorteado = arq_g.readBoolean();
+                boolean ativo = arq_g.readBoolean();
+
+                if (ativo == true && lapide == '*' && sorteado == false) {
 
                     System.out.println((i + 1) + ". " + nome);
                 }
