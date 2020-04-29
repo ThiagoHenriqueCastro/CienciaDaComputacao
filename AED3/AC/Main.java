@@ -69,12 +69,13 @@ public class Main {
                         float valor = 0;
                         String obs = "";
                         do {
+                            int n_cv[] = crud.getConvites(email);
                             System.out.println("AMIGO OCULTO 1.0");
                             System.out.println("================");
                             System.out.println("INICIO");
                             System.out.println("1) Sugestões de presentes");
                             System.out.println("2) Grupos");
-                            System.out.println("3) Novos convites: 0");
+                            System.out.println("3) Novos convites: " + n_cv.length);
                             System.out.println("0) Sair");
 
                             flag1 = reader.nextByte();

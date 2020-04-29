@@ -654,6 +654,17 @@ class Crud<T extends Registro> {
         return user;
     }
 
+    public int[] getConvites(String e) {
+        int[] out = null;
+        try {
+            out = lista_convites.read(e);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return out;
+    }
+
     public int emailExists(String email) throws Exception {
         return indice_indireto.read(email);
     }
