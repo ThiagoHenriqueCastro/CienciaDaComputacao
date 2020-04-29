@@ -601,6 +601,86 @@ public class Main {
 
                                     }
                                 }
+                            } else if (flag1 == 3) {
+                                System.out.println("VOCÊ FOI CONVIDADO PARA PARTICIPAR DOS GRUPOS ABAIXO");
+                                System.out.println("ESCOLHA QUAL CONVITE DESEJA ACEITAR OU RECUSAR");
+
+                                int[] id_list = crud.getConvites(email);
+                                Convite c = null;
+                                Grupo g = null;
+                                Usuario u = null;
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                                Date d = null;
+                                for (int i = 0; i < id_list.length; i++) {
+                                    c = crud.read_convite(id_list[i]);
+                                    if (c.getEstado() == 0) {
+                                        g = crud.read_grupo(c.getIdGrupo(), true);
+                                        u = crud.read(g.getIdUsuario());
+                                        d = new Date(c.getMomentoConvite());
+                                        System.out.println((i + 1) + ". " + g.getNome());
+                                        System.out.println("Convidado em " + sdf.format(d));
+                                        System.out.println("por " + u.getNome());
+                                        System.out.println("\n\n\n");
+                                    }
+                                }
+
+                                System.out.print("Digite o numero do convite: ");
+                                int id_convite = reader.nextInt();
+                                reader.nextLine();
+                                if (id_convite == 0) {
+                                    System.out.println("Retornando ao menu anterior...");
+                                    press_toContinue();
+                                } else {
+                                    c = crud.read_convite(id_list[id_convite - 1]);
+                                    g = crud.read_grupo(c.getIdGrupo(), true);
+                                    u = crud.read(g.getIdUsuario());
+                                    d = new Date(c.getMomentoConvite());
+                                    System.out.println((id_convite) + ". " + g.getNome());
+                                    System.out.println("Convidado em " + sdf.format(d));
+                                    System.out.println("por " + u.getNome());
+
+                                    System.out.println("");
+                                    String new_estado_cv = "";
+                                    byte es = 0;
+                                    do {
+                                        System.out.print(
+                                                "Digite se deseja aceitar(A), recusar(R) ou voltar(V) ao menu anterior: ");
+                                        new_estado_cv = reader.nextLine();
+                                        if (new_estado_cv.equals("A") || new_estado_cv.equals("a")) {
+                                            es = 1;
+                                            c.setEstado(es);
+                                            try {
+                                                crud.update_convite(c);
+                                                crud.removeLista_CV(email, c.getId());
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            System.out.println("Convite aceito com sucesso!");
+                                            press_toContinue();
+                                        } else if (new_estado_cv.equals("R") || new_estado_cv.equals("r")) {
+                                            es = 2;
+                                            c.setEstado(es);
+                                            try {
+                                                crud.update_convite(c);
+                                                crud.removeLista_CV(email, c.getId());
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            System.out.println("Convite recusado com sucesso!");
+                                            press_toContinue();
+                                        } else if (new_estado_cv.equals("V") || new_estado_cv.equals("v")) {
+                                            System.out.println("Retornando ao menu anterior...");
+                                            press_toContinue();
+                                        } else {
+                                            System.out.println("Digite um valor valido!(A,R,V)");
+                                            press_toContinue();
+                                        }
+
+                                    } while (!new_estado_cv.equals("A") && !new_estado_cv.equals("a")
+                                            && !new_estado_cv.equals("R") && !new_estado_cv.equals("r")
+                                            && !new_estado_cv.equals("V") && !new_estado_cv.equals("v"));
+                                }
+
                             }
                         } while (flag1 != 0);
                     } else {

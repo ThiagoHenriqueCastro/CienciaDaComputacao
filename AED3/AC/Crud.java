@@ -580,6 +580,27 @@ class Crud<T extends Registro> {
     }
 
     // Busca um grupo pelo pseudo id da interface
+    public Grupo read_grupo(int idG, boolean flag) {
+        Grupo g = new Grupo();
+        try {
+            long endereco = indice_direto_grupo.read(idG);
+
+            arq_g.seek(endereco + 1);
+            short reg_size = arq_g.readShort();
+            // System.out.println(reg_size);
+            arq_g.seek(endereco + 3);
+            byte[] data = new byte[reg_size];
+            arq_g.readFully(data);
+
+            g.fromByteArray(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return g;
+    }
+
+    // Busca um grupo pelo pseudo id da interface
     public Convite read_convite(int idC) {
         Convite c = new Convite();
 
@@ -663,6 +684,14 @@ class Crud<T extends Registro> {
         }
 
         return out;
+    }
+
+    public void removeLista_CV(String email, int idC) {
+        try {
+            lista_convites.delete(email, idC);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int emailExists(String email) throws Exception {
