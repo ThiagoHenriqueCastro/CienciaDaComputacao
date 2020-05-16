@@ -10,21 +10,27 @@ class Crud<T extends Registro> {
     private RandomAccessFile arq_s;
     private RandomAccessFile arq_g;
     private RandomAccessFile arq_c;
+    private RandomAccessFile arq_p;
     private HashExtensivel indice_direto;
     private ArvoreBMais_String_Int indice_indireto;
     private HashExtensivel indice_direto_sugestoes;
     private HashExtensivel indice_direto_grupo;
     private HashExtensivel indice_direto_convite;
+    private HashExtensivel indice_direto_participacao;
     private ArvoreBMais_ChaveComposta_String_Int lista_convites;
     private AB_sugestions indice_sugestions;
     private AB_grupos indice_grupos;
     private AB_convites indice_convites;
+    private AB_participacao indice_participacao;
     private int[][] associacao_vetorid;
     private int associacao_n;
     private int[][] associacao_vetorid_grupo;
     private int associacao_n_grupo;
     private int[][] associacao_vetorid_convite;
     private int associacao_n_convite;
+    private int[][] associacao_vetorid_participacao;
+    private int associacao_n_participacao;
+
     Constructor<T> construtor;
 
     public Crud(Constructor<T> construtor) {
@@ -37,6 +43,9 @@ class Crud<T extends Registro> {
 
         associacao_n_convite = 500; // Mudar conforme necessidade
         associacao_vetorid_convite = new int[associacao_n_convite][2];
+
+        associacao_n_participacao = 500; // Mudar conforme necessidade
+        associacao_vetorid_participacao = new int[associacao_n_participacao][2];
 
         for (int i = 0; i < associacao_n; i++) {
             associacao_vetorid[i][0] = -1;
@@ -59,11 +68,19 @@ class Crud<T extends Registro> {
             associacao_vetorid_convite[i][1] = -1;
         }
 
+        for (int i = 0; i < associacao_n_participacao; i++) {
+            associacao_vetorid_participacao[i][0] = -1;
+        }
+        for (int i = 0; i < associacao_n_participacao; i++) {
+            associacao_vetorid_participacao[i][1] = -1;
+        }
+
         try {
             arq = new RandomAccessFile("dados/dados.db", "rw");
             arq_s = new RandomAccessFile("dados/dados_s.db", "rw");
             arq_g = new RandomAccessFile("dados/dados_g.db", "rw");
             arq_c = new RandomAccessFile("dados/dados_c.db", "rw");
+            arq_p = new RandomAccessFile("dados/dados_p.db", "rw");
 
             // Verifico se o arquivo está vazio. Se estiver, trato de inicializar o
             // cabeçalho
@@ -75,6 +92,8 @@ class Crud<T extends Registro> {
                 arq_g.writeInt(0);
             if (arq_c.length() == 0)
                 arq_c.writeInt(0);
+            if (arq_p.length() == 0)
+                arq_p.writeInt(0);
 
             indice_direto = new HashExtensivel(5, "dados/diretorio.db", "dados/bucket.db");
             indice_indireto = new ArvoreBMais_String_Int(5, "dados/AB.db");
@@ -86,6 +105,9 @@ class Crud<T extends Registro> {
             indice_convites = new AB_convites("dados/convites.db");
             lista_convites = new ArvoreBMais_ChaveComposta_String_Int(5, "dados/lista_convites.db");
             indice_direto_convite = new HashExtensivel(5, "dados/diretorio_convite.db", "dados/bucket_convite.db");
+            indice_participacao = new AB_participacao("dados/participacao.db");
+            indice_direto_participacao = new HashExtensivel(5, "dados/diretorio_participacao.db",
+                    "dados/bucket_participacao.db");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,6 +217,40 @@ class Crud<T extends Registro> {
     }
 
     // Cria uma convite no arquivo de dados
+    public int participar_grupo(int idUsuario, int idGrupo) {
+        int last_id = 0;
+        int current_id = 0;
+        long begin = 0;
+        try {
+            arq_p.seek(0);
+            last_id = arq_p.readInt();
+            current_id = last_id + 1;
+            arq_p.seek(0);
+            arq_p.writeInt(current_id);
+
+            // Criando o objeto usuario
+            Participacao participacao = new Participacao(current_id, idUsuario, idGrupo, -1);
+
+            // Movo o ponteiro pro fim do arquivo
+            arq_p.seek(arq_p.length());
+            begin = arq_p.getFilePointer();
+            // System.out.println(begin);
+            arq_p.writeByte('*');
+            arq_p.seek(arq_p.length());
+            arq_p.writeShort(participacao.toByteArray().size());
+            arq_p.seek(arq_p.length());
+            arq_p.write(participacao.toByteArray().toByteArray());
+
+            indice_participacao.insere(idGrupo, begin);
+            indice_direto_participacao.create(current_id, begin);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return current_id;
+    }
+
+    // Cria uma participacao no arquivo de dados
     public int create(int idGrupo, String e, long mc, byte estado) {
         int last_id = 0;
         int current_id = 0;

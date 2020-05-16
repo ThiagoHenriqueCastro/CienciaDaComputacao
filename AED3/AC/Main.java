@@ -652,6 +652,7 @@ public class Main {
                                             try {
                                                 crud.update_convite(c);
                                                 crud.removeLista_CV(email, c.getId());
+                                                crud.participar_grupo(active_id, g.getId());
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
