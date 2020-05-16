@@ -497,6 +497,36 @@ class Crud<T extends Registro> {
         return out;
     }
 
+    // Lista os grupos de um dado usuario
+    public ArrayList<Participacao> list_participantes(int idG, boolean flag) {
+        ArrayList<Long> participantes = null;
+        ArrayList<Participacao> out = new ArrayList<Participacao>();
+        Participacao p = null;
+
+        try {
+            participantes = indice_participacao.getConvites(idG);
+
+            for (int i = 0; i < participantes.size(); i++) {
+                // System.out.println(grupos.get(i));
+                arq_p.seek(participantes.get(i));
+                byte lapide = arq_p.readByte();
+                short tamanho_reg = arq_p.readShort();
+                int idParticipacao = arq_p.readInt();
+                int idUsuario = arq_p.readInt();
+                int idGrupo = arq_p.readInt();
+                int idAmigo = arq_p.readInt();
+
+                p = new Participacao(idParticipacao, idUsuario, idGrupo, idAmigo);
+
+                out.add(p);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return out;
+    }
+
     // Altera uma sugestão
     public void update_sugestao(Sugestao s) throws Exception {
         long endereco = indice_direto_sugestoes.read(s.getId());

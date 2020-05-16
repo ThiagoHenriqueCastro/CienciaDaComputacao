@@ -64,6 +64,7 @@ public class Main {
                         byte flag4 = 0;
                         byte flag5 = 0;
                         byte flag6 = 0;
+                        byte flag7 = 0;
                         String produto = "";
                         String loja = "";
                         float valor = 0;
@@ -599,6 +600,52 @@ public class Main {
                                             }
                                         }
 
+                                    } else if (flag4 == 3) {
+                                        System.out.println("AMIGO OCULTO 1.0");
+                                        System.out.println("================\n");
+                                        System.out.println(
+                                                "INICIO > GRUPOS > GERENCIAMENTO DE GRUPOS > PARTICIPACAO\n\n");
+                                        System.out.println("1) Listagem");
+                                        System.out.println("2) Remoção");
+                                        System.out.println("0) Retornar ao menu anterior");
+
+                                        flag7 = reader.nextByte();
+                                        reader.nextLine();
+
+                                        if (flag7 == 1) {
+                                            System.out.println("LISTAGEM DE PARTICIPANTES");
+
+                                            crud.list_grupo(active_id, true);
+                                            System.out.println("");
+                                            System.out.print(
+                                                    "Digite o numero do grupo do qual deseja ver os participantes: ");
+                                            int list_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (list_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+                                                Grupo g = crud.read_grupo(list_id);
+
+                                                System.out.println("GRUPO " + list_id);
+                                                System.out.println("");
+                                                System.out.println(g.getNome());
+                                                System.out.println(g.sorteado ? "Ja sorteado" : "Não sorteado");
+                                                System.out.println("\n\n");
+
+                                                System.out.println("PARTICIPANTES: ");
+                                                ArrayList<Participacao> lp = crud.list_participantes(g.idGrupo, true);
+                                                Usuario up = null;
+
+                                                for (int i = 0; i < lp.size(); i++) {
+                                                    up = crud.read(lp.get(i).getIdUsuario());
+                                                    System.out.println(up.getNome());
+                                                }
+                                                press_toContinue();
+
+                                            }
+                                        }
                                     }
                                 }
                             } else if (flag1 == 3) {
