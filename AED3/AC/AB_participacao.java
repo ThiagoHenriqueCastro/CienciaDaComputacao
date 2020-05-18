@@ -98,7 +98,7 @@ public class AB_participacao {
 
     public ArrayList<Long> getUserGroups(int idU) throws IOException {
         arq1.seek(0);
-        int n = arq.readInt();
+        int n = arq1.readInt();
         arq1.seek(4);
         int id = 0;
         long endereco;

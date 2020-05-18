@@ -761,9 +761,22 @@ public class Main {
                                         byte flag8 = 0;
                                         flag8 = reader.nextByte();
                                         reader.nextLine();
-                                        if (flag8 == 1) {
+                                        System.out.println("\n\n");
+                                        int idUsuario = 0;
+                                        Usuario part_user = null;
 
+                                        if (flag8 == 1) {
+                                            ArrayList<Participacao> group_participants = crud
+                                                    .list_participantes(group.getId(), false);
+
+                                            for (int i = 0; i < group_participants.size(); i++) {
+                                                idUsuario = group_participants.get(i).getIdUsuario();
+                                                part_user = crud.read(idUsuario);
+                                                System.out.println((i + 1) + ". " + part_user.getNome());
+                                            }
+                                            press_toContinue();
                                         }
+
                                     }
                                 }
                             } else if (flag1 == 3) {
