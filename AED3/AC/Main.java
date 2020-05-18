@@ -645,6 +645,124 @@ public class Main {
                                                 press_toContinue();
 
                                             }
+                                        } else if (flag7 == 2) {
+                                            System.out.println("REMOÇÃO DE PARTICIPANTES");
+
+                                            crud.list_grupo(active_id, true);
+                                            System.out.println("");
+                                            System.out.print(
+                                                    "Digite o numero do grupo do qual deseja ver os participantes: ");
+                                            int list_id = reader.nextInt();
+                                            reader.nextLine();
+                                            if (list_id == 0) {
+                                                System.out.println("Retornando ao menu...");
+                                                press_toContinue();
+                                            } else {
+                                                crud.organiza_vetor_grupos(active_id);
+                                                Grupo g = crud.read_grupo(list_id);
+
+                                                System.out.println("GRUPO " + list_id);
+                                                System.out.println("");
+                                                System.out.println(g.getNome());
+                                                System.out.println(g.sorteado ? "Ja sorteado" : "Não sorteado");
+                                                System.out.println("\n\n");
+
+                                                System.out.println("PARTICIPANTES: ");
+                                                ArrayList<Participacao> lp = crud.list_participantes(g.idGrupo, true);
+                                                Usuario up = null;
+                                                int[][] indicePresentes = new int[1000][1000];
+
+                                                for (int i = 0; i < lp.size(); i++) {
+                                                    up = crud.read(lp.get(i).getIdUsuario());
+                                                    System.out.println((i + 1) + ". " + up.getNome());
+                                                }
+                                                if (g.getSorteado()) {
+                                                    for (int i = 0; i < lp.size(); i++) {
+                                                        indicePresentes[i][0] = lp.get(i).getAmigo();
+                                                    }
+                                                    for (int i = 0; i < lp.size(); i++) {
+                                                        indicePresentes[i][1] = lp.get(i).getIdUsuario();
+                                                    }
+                                                }
+                                                if (lp.size() != 0) {
+                                                    System.out.println("Digite o usuario que deseja remover: ");
+                                                    int remove_part = reader.nextInt();
+                                                    reader.nextLine();
+
+                                                    if (remove_part != 0) {
+                                                        if (g.getSorteado()) {
+                                                            int idAmigo = lp.get(remove_part - 1).getAmigo();
+                                                            Usuario amigo = crud.read(idAmigo);
+                                                            int idAmigoAmigo = 0;
+                                                            for (int i = 0; i < indicePresentes.length; i++) {
+                                                                if (indicePresentes[i][0] == idAmigo) {
+                                                                    idAmigoAmigo = indicePresentes[i][1];
+                                                                }
+                                                            }
+                                                            Participacao amigoamigo = null;
+                                                            for (int i = 0; i < lp.size(); i++) {
+                                                                if (lp.get(i).getIdUsuario() == idAmigoAmigo) {
+                                                                    amigoamigo = lp.get(i);
+                                                                }
+                                                            }
+
+                                                            amigoamigo.setIdAmigo(idAmigo);
+                                                        }
+                                                        crud.delete_participacao(lp.get(remove_part - 1).getId());
+                                                        System.out.println("PARTICIPAÇÃO REMOVIDA COM SUCESSO!");
+                                                        press_toContinue();
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                } else if (flag3 == 2) {
+                                    System.out.println("ESCOLHA UM DOS GRUPOS QUE VOCÊ PARTICIPA: ");
+
+                                    ArrayList<Participacao> part_groups = crud.list_part_user(active_id);
+                                    Grupo group = null;
+                                    int id_group;
+                                    for (int i = 0; i < part_groups.size(); i++) {
+                                        id_group = part_groups.get(i).getIdGrupo();
+                                        group = crud.read_grupo(id_group, false);
+
+                                        System.out.println((i + 1) + ". " + group.getNome());
+
+                                    }
+                                    System.out.println("Grupo: ");
+                                    int gerencia_grupo = reader.nextInt();
+                                    SimpleDateFormat data_holder = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                                    Date data = null;
+                                    Date data_e = null;
+                                    reader.nextLine();
+                                    if (gerencia_grupo != 0) {
+                                        group = crud.read_grupo(part_groups.get(gerencia_grupo - 1).getIdGrupo(),
+                                                false);
+                                        System.out.println("\n\nAMIGO OCULTO 1.0");
+                                        System.out.println("================\n\n");
+                                        System.out.println("INICIO > GRUPOS > PARTICIPAÇÃO EM GRUPO\n");
+                                        System.out.println(group.getNome());
+                                        data = new Date(group.getMomentoSorteio());
+                                        System.out.println("O sorteio ocorrerá dia " + data_holder.format(data));
+                                        System.out.println(
+                                                "Os presentes devem ter valor aproximado de R$" + group.getValor());
+                                        data_e = new Date(group.getMomentoEncontro());
+                                        System.out.println("O encontro ocorrerá dia " + data_holder.format(data_e)
+                                                + " em " + group.getLocalEncontro());
+                                        System.out.println("Observações: " + group.getObservacoes());
+
+                                        System.out.println("\n\n\n1) Visualizar participantes");
+                                        System.out.println("2) Visualizar amigo sorteado");
+                                        System.out.println("3) Ler/Enviar mensagens ao grupo\n");
+
+                                        System.out.println("0) Retornar");
+                                        System.out.println("\n\nDigite qual operação deseja fazer: ");
+                                        byte flag8 = 0;
+                                        flag8 = reader.nextByte();
+                                        reader.nextLine();
+                                        if (flag8 == 1) {
+
                                         }
                                     }
                                 }

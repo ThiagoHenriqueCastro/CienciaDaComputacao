@@ -242,6 +242,7 @@ class Crud<T extends Registro> {
             arq_p.write(participacao.toByteArray().toByteArray());
 
             indice_participacao.insere(idGrupo, begin);
+            indice_participacao.insere_id(idUsuario, begin);
             indice_direto_participacao.create(current_id, begin);
 
         } catch (Exception ex) {
@@ -517,8 +518,40 @@ class Crud<T extends Registro> {
                 int idAmigo = arq_p.readInt();
 
                 p = new Participacao(idParticipacao, idUsuario, idGrupo, idAmigo);
+                if (lapide == '*') {
+                    out.add(p);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-                out.add(p);
+        return out;
+    }
+
+    // Lista os grupos de um dado usuario
+    public ArrayList<Participacao> list_part_user(int idU) {
+        ArrayList<Long> participantes = null;
+        ArrayList<Participacao> out = new ArrayList<Participacao>();
+        Participacao p = null;
+
+        try {
+            participantes = indice_participacao.getUserGroups(idU);
+
+            for (int i = 0; i < participantes.size(); i++) {
+                // System.out.println(grupos.get(i));
+                arq_p.seek(participantes.get(i));
+                byte lapide = arq_p.readByte();
+                short tamanho_reg = arq_p.readShort();
+                int idParticipacao = arq_p.readInt();
+                int idUsuario = arq_p.readInt();
+                int idGrupo = arq_p.readInt();
+                int idAmigo = arq_p.readInt();
+
+                p = new Participacao(idParticipacao, idUsuario, idGrupo, idAmigo);
+                if (lapide == '*') {
+                    out.add(p);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -605,6 +638,18 @@ class Crud<T extends Registro> {
             arq_s.seek(endereco);
             arq_s.writeByte('$');
             indice_direto_sugestoes.delete(idSugestao);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete_participacao(int id) {
+
+        try {
+            long endereco = indice_direto_participacao.read(id);
+            arq_p.seek(endereco);
+            arq_p.writeByte('$');
+            indice_direto_participacao.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
