@@ -2,6 +2,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -716,6 +717,68 @@ public class Main {
 
                                             }
                                         }
+                                    } else if (flag4 == 4) {
+                                        System.out.println("SORTEIO\n\n");
+
+                                        ArrayList<Grupo> my_g = crud.get_grupos(active_id);
+                                        Grupo my_g_g = null;
+                                        Date now = new Date();
+
+                                        for (int i = 0; i < my_g.size(); i++) {
+                                            my_g_g = my_g.get(i);
+                                            if (my_g_g.getAtivo() && !my_g_g.getSorteado()
+                                                    && now.getTime() > my_g_g.getMomentoSorteio()) {
+                                                System.out.println((i + 1) + ". " + my_g_g.getNome());
+
+                                            }
+                                        }
+
+                                        System.out.println("\n");
+                                        System.out.print("Para qual grupo deseja realizar o sorteio: ");
+                                        int sorteio_id = reader.nextInt();
+                                        reader.nextLine();
+
+                                        if (sorteio_id != 0) {
+                                            my_g_g = my_g.get(sorteio_id - 1);
+                                            System.out.println("\nGrupo " + sorteio_id);
+                                            System.out.println(my_g_g.getNome());
+
+                                            ArrayList<Participacao> lista_part = crud.list_participantes(my_g_g.getId(),
+                                                    false);
+
+                                            Collections.shuffle(lista_part);
+                                            Participacao a = null;
+                                            Participacao b = null;
+
+                                            for (int i = 0; i < (lista_part.size() - 1); i++) {
+                                                a = lista_part.get(i);
+                                                b = lista_part.get(i + 1);
+                                                a.setIdAmigo(b.getIdUsuario());
+                                                try {
+                                                    crud.update_part(a);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                            }
+                                            lista_part.get(lista_part.size() - 1)
+                                                    .setIdAmigo(lista_part.get(0).getIdUsuario());
+                                            try {
+                                                crud.update_part(lista_part.get(lista_part.size() - 1));
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            my_g_g.setSorteado(true);
+                                            try {
+                                                crud.update_grupo(my_g_g);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            System.out.println("Sorteio Realizado no grupo " + my_g_g.getNome());
+                                            press_toContinue();
+
+                                        }
+
                                     }
                                 } else if (flag3 == 2) {
                                     System.out.println("ESCOLHA UM DOS GRUPOS QUE VOCÊ PARTICIPA: ");
@@ -723,9 +786,13 @@ public class Main {
                                     ArrayList<Participacao> part_groups = crud.list_part_user(active_id);
                                     Grupo group = null;
                                     int id_group;
+                                    Participacao my_part = null;
                                     for (int i = 0; i < part_groups.size(); i++) {
                                         id_group = part_groups.get(i).getIdGrupo();
                                         group = crud.read_grupo(id_group, false);
+                                        if (part_groups.get(i).getIdUsuario() == active_id) {
+                                            my_part = part_groups.get(i);
+                                        }
 
                                         System.out.println((i + 1) + ". " + group.getNome());
 
@@ -775,6 +842,25 @@ public class Main {
                                                 System.out.println((i + 1) + ". " + part_user.getNome());
                                             }
                                             press_toContinue();
+                                        }
+
+                                        else if (flag8 == 2) {
+                                            Usuario amigo = null;
+                                            Sugestao s = null;
+                                            if (group.getSorteado()) {
+                                                int idAmigo = my_part.getAmigo();
+
+                                                amigo = crud.read(idAmigo);
+                                                System.out.println("\n" + amigo.getNome());
+                                                s = crud.getSugestao_user(amigo.getId());
+                                                System.out.println(s.getProduto());
+                                                System.out.println(s.getLoja());
+                                                System.out.println(s.getValor());
+                                            } else {
+                                                System.out.println("O sorteio ainda não aconteceu!");
+                                            }
+                                            press_toContinue();
+
                                         }
 
                                     }

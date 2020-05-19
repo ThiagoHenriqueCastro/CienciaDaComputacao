@@ -102,6 +102,10 @@ public class Grupo implements Registro {
         this.ativo = a;
     }
 
+    public void setSorteado(boolean a) {
+        this.sorteado = a;
+    }
+
     // METODOS PARA REPRESENTAÇÃO DA CLASSE EM UM VETOR DE BYTES
 
     // Escreve e devolve os atributos da classe em um vetor de bytes

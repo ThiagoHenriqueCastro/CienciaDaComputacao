@@ -459,6 +459,44 @@ class Crud<T extends Registro> {
         }
     }
 
+    public ArrayList<Grupo> get_grupos(int idU) {
+        ArrayList<Long> grupos = null;
+        String p = "";
+        ArrayList<Grupo> out = new ArrayList<Grupo>();
+        Grupo g = null;
+        try {
+            grupos = indice_grupos.getGrupos(idU);
+
+            for (int i = 0; i < grupos.size(); i++) {
+                // System.out.println(grupos.get(i));
+                arq_g.seek(grupos.get(i));
+                byte lapide = arq_g.readByte();
+                short tamanho_reg = arq_g.readShort();
+                int idGrupo = arq_g.readInt();
+                int idUsuario = arq_g.readInt();
+                String nome = arq_g.readUTF();
+                long momentoSorteio = arq_g.readLong();
+                float valor = arq_g.readFloat();
+                long momentoEncontro = arq_g.readLong();
+                String local = arq_g.readUTF();
+                String obs = arq_g.readUTF();
+                boolean sorteado = arq_g.readBoolean();
+                boolean ativo = arq_g.readBoolean();
+
+                if (ativo == true && lapide == '*') {
+
+                    g = new Grupo(idGrupo, idUsuario, nome, momentoSorteio, valor, momentoEncontro, local, obs,
+                            sorteado, ativo);
+                    out.add(g);
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out;
+    }
+
     // Lista os grupos de um dado usuario
     public ArrayList<Convite> list_convites(int idG, boolean flag) {
         ArrayList<Long> convites = null;
@@ -612,6 +650,17 @@ class Crud<T extends Registro> {
         }
     }
 
+    public void update_part(Participacao p) throws Exception {
+        long endereco = indice_direto_participacao.read(p.getId());
+        arq_p.seek(endereco + 1);
+
+        arq_p.seek(endereco);
+        arq_p.writeByte('*');
+        arq_p.writeShort(p.toByteArray().size());
+        arq_p.write(p.toByteArray().toByteArray());
+
+    }
+
     // Altera um grupo
     public void update_convite(Convite c) throws Exception {
         long endereco = indice_direto_convite.read(c.getId());
@@ -653,6 +702,28 @@ class Crud<T extends Registro> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // Busca um usuario no arquivo de dados pela chave primaria id
+    public Sugestao getSugestao_user(int id) {
+
+        Sugestao s = new Sugestao();
+
+        try {
+            long endereco = indice_direto_sugestoes.read(id);
+            arq_s.seek(endereco + 1);
+            short reg_size = arq_s.readShort();
+            // System.out.println(reg_size);
+            arq_s.seek(endereco + 3);
+            byte[] data = new byte[reg_size];
+            arq_s.readFully(data);
+
+            s.fromByteArray(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return s;
     }
 
     // Busca um usuario no arquivo de dados pela chave primaria id
