@@ -8,6 +8,7 @@ public class Main {
 
         Scanner reader = new Scanner(System.in);
         try {
+            // Inicialização do objeto lista
             Lista_Invertida lista_invertida = new Lista_Invertida("termos.db", "lista_id.db", "dados.db");
 
             byte flag = 0;
