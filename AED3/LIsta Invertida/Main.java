@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -26,14 +27,17 @@ public class Main {
                     String n = reader.nextLine();
 
                     lista_invertida.create(n);
+                    press_toContinue();
                 } else if (flag == 2) {
                     System.out.print("\n\nNome a ser buscado: ");
                     String n = reader.nextLine();
 
-                    long endereco = lista_invertida.buscar(n);
+                    ArrayList<Long> list_e = lista_invertida.buscar(n);
 
-                    System.out
-                            .println("Endereço: " + endereco + " | Nome: " + lista_invertida.busca_endereco(endereco));
+                    for (Long e : list_e) {
+                        System.out.println("Endereço: " + e + " | Nome: " + lista_invertida.busca_endereco(e));
+                    }
+                    press_toContinue();
                     System.out.println("\n");
                 }
             } while (flag != 0);
@@ -41,5 +45,10 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static void press_toContinue() throws Exception {
+        System.out.println("Pressione um tecla para continuar...");
+        System.in.read();
     }
 }

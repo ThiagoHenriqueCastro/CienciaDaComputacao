@@ -70,7 +70,7 @@ public class Lista_Invertida {
 
     }
 
-    long buscar(String termo) throws Exception {
+    ArrayList<Long> buscar(String termo) throws Exception {
         // remove acentos e torna lower case
         String handled_string = Normalizer.normalize(termo, Form.NFD);
         handled_string = handled_string.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -99,7 +99,10 @@ public class Lista_Invertida {
             out.retainAll(aux);
         }
 
-        long out_endereco = busca_id(out.get(0));
+        ArrayList<Long> out_endereco = new ArrayList<Long>();
+        for (int i = 0; i < out.size(); i++) {
+            out_endereco.add(busca_id(out.get(i)));
+        }
 
         return out_endereco;
 
@@ -149,6 +152,9 @@ public class Lista_Invertida {
         arqLista.seek(e);
         arqLista.writeInt(n);
         arqLista.writeInt(id);
+        for (int i = 0; i < 9; i++) {
+            arqLista.writeInt(-1);
+        }
         arqLista.writeLong(prox);
 
         return e;
@@ -164,9 +170,7 @@ public class Lista_Invertida {
             int offset = n * 4;
 
             arqLista.seek(e + 4 + offset);
-            long prox = arqLista.readLong();
             arqLista.writeInt(id);
-            arqLista.writeLong(prox);
         } else {
             long new_bloco = criaBloco(e * 10, 1, id, -1);
             arqLista.seek(e + 4 + n * 4);
