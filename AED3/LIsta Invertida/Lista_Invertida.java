@@ -2,6 +2,8 @@ import java.io.*;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Lista_Invertida {
     String nomeArqTermos;
@@ -52,7 +54,13 @@ public class Lista_Invertida {
 
         String[] broken_string = handled_string.split(" ");
 
-        for (String termo : broken_string) {
+        List<String> allWords = new ArrayList<String>(Arrays.asList(broken_string));
+        // Completar com mais stop words caso seja necessario
+        List<String> stopWords = Arrays.asList("de", "das", "da");
+
+        allWords.removeAll(stopWords);
+
+        for (String termo : allWords) {
             /*
              * Para cada palavra quebrada do meu dado, preciso verificar se ele ja existe na
              * lista de termos
@@ -81,24 +89,25 @@ public class Lista_Invertida {
         ArrayList<Integer> aux = new ArrayList<Integer>();
 
         long e = buscaTermo(broken_string[0]);
-        arqLista.seek(e);
-        int n = arqLista.readInt();
-        for (int i = 0; i < n; i++) {
-            out.add(arqLista.readInt());
-        }
-
-        for (int i = 1; i < broken_string.length; i++) {
-            aux.clear();
-            e = buscaTermo(broken_string[i]);
+        if (e != -1) {
             arqLista.seek(e);
-            n = arqLista.readInt();
-            for (int j = 0; j < n; j++) {
-                aux.add(arqLista.readInt());
+            int n = arqLista.readInt();
+            for (int i = 0; i < n; i++) {
+                out.add(arqLista.readInt());
             }
 
-            out.retainAll(aux);
-        }
+            for (int i = 1; i < broken_string.length; i++) {
+                aux.clear();
+                e = buscaTermo(broken_string[i]);
+                arqLista.seek(e);
+                n = arqLista.readInt();
+                for (int j = 0; j < n; j++) {
+                    aux.add(arqLista.readInt());
+                }
 
+                out.retainAll(aux);
+            }
+        }
         ArrayList<Long> out_endereco = new ArrayList<Long>();
         for (int i = 0; i < out.size(); i++) {
             out_endereco.add(busca_id(out.get(i)));
